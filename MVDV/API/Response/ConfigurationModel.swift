@@ -6,18 +6,33 @@
 //
 
 import Foundation
+import BetterCodable
 
 struct ConfigurationModel: Decodable {
-    let images: Image
-    let change_keys: [String]
+    @DefaultCodable<String> var nostring: String
+    @DefaultCodable<Image> var images: Image
+    
+    @DefaultEmptyArray var change_keys: [String]
     
     struct Image: Decodable {
-        let base_url: String?
-        let secure_base_url: String?
-        let backdrop_sizes: [String]
-        let logo_sizes: [String]
-        let poster_sizes: [String]
-        let profile_sizes: [String]
-        let still_sizes: [String]
+        @DefaultCodable<String> var base_url: String
+        @DefaultCodable<String>  var secure_base_url: String
+        @DefaultEmptyArray var backdrop_sizes: [String]
+        @DefaultEmptyArray var logo_sizes: [String]
+        @DefaultEmptyArray var poster_sizes: [String]
+        @DefaultEmptyArray var profile_sizes: [String]
+        @DefaultEmptyArray var still_sizes: [String]
+    }
+}
+
+extension ConfigurationModel.Image: DefaultCodableStrategy {
+    public static var defaultValue: ConfigurationModel.Image {
+        ConfigurationModel.Image(base_url: "",
+                                 secure_base_url: "",
+                                 backdrop_sizes: [],
+                                 logo_sizes: [],
+                                 poster_sizes: [],
+                                 profile_sizes: [],
+                                 still_sizes: [])
     }
 }

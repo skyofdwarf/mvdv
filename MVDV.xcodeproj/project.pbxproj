@@ -12,6 +12,8 @@
 		4283FBF22795B3FD00F3D753 /* MovieTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBF12795B3FD00F3D753 /* MovieTarget.swift */; };
 		4283FBF42795B40600F3D753 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBF32795B40600F3D753 /* APIService.swift */; };
 		4283FBF72795BB9900F3D753 /* ConfigurationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBF62795BB9900F3D753 /* ConfigurationModel.swift */; };
+		4283FBFA2795C44D00F3D753 /* BetterCodable in Frameworks */ = {isa = PBXBuildFile; productRef = 4283FBF92795C44D00F3D753 /* BetterCodable */; };
+		4283FBFC2795DCF500F3D753 /* DefaultCodableStrategys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBFB2795DCF500F3D753 /* DefaultCodableStrategys.swift */; };
 		42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */ = {isa = PBXBuildFile; productRef = 42E5A3CC27957C8600BA84AA /* Reduxift */; };
 		56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */; };
 		56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */; };
@@ -28,6 +30,7 @@
 		4283FBF12795B3FD00F3D753 /* MovieTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTarget.swift; sourceTree = "<group>"; };
 		4283FBF32795B40600F3D753 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		4283FBF62795BB9900F3D753 /* ConfigurationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationModel.swift; sourceTree = "<group>"; };
+		4283FBFB2795DCF500F3D753 /* DefaultCodableStrategys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCodableStrategys.swift; sourceTree = "<group>"; };
 		56B43F39277BEDDE00EA1E88 /* MVDV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MVDV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -44,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4283FBFA2795C44D00F3D753 /* BetterCodable in Frameworks */,
 				42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */,
 				4232CAC2278C7A8800168DE5 /* RxMoya in Frameworks */,
 				4232CAC0278C7A8800168DE5 /* Moya in Frameworks */,
@@ -67,6 +71,7 @@
 		4283FBF52795BB6A00F3D753 /* Response */ = {
 			isa = PBXGroup;
 			children = (
+				4283FBFB2795DCF500F3D753 /* DefaultCodableStrategys.swift */,
 				4283FBF62795BB9900F3D753 /* ConfigurationModel.swift */,
 			);
 			path = Response;
@@ -144,6 +149,7 @@
 				4232CABF278C7A8800168DE5 /* Moya */,
 				4232CAC1278C7A8800168DE5 /* RxMoya */,
 				42E5A3CC27957C8600BA84AA /* Reduxift */,
+				4283FBF92795C44D00F3D753 /* BetterCodable */,
 			);
 			productName = MVDV;
 			productReference = 56B43F39277BEDDE00EA1E88 /* MVDV.app */;
@@ -176,6 +182,7 @@
 			packageReferences = (
 				4232CABE278C7A8800168DE5 /* XCRemoteSwiftPackageReference "Moya" */,
 				42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */,
+				4283FBF82795C44D00F3D753 /* XCRemoteSwiftPackageReference "BetterCodable" */,
 			);
 			productRefGroup = 56B43F3A277BEDDE00EA1E88 /* Products */;
 			projectDirPath = "";
@@ -251,6 +258,7 @@
 				4283FBF42795B40600F3D753 /* APIService.swift in Sources */,
 				56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */,
 				56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */,
+				4283FBFC2795DCF500F3D753 /* DefaultCodableStrategys.swift in Sources */,
 				4283FBF22795B3FD00F3D753 /* MovieTarget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -486,6 +494,14 @@
 				minimumVersion = 15.0.0;
 			};
 		};
+		4283FBF82795C44D00F3D753 /* XCRemoteSwiftPackageReference "BetterCodable" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marksands/BetterCodable";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
 		42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/skyofdwarf/Reduxift";
@@ -506,6 +522,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4232CABE278C7A8800168DE5 /* XCRemoteSwiftPackageReference "Moya" */;
 			productName = RxMoya;
+		};
+		4283FBF92795C44D00F3D753 /* BetterCodable */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4283FBF82795C44D00F3D753 /* XCRemoteSwiftPackageReference "BetterCodable" */;
+			productName = BetterCodable;
 		};
 		42E5A3CC27957C8600BA84AA /* Reduxift */ = {
 			isa = XCSwiftPackageProductDependency;
