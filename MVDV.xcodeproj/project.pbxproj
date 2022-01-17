@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		4232CAC0278C7A8800168DE5 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 4232CABF278C7A8800168DE5 /* Moya */; };
 		4232CAC2278C7A8800168DE5 /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 4232CAC1278C7A8800168DE5 /* RxMoya */; };
+		4283FBF22795B3FD00F3D753 /* MovieTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBF12795B3FD00F3D753 /* MovieTarget.swift */; };
+		4283FBF42795B40600F3D753 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBF32795B40600F3D753 /* APIService.swift */; };
+		4283FBF72795BB9900F3D753 /* ConfigurationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBF62795BB9900F3D753 /* ConfigurationModel.swift */; };
 		42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */ = {isa = PBXBuildFile; productRef = 42E5A3CC27957C8600BA84AA /* Reduxift */; };
 		56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */; };
 		56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */; };
@@ -22,6 +25,9 @@
 /* Begin PBXFileReference section */
 		23F4AAA74911A5F0E23F6B30 /* Pods-MVDV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MVDV.debug.xcconfig"; path = "Target Support Files/Pods-MVDV/Pods-MVDV.debug.xcconfig"; sourceTree = "<group>"; };
 		368EF6C907FF035883F6037C /* Pods_MVDV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MVDV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4283FBF12795B3FD00F3D753 /* MovieTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTarget.swift; sourceTree = "<group>"; };
+		4283FBF32795B40600F3D753 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		4283FBF62795BB9900F3D753 /* ConfigurationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationModel.swift; sourceTree = "<group>"; };
 		56B43F39277BEDDE00EA1E88 /* MVDV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MVDV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -48,6 +54,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4283FBF02795B3F200F3D753 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				4283FBF52795BB6A00F3D753 /* Response */,
+				4283FBF12795B3FD00F3D753 /* MovieTarget.swift */,
+				4283FBF32795B40600F3D753 /* APIService.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		4283FBF52795BB6A00F3D753 /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				4283FBF62795BB9900F3D753 /* ConfigurationModel.swift */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
 		4A807ADFE2DD0EB790960751 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +102,7 @@
 		56B43F3B277BEDDE00EA1E88 /* MVDV */ = {
 			isa = PBXGroup;
 			children = (
+				4283FBF02795B3F200F3D753 /* API */,
 				56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */,
 				56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */,
 				56B43F40277BEDDE00EA1E88 /* ViewController.swift */,
@@ -222,8 +247,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				56B43F41277BEDDE00EA1E88 /* ViewController.swift in Sources */,
+				4283FBF72795BB9900F3D753 /* ConfigurationModel.swift in Sources */,
+				4283FBF42795B40600F3D753 /* APIService.swift in Sources */,
 				56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */,
 				56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */,
+				4283FBF22795B3FD00F3D753 /* MovieTarget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

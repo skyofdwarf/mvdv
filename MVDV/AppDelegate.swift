@@ -14,6 +14,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        APIService.shared.request(.configuration) { (model: ConfigurationModel) in
+            print("response model: \(model)")
+        } failure: {
+            print("error: \($0)")
+        }
+        
         return true
     }
 
