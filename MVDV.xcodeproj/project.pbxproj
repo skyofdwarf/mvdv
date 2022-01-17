@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4232CAC0278C7A8800168DE5 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 4232CABF278C7A8800168DE5 /* Moya */; };
 		4232CAC2278C7A8800168DE5 /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 4232CAC1278C7A8800168DE5 /* RxMoya */; };
+		42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */ = {isa = PBXBuildFile; productRef = 42E5A3CC27957C8600BA84AA /* Reduxift */; };
 		56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */; };
 		56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */; };
 		56B43F41277BEDDE00EA1E88 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F40277BEDDE00EA1E88 /* ViewController.swift */; };
@@ -33,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */,
 				4232CAC2278C7A8800168DE5 /* RxMoya in Frameworks */,
 				4232CAC0278C7A8800168DE5 /* Moya in Frameworks */,
 			);
@@ -90,6 +92,7 @@
 			packageProductDependencies = (
 				4232CABF278C7A8800168DE5 /* Moya */,
 				4232CAC1278C7A8800168DE5 /* RxMoya */,
+				42E5A3CC27957C8600BA84AA /* Reduxift */,
 			);
 			productName = MVDV;
 			productReference = 56B43F39277BEDDE00EA1E88 /* MVDV.app */;
@@ -121,6 +124,7 @@
 			mainGroup = 56B43F30277BEDDE00EA1E88;
 			packageReferences = (
 				4232CABE278C7A8800168DE5 /* XCRemoteSwiftPackageReference "Moya" */,
+				42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */,
 			);
 			productRefGroup = 56B43F3A277BEDDE00EA1E88 /* Products */;
 			projectDirPath = "";
@@ -384,6 +388,14 @@
 				minimumVersion = 15.0.0;
 			};
 		};
+		42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/skyofdwarf/Reduxift";
+			requirement = {
+				branch = rdxvm;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -396,6 +408,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4232CABE278C7A8800168DE5 /* XCRemoteSwiftPackageReference "Moya" */;
 			productName = RxMoya;
+		};
+		42E5A3CC27957C8600BA84AA /* Reduxift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */;
+			productName = Reduxift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
