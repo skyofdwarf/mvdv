@@ -66,7 +66,7 @@ final class APIService {
 // MARK: Target requests
 
 extension APIService {
-    func configuration() -> Single<ConfigurationModel> {
+    func configuration() -> Single<ConfigurationResponse> {
         request(ConfigurationTarget.configuration)
     }
 }
