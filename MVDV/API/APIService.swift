@@ -16,29 +16,34 @@ fileprivate let accessToken = MVDBKeys().apiAccessToken
 final class APIService {
     static let shared = APIService()
     
-    private lazy var provider: MoyaProvider<MovieTarget> = {
+    fileprivate lazy var provider: MoyaProvider<MultiTarget> = {
 #if DEBUG
         let plugins: [PluginType] = [
             NetworkLoggerPlugin(),
             AccessTokenPlugin(tokenClosure: { _ in accessToken })
         ]
         
-        return MoyaProvider<MovieTarget>(plugins: plugins)
+        return MoyaProvider<MultiTarget>(plugins: plugins)
 #else
-        return MoyaProvider<MovieTarget>()
+        return MoyaProvider<MultiTarget>()
 #endif
     }()
     
-    func request(_ target: MovieTarget, completion: @escaping (Result<Response, MoyaError>) -> Void) {
-        provider.request(target) { completion($0) }
-    }
+    private init() {}
     
-    func request<T: Decodable>(_ target: MovieTarget, success: @escaping (T) -> (), failure: @escaping (Error) -> ()) {
-        provider.request(target) { result in
+    // Raw request method
+    func request(_ target: MVDBTarget, completion: @escaping (Result<Response, MoyaError>) -> Void) {
+        provider.request(MultiTarget(target)) { completion($0) }
+    }
+
+    // Mapping requests
+    func request<D: Decodable>(_ target: MVDBTarget, success: @escaping (D) -> (), failure: @escaping (Error) -> ()) {
+        request(target) { result in
             switch result {
             case .success(let response):
                 do {
-                    success(try response.map(T.self))
+                    let successfulResponse = try response.filterSuccessfulStatusCodes()
+                    success(try successfulResponse.map(D.self))
                 } catch {
                     failure(error)
                 }
@@ -49,7 +54,19 @@ final class APIService {
         }
     }
     
-    func request<T: Decodable>(_ target: MovieTarget) -> Single<T> {
-        provider.rx.request(target).map(T.self)
+    // Raw request.rx method
+    func request<D: Decodable>(_ target: MVDBTarget) -> Single<D> {
+        provider.rx
+            .request(MultiTarget(target))
+            .filterSuccessfulStatusCodes()
+            .map(D.self)
+    }
+}
+
+// MARK: Target requests
+
+extension APIService {
+    func configuration() -> Single<ConfigurationModel> {
+        request(ConfigurationTarget.configuration)
     }
 }

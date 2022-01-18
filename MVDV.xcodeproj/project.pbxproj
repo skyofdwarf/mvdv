@@ -14,6 +14,12 @@
 		4283FBF72795BB9900F3D753 /* ConfigurationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBF62795BB9900F3D753 /* ConfigurationModel.swift */; };
 		4283FBFA2795C44D00F3D753 /* BetterCodable in Frameworks */ = {isa = PBXBuildFile; productRef = 4283FBF92795C44D00F3D753 /* BetterCodable */; };
 		4283FBFC2795DCF500F3D753 /* DefaultCodableStrategys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBFB2795DCF500F3D753 /* DefaultCodableStrategys.swift */; };
+		4283FBFE2796E14D00F3D753 /* MVDBTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBFD2796E14D00F3D753 /* MVDBTarget.swift */; };
+		4283FC002796E16F00F3D753 /* APIVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FBFF2796E16F00F3D753 /* APIVersion.swift */; };
+		4283FC032796E27600F3D753 /* ConfigurationTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC022796E27600F3D753 /* ConfigurationTarget.swift */; };
+		4283FC052796E41000F3D753 /* ErrorResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC042796E40F00F3D753 /* ErrorResponseModel.swift */; };
+		4283FC072796F4BC00F3D753 /* Error+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC062796F4BC00F3D753 /* Error+API.swift */; };
+		4283FC092796F4FE00F3D753 /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC082796F4FE00F3D753 /* HTTP.swift */; };
 		42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */ = {isa = PBXBuildFile; productRef = 42E5A3CC27957C8600BA84AA /* Reduxift */; };
 		56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */; };
 		56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */; };
@@ -31,6 +37,12 @@
 		4283FBF32795B40600F3D753 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		4283FBF62795BB9900F3D753 /* ConfigurationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationModel.swift; sourceTree = "<group>"; };
 		4283FBFB2795DCF500F3D753 /* DefaultCodableStrategys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCodableStrategys.swift; sourceTree = "<group>"; };
+		4283FBFD2796E14D00F3D753 /* MVDBTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVDBTarget.swift; sourceTree = "<group>"; };
+		4283FBFF2796E16F00F3D753 /* APIVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIVersion.swift; sourceTree = "<group>"; };
+		4283FC022796E27600F3D753 /* ConfigurationTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTarget.swift; sourceTree = "<group>"; };
+		4283FC042796E40F00F3D753 /* ErrorResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponseModel.swift; sourceTree = "<group>"; };
+		4283FC062796F4BC00F3D753 /* Error+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+API.swift"; sourceTree = "<group>"; };
+		4283FC082796F4FE00F3D753 /* HTTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTP.swift; sourceTree = "<group>"; };
 		56B43F39277BEDDE00EA1E88 /* MVDV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MVDV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,20 +73,42 @@
 		4283FBF02795B3F200F3D753 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				4283FBF52795BB6A00F3D753 /* Response */,
-				4283FBF12795B3FD00F3D753 /* MovieTarget.swift */,
+				4283FC0A2796F58500F3D753 /* Extensions */,
+				4283FC012796E22000F3D753 /* Targets */,
+				4283FBF52795BB6A00F3D753 /* Responses */,
+				4283FC082796F4FE00F3D753 /* HTTP.swift */,
+				4283FBFF2796E16F00F3D753 /* APIVersion.swift */,
 				4283FBF32795B40600F3D753 /* APIService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
 		};
-		4283FBF52795BB6A00F3D753 /* Response */ = {
+		4283FBF52795BB6A00F3D753 /* Responses */ = {
 			isa = PBXGroup;
 			children = (
 				4283FBFB2795DCF500F3D753 /* DefaultCodableStrategys.swift */,
+				4283FC042796E40F00F3D753 /* ErrorResponseModel.swift */,
 				4283FBF62795BB9900F3D753 /* ConfigurationModel.swift */,
 			);
-			path = Response;
+			path = Responses;
+			sourceTree = "<group>";
+		};
+		4283FC012796E22000F3D753 /* Targets */ = {
+			isa = PBXGroup;
+			children = (
+				4283FBFD2796E14D00F3D753 /* MVDBTarget.swift */,
+				4283FBF12795B3FD00F3D753 /* MovieTarget.swift */,
+				4283FC022796E27600F3D753 /* ConfigurationTarget.swift */,
+			);
+			path = Targets;
+			sourceTree = "<group>";
+		};
+		4283FC0A2796F58500F3D753 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4283FC062796F4BC00F3D753 /* Error+API.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		4A807ADFE2DD0EB790960751 /* Pods */ = {
@@ -253,9 +287,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4283FC002796E16F00F3D753 /* APIVersion.swift in Sources */,
+				4283FC032796E27600F3D753 /* ConfigurationTarget.swift in Sources */,
+				4283FC052796E41000F3D753 /* ErrorResponseModel.swift in Sources */,
 				56B43F41277BEDDE00EA1E88 /* ViewController.swift in Sources */,
 				4283FBF72795BB9900F3D753 /* ConfigurationModel.swift in Sources */,
+				4283FC072796F4BC00F3D753 /* Error+API.swift in Sources */,
 				4283FBF42795B40600F3D753 /* APIService.swift in Sources */,
+				4283FC092796F4FE00F3D753 /* HTTP.swift in Sources */,
+				4283FBFE2796E14D00F3D753 /* MVDBTarget.swift in Sources */,
 				56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */,
 				56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */,
 				4283FBFC2795DCF500F3D753 /* DefaultCodableStrategys.swift in Sources */,
