@@ -15,3 +15,18 @@ struct Genre: Decodable {
 struct GenreResponse: Decodable {
     let genres: [Genre]
 }
+
+#if DEBUG
+extension GenreResponse {
+    static let json = #"""
+    {
+      "genres": [
+        {
+          "id": 28,
+          "name": "Action"
+        }
+      ]
+    }
+    """#
+}
+#endif
