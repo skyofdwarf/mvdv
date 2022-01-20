@@ -1,0 +1,14 @@
+/* 
+  Home.strings
+  MVDV
+
+  Created by YEONGJUNG KIM on 2022/01/21.
+  
+*/
+
+"section.title.lastest" = "Lastest";
+"section.title.now-playing" = "Now Playing";
+"section.title.popular" = "Popular";
+"section.title.top-reated" = "Top Rated";
+"section.title.genres" = "Genres";
+"section.title.keywords" = "Keywords";

@@ -8,13 +8,21 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        
+        title = Strings.Common.Title.profile
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .white
+    }    
 
     /*
     // MARK: - Navigation

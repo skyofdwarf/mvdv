@@ -15,6 +15,15 @@ class MainViewController: UITabBarController {
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        viewControllers = [ HomeViewController(),
+                            UpcomingViewController(),
+                            SearchViewController(),
+                            ProfileViewController() ]
+    }
+    
 
     /*
     // MARK: - Navigation
