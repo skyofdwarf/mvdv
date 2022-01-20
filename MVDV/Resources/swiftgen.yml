@@ -18,12 +18,12 @@
 #       output: Strings+Generated.swift
 strings:
   - inputs:
-      - MVDV/Resources/Strings/Home.strings
-      - MVDV/Resources/Strings/Common.strings
+      - ./Strings/Home.strings
+      - ./Strings/Common.strings
     outputs:
     - templateName: structured-swift5
       output:
-        MVDV/Resources/Strings/Strings+Generated.swift
+        ./Strings+Generated.swift
       params:
         enumName: Strings
 

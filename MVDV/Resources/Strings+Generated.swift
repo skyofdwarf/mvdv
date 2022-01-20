@@ -11,48 +11,32 @@ import Foundation
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum Strings {
   internal enum Common {
-    internal enum Home {
+    internal enum Title {
       /// Home
-      internal static let title = Strings.tr("Common", "home.title")
-    }
-    internal enum Profile {
+      internal static let home = Strings.tr("Common", "title.home")
       /// Profile
-      internal static let title = Strings.tr("Common", "profile.title")
-    }
-    internal enum Search {
+      internal static let profile = Strings.tr("Common", "title.profile")
       /// Search
-      internal static let title = Strings.tr("Common", "search.title")
-    }
-    internal enum Upcoming {
+      internal static let search = Strings.tr("Common", "title.search")
       /// Upcoming
-      internal static let title = Strings.tr("Common", "upcoming.title")
+      internal static let upcoming = Strings.tr("Common", "title.upcoming")
     }
   }
   internal enum Home {
     internal enum Section {
-      internal enum Genres {
+      internal enum Title {
         /// Genres
-        internal static let title = Strings.tr("Home", "section.genres.title")
-      }
-      internal enum Keywords {
+        internal static let genres = Strings.tr("Home", "section.title.genres")
         /// Keywords
-        internal static let title = Strings.tr("Home", "section.keywords.title")
-      }
-      internal enum Lastest {
+        internal static let keywords = Strings.tr("Home", "section.title.keywords")
         /// Lastest
-        internal static let title = Strings.tr("Home", "section.lastest.title")
-      }
-      internal enum NowPlaying {
+        internal static let lastest = Strings.tr("Home", "section.title.lastest")
         /// Now Playing
-        internal static let title = Strings.tr("Home", "section.now-playing.title")
-      }
-      internal enum Popular {
+        internal static let nowPlaying = Strings.tr("Home", "section.title.now-playing")
         /// Popular
-        internal static let title = Strings.tr("Home", "section.popular.title")
-      }
-      internal enum TopReated {
+        internal static let popular = Strings.tr("Home", "section.title.popular")
         /// Top Rated
-        internal static let title = Strings.tr("Home", "section.top-reated.title")
+        internal static let topReated = Strings.tr("Home", "section.title.top-reated")
       }
     }
   }

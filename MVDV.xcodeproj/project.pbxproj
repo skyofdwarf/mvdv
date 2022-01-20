@@ -33,7 +33,6 @@
 		4283FC2127971A4A00F3D753 /* UpcomingMovieResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC2027971A4A00F3D753 /* UpcomingMovieResponse.swift */; };
 		4283FC302797211900F3D753 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC2F2797211900F3D753 /* ResponseTests.swift */; };
 		4283FC3D27995B3C00F3D753 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4283FC3C27995B3C00F3D753 /* SnapKit */; };
-		4283FC4027996E4F00F3D753 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC3F27996E4F00F3D753 /* R.generated.swift */; };
 		4283FC4A27998E3000F3D753 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 4283FC4927998E3000F3D753 /* Then */; };
 		4283FC4E27998EB500F3D753 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC4D27998EB500F3D753 /* HomeViewController.swift */; };
 		4283FC5027998ED900F3D753 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC4F27998ED900F3D753 /* MainViewController.swift */; };
@@ -47,6 +46,7 @@
 		4283FC722799D0B400F3D753 /* Upcoming.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4283FC712799D0B400F3D753 /* Upcoming.strings */; };
 		4283FC742799D0BB00F3D753 /* Search.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4283FC732799D0BB00F3D753 /* Search.strings */; };
 		4283FC762799D0C100F3D753 /* Profile.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4283FC752799D0C100F3D753 /* Profile.strings */; };
+		4283FC7F2799E85C00F3D753 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC7E2799E85C00F3D753 /* R.generated.swift */; };
 		42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */ = {isa = PBXBuildFile; productRef = 42E5A3CC27957C8600BA84AA /* Reduxift */; };
 		56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */; };
 		56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */; };
@@ -92,7 +92,6 @@
 		4283FC2027971A4A00F3D753 /* UpcomingMovieResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingMovieResponse.swift; sourceTree = "<group>"; };
 		4283FC2627971F9E00F3D753 /* MVDVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MVDVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4283FC2F2797211900F3D753 /* ResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
-		4283FC3F27996E4F00F3D753 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		4283FC4D27998EB500F3D753 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		4283FC4F27998ED900F3D753 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		4283FC542799BF0300F3D753 /* UpcomingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingViewController.swift; sourceTree = "<group>"; };
@@ -101,10 +100,12 @@
 		4283FC672799C77A00F3D753 /* Home.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Home.strings; sourceTree = "<group>"; };
 		4283FC682799C77A00F3D753 /* Main.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Main.strings; sourceTree = "<group>"; };
 		4283FC692799C77A00F3D753 /* Common.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Common.strings; sourceTree = "<group>"; };
-		4283FC6F2799CC9700F3D753 /* Strings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Strings+Generated.swift"; sourceTree = "<group>"; };
+		4283FC6F2799CC9700F3D753 /* Strings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Strings+Generated.swift"; path = "Strings/Strings+Generated.swift"; sourceTree = "<group>"; };
 		4283FC712799D0B400F3D753 /* Upcoming.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Upcoming.strings; sourceTree = "<group>"; };
 		4283FC732799D0BB00F3D753 /* Search.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Search.strings; sourceTree = "<group>"; };
 		4283FC752799D0C100F3D753 /* Profile.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Profile.strings; sourceTree = "<group>"; };
+		4283FC7E2799E85C00F3D753 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
+		4283FC802799E86200F3D753 /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		56B43F39277BEDDE00EA1E88 /* MVDV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MVDV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -271,6 +272,9 @@
 			isa = PBXGroup;
 			children = (
 				4283FC662799C77A00F3D753 /* Strings */,
+				4283FC6F2799CC9700F3D753 /* Strings+Generated.swift */,
+				4283FC7E2799E85C00F3D753 /* R.generated.swift */,
+				4283FC802799E86200F3D753 /* swiftgen.yml */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -284,7 +288,6 @@
 				4283FC712799D0B400F3D753 /* Upcoming.strings */,
 				4283FC732799D0BB00F3D753 /* Search.strings */,
 				4283FC752799D0C100F3D753 /* Profile.strings */,
-				4283FC6F2799CC9700F3D753 /* Strings+Generated.swift */,
 			);
 			path = Strings;
 			sourceTree = "<group>";
@@ -327,7 +330,6 @@
 				4283FBF02795B3F200F3D753 /* API */,
 				56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */,
 				56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */,
-				4283FC3F27996E4F00F3D753 /* R.generated.swift */,
 				56B43F42277BEDDE00EA1E88 /* Main.storyboard */,
 				56B43F45277BEDE000EA1E88 /* Assets.xcassets */,
 				56B43F47277BEDE000EA1E88 /* LaunchScreen.storyboard */,
@@ -502,11 +504,11 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/R.generated.swift,
+				$SRCROOT/Resources/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# R.swift\n# NOTE: *.strings are parsed by SwiftGen.\n\"$PODS_ROOT/R.swift/rswift\" generate --generators image,color,file,font,nib,segue,storyboard,reuseIdentifier,entitlements,info,id \"$SRCROOT/R.generated.swift\"\n";
+			shellScript = "# R.swift\n# NOTE: *.strings are parsed by SwiftGen.\n\"$PODS_ROOT/R.swift/rswift\" generate --generators image,color,file,font,nib,segue,storyboard,reuseIdentifier,entitlements,info,id \"$SRCROOT/MVDV/Resources/R.generated.swift\"\n";
 		};
 		4283FC642799C60F00F3D753 /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -525,7 +527,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\"\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
+			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" config run --config ${SRCROOT}/MVDV/Resources/swiftgen.yml\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
 		};
 		45E853AEC253A0EFB11B5CE1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -561,7 +563,6 @@
 			files = (
 				4283FC002796E16F00F3D753 /* APIVersion.swift in Sources */,
 				4283FC0C2797107E00F3D753 /* GenreResponse.swift in Sources */,
-				4283FC4027996E4F00F3D753 /* R.generated.swift in Sources */,
 				4283FC552799BF0300F3D753 /* UpcomingViewController.swift in Sources */,
 				4283FC032796E27600F3D753 /* ConfigurationTarget.swift in Sources */,
 				4283FC14279714A700F3D753 /* Language.swift in Sources */,
@@ -577,6 +578,7 @@
 				4283FBF42795B40600F3D753 /* APIService.swift in Sources */,
 				4283FC2127971A4A00F3D753 /* UpcomingMovieResponse.swift in Sources */,
 				4283FC092796F4FE00F3D753 /* HTTP.swift in Sources */,
+				4283FC7F2799E85C00F3D753 /* R.generated.swift in Sources */,
 				4283FBFE2796E14D00F3D753 /* MVDBTarget.swift in Sources */,
 				4283FC1A2797189F00F3D753 /* Movie.swift in Sources */,
 				4283FC702799CC9700F3D753 /* Strings+Generated.swift in Sources */,
