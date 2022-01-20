@@ -34,6 +34,7 @@
 		4283FC302797211900F3D753 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC2F2797211900F3D753 /* ResponseTests.swift */; };
 		4283FC3D27995B3C00F3D753 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4283FC3C27995B3C00F3D753 /* SnapKit */; };
 		4283FC4027996E4F00F3D753 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC3F27996E4F00F3D753 /* R.generated.swift */; };
+		4283FC4A27998E3000F3D753 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 4283FC4927998E3000F3D753 /* Then */; };
 		42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */ = {isa = PBXBuildFile; productRef = 42E5A3CC27957C8600BA84AA /* Reduxift */; };
 		56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */; };
 		56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */; };
@@ -107,6 +108,7 @@
 				4283FBFA2795C44D00F3D753 /* BetterCodable in Frameworks */,
 				42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */,
 				4232CAC2278C7A8800168DE5 /* RxMoya in Frameworks */,
+				4283FC4A27998E3000F3D753 /* Then in Frameworks */,
 				4283FC3D27995B3C00F3D753 /* SnapKit in Frameworks */,
 				4232CAC0278C7A8800168DE5 /* Moya in Frameworks */,
 				F19469850A59FC8267396EC7 /* Pods_MVDV.framework in Frameworks */,
@@ -280,6 +282,7 @@
 				42E5A3CC27957C8600BA84AA /* Reduxift */,
 				4283FBF92795C44D00F3D753 /* BetterCodable */,
 				4283FC3C27995B3C00F3D753 /* SnapKit */,
+				4283FC4927998E3000F3D753 /* Then */,
 			);
 			productName = MVDV;
 			productReference = 56B43F39277BEDDE00EA1E88 /* MVDV.app */;
@@ -318,6 +321,7 @@
 				42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */,
 				4283FBF82795C44D00F3D753 /* XCRemoteSwiftPackageReference "BetterCodable" */,
 				4283FC3B27995B3C00F3D753 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				4283FC4827998E3000F3D753 /* XCRemoteSwiftPackageReference "Then" */,
 			);
 			productRefGroup = 56B43F3A277BEDDE00EA1E88 /* Products */;
 			projectDirPath = "";
@@ -749,6 +753,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		4283FC4827998E3000F3D753 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/skyofdwarf/Reduxift";
@@ -779,6 +791,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4283FC3B27995B3C00F3D753 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		4283FC4927998E3000F3D753 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4283FC4827998E3000F3D753 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
 		};
 		42E5A3CC27957C8600BA84AA /* Reduxift */ = {
 			isa = XCSwiftPackageProductDependency;
