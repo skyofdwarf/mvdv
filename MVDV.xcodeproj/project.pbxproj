@@ -33,6 +33,7 @@
 		4283FC2127971A4A00F3D753 /* UpcomingMovieResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC2027971A4A00F3D753 /* UpcomingMovieResponse.swift */; };
 		4283FC302797211900F3D753 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC2F2797211900F3D753 /* ResponseTests.swift */; };
 		4283FC3D27995B3C00F3D753 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4283FC3C27995B3C00F3D753 /* SnapKit */; };
+		4283FC4027996E4F00F3D753 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4283FC3F27996E4F00F3D753 /* R.generated.swift */; };
 		42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */ = {isa = PBXBuildFile; productRef = 42E5A3CC27957C8600BA84AA /* Reduxift */; };
 		56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */; };
 		56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */; };
@@ -79,6 +80,7 @@
 		4283FC2027971A4A00F3D753 /* UpcomingMovieResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingMovieResponse.swift; sourceTree = "<group>"; };
 		4283FC2627971F9E00F3D753 /* MVDVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MVDVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4283FC2F2797211900F3D753 /* ResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
+		4283FC3F27996E4F00F3D753 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		56B43F39277BEDDE00EA1E88 /* MVDV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MVDV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */,
 				56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */,
 				56B43F40277BEDDE00EA1E88 /* ViewController.swift */,
+				4283FC3F27996E4F00F3D753 /* R.generated.swift */,
 				56B43F42277BEDDE00EA1E88 /* Main.storyboard */,
 				56B43F45277BEDE000EA1E88 /* Assets.xcassets */,
 				56B43F47277BEDE000EA1E88 /* LaunchScreen.storyboard */,
@@ -260,6 +263,7 @@
 			buildConfigurationList = 56B43F4D277BEDE000EA1E88 /* Build configuration list for PBXNativeTarget "MVDV" */;
 			buildPhases = (
 				395DD55066F1A32B116A7463 /* [CP] Check Pods Manifest.lock */,
+				4283FC3E27996C1300F3D753 /* ShellScript */,
 				56B43F35277BEDDE00EA1E88 /* Sources */,
 				56B43F36277BEDDE00EA1E88 /* Frameworks */,
 				56B43F37277BEDDE00EA1E88 /* Resources */,
@@ -368,6 +372,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		4283FC3E27996C1300F3D753 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# R.swift\n\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
+		};
 		45E853AEC253A0EFB11B5CE1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -402,6 +425,7 @@
 			files = (
 				4283FC002796E16F00F3D753 /* APIVersion.swift in Sources */,
 				4283FC0C2797107E00F3D753 /* GenreResponse.swift in Sources */,
+				4283FC4027996E4F00F3D753 /* R.generated.swift in Sources */,
 				4283FC032796E27600F3D753 /* ConfigurationTarget.swift in Sources */,
 				4283FC14279714A700F3D753 /* Language.swift in Sources */,
 				4283FC052796E41000F3D753 /* ErrorResponse.swift in Sources */,

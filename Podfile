@@ -8,6 +8,7 @@ target 'MVDV' do
   use_frameworks!
 
   # Pods for MVDV
+  pod 'R.swift'
 
 end
 

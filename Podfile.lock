@@ -1,8 +1,17 @@
 PODS:
   - Keys (1.0.1)
+  - R.swift (6.1.0):
+    - R.swift.Library (~> 5.3.0)
+  - R.swift.Library (5.3.0)
 
 DEPENDENCIES:
   - Keys (from `Pods/CocoaPodsKeys`)
+  - R.swift
+
+SPEC REPOS:
+  trunk:
+    - R.swift
+    - R.swift.Library
 
 EXTERNAL SOURCES:
   Keys:
@@ -10,7 +19,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Keys: a576f4c9c1c641ca913a959a9c62ed3f215a8de9
+  R.swift: ec98ff71c4ab2f6fd01dd077e5afd15e63a4834c
+  R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
 
-PODFILE CHECKSUM: 5ba82d6cb5f96938df544fbf42b77beeaa9d8cbf
+PODFILE CHECKSUM: e4fd596d3a2f840e17b9df395cedd0df3190a236
 
 COCOAPODS: 1.11.2
