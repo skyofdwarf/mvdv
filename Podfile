@@ -9,6 +9,7 @@ target 'MVDV' do
 
   # Pods for MVDV
   pod 'R.swift'
+  pod 'SwiftGen', '~> 6.0'
 
 end
 

@@ -333,7 +333,8 @@
 			buildConfigurationList = 56B43F4D277BEDE000EA1E88 /* Build configuration list for PBXNativeTarget "MVDV" */;
 			buildPhases = (
 				395DD55066F1A32B116A7463 /* [CP] Check Pods Manifest.lock */,
-				4283FC3E27996C1300F3D753 /* ShellScript */,
+				4283FC642799C60F00F3D753 /* SwiftGen */,
+				4283FC3E27996C1300F3D753 /* R.swift */,
 				56B43F35277BEDDE00EA1E88 /* Sources */,
 				56B43F36277BEDDE00EA1E88 /* Frameworks */,
 				56B43F37277BEDDE00EA1E88 /* Resources */,
@@ -444,7 +445,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4283FC3E27996C1300F3D753 /* ShellScript */ = {
+		4283FC3E27996C1300F3D753 /* R.swift */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -454,6 +455,7 @@
 			);
 			inputPaths = (
 			);
+			name = R.swift;
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -461,7 +463,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# R.swift\n\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
+			shellScript = "# R.swift\n# NOTE: *.strings are parsed by SwiftGen.\n\"$PODS_ROOT/R.swift/rswift\" generate --generators image,color,file,font,nib,segue,storyboard,reuseIdentifier,entitlements,info,id \"$SRCROOT/R.generated.swift\"\n";
+		};
+		4283FC642799C60F00F3D753 /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\"\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
 		};
 		45E853AEC253A0EFB11B5CE1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
