@@ -11,7 +11,9 @@ class SearchViewController: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
         
-        title = Strings.Common.Title.search
+        self.tabBarItem = UITabBarItem(title: Strings.Common.Title.search,
+                                       image: UIImage(systemName: "magnifyingglass"),
+                                       tag: 0)
     }
     
     required init?(coder: NSCoder) {

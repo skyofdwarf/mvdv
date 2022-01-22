@@ -11,7 +11,9 @@ class ProfileViewController: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
         
-        title = Strings.Common.Title.profile
+        self.tabBarItem = UITabBarItem(title: Strings.Common.Title.profile,
+                                       image: UIImage(systemName: "person"),
+                                       tag: 0)
     }
     
     required init?(coder: NSCoder) {

@@ -11,7 +11,9 @@ class UpcomingViewController: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
         
-        self.title = Strings.Common.Title.upcoming
+        self.tabBarItem = UITabBarItem(title: Strings.Common.Title.upcoming,
+                                       image: UIImage(systemName: "film"),
+                                       tag: 0)
     }
     
     required init?(coder: NSCoder) {
