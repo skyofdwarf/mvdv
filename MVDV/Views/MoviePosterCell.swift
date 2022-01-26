@@ -20,17 +20,32 @@ class MoviePosterCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func prepareForReuse() {
+        imageView.kf.cancelDownloadTask()
+    }
 
     func configure() {
-        addSubview(label)
-        addSubview(imageView)
+        contentView.layer.borderColor = UIColor.white.cgColor
+        contentView.layer.borderWidth = 1
+        contentView.layer.cornerRadius = 5
+        contentView.backgroundColor = .lightGray
         
-        label.snp.makeConstraints {
-            $0.center.equalToSuperview()
-        }
+        contentView.addSubview(imageView)
+        contentView.addSubview(label)
         
         imageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        
+        label.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(10)
+        }
+        
+        label.numberOfLines = 0
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = UIFont.preferredFont(forTextStyle: .caption1)
     }
 }

@@ -8,14 +8,23 @@
 import UIKit
 import Then
 import SnapKit
+import RxSwift
+import RxCocoa
+import RxRelay
+import Accelerate
+import Kingfisher
 
 class HomeViewController: UIViewController {
     enum SectionHeaderElementKind: String {
         case header
     }
+
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<HomeSection, HomeItem>!
+    private var indicator: UIActivityIndicatorView!
     
-    lazy var collectionView: UICollectionView = createCollectionView()
-    lazy var dataSource: UICollectionViewDiffableDataSource<Int, Int> = createDataSource()
+    private(set) var db = DisposeBag()
+    let vm = HomeViewModel()
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -33,14 +42,52 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureDataSource()
+        createCollectionView()
+        createDataSource()
+        createIndicator()
+        
+        bindViewModel()
+
+        Observable.just(HomeAction.ready)
+            .bind(to: vm.action)
+            .disposed(by: db)
+    }
+}
+
+// MARK: ViewModel
+
+private extension HomeViewController {
+    func bindViewModel() {
+        vm.state.$fetching
+            .drive(indicator.rx.isAnimating)
+            .disposed(by: db)
+        
+        vm.state.$data
+            .drive(rx.dataSource)
+            .disposed(by: db)
     }
 }
 
 
+// MARK: UI
+
 private extension HomeViewController {
-    func createCollectionView() -> UICollectionView {
-        return UICollectionView(frame:  view.bounds, collectionViewLayout: createLayout()).then {
+    func createIndicator() {
+        indicator = UIActivityIndicatorView(style: .large).then {
+            view.addSubview($0)
+            
+            $0.snp.makeConstraints {
+                $0.center.equalToSuperview()
+            }
+            
+            $0.tintColor = .red
+            $0.hidesWhenStopped = true
+        }
+    }
+    
+    func createCollectionView() {
+        let layout = createLayout()
+        collectionView = UICollectionView(frame:  view.bounds, collectionViewLayout: layout).then {
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
@@ -74,54 +121,79 @@ private extension HomeViewController {
         }
     }
     
-    func createDataSource() -> UICollectionViewDiffableDataSource<Int, Int> {
-        let cellRegistration = UICollectionView.CellRegistration<MoviePosterCell, Int> {
-            (cell, indexPath, identifier) in
-            cell.contentView.layer.borderColor = UIColor.white.cgColor
-            cell.contentView.layer.borderWidth = 1
-            cell.contentView.layer.cornerRadius = 5
-            cell.contentView.backgroundColor = .lightGray
-            
-            cell.label.textColor = .white
-            cell.label.textAlignment = .center
-            cell.label.font = UIFont.preferredFont(forTextStyle: .title1)
-            
-            cell.label.text = "\(indexPath.section), \(indexPath.item)"
+    func createDataSource() {
+        let genreCellRegistration = UICollectionView.CellRegistration<MoviePosterCell, Genre> {
+            (cell, indexPath, genre) in
+            cell.label.text = genre.name
         }
         
-        return UICollectionViewDiffableDataSource<Int, Int>(collectionView: collectionView) {
+        let movieCellRegistration = UICollectionView.CellRegistration<MoviePosterCell, Movie> {
+            [weak self] (cell, indexPath, movie) in
+            guard let self = self else { return }
+            
+            cell.label.text = movie.title
+            
+            let sizes: [String] = self.vm.state.imageConfiguration.poster_sizes
+            let sizeIndex: Int = (sizes.firstIndex(of: "w185") ??
+                                  sizes.firstIndex(of: "w342") ??
+                                  sizes.firstIndex(of: "w500") ??
+                                  sizes.firstIndex(of: "w780") ??
+                                  sizes.firstIndex(of: "original") ??
+                                  sizes.firstIndex(of: "w154") ??
+                                  0)
+            
+            guard let baseUrl = URL(string: self.vm.state.imageConfiguration.secure_base_url),
+                  sizes.count > sizeIndex,
+                  let posterPath = movie.poster_path
+            else { return }
+            
+            let imageUrl = baseUrl
+                .appendingPathComponent(sizes[sizeIndex])
+                .appendingPathComponent(posterPath)
+            cell.imageView.kf.setImage(with: imageUrl)
+        }
+        
+        dataSource = UICollectionViewDiffableDataSource<HomeSection, HomeItem>(collectionView: collectionView) {
             (collectionView, indexPath, identifier) in
             
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+            switch identifier {
+                case .genre(let genre):
+                    return collectionView.dequeueConfiguredReusableCell(using: genreCellRegistration, for: indexPath, item: genre)
+                case .movie(let movie):
+                    return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
+            }
         }.then {
             let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {
-                (supplementaryView, string, indexPath) in
+                (view, kind, indexPath) in
                 
-                
-                supplementaryView.backgroundColor = .lightGray
-                supplementaryView.layer.borderColor = UIColor.white.cgColor
-                supplementaryView.layer.borderWidth = 1
-                supplementaryView.label.text = "\(string) for section \(indexPath.section)"
+                guard let section = HomeSection(rawValue: indexPath.section) else { return }
+                view.label.text = section.title
             }
             
-            $0.supplementaryViewProvider = { (view, kind, index) in
-                print("header kind: \(kind)")
-                return self.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
+            $0.supplementaryViewProvider = { (cv, kind, indexPath) in               
+                return cv.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
             }
         }
     }
     
-    func configureDataSource() {
-        // initial data
-        var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
-        var identifierOffset = 0
-        let itemsPerSection = 30
-        for section in 0..<5 {
-            snapshot.appendSections([section])
-            let maxIdentifier = identifierOffset + itemsPerSection
-            snapshot.appendItems(Array(identifierOffset..<maxIdentifier))
-            identifierOffset += itemsPerSection
+    func applyDataSource(data: [HomeSection: [HomeItem]]) {
+        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeItem>()
+        
+        snapshot.appendSections(HomeSection.allCases)
+        
+        HomeSection.allCases.forEach {
+            guard let items = data[$0] else { return }
+            snapshot.appendItems(items, toSection: $0)
         }
+        
         dataSource.apply(snapshot, animatingDifferences: false)
+    }
+}
+
+extension Reactive where Base: HomeViewController {
+    var dataSource: Binder<[HomeSection: [HomeItem]]> {
+        Binder(base) {
+            $0.applyDataSource(data: $1)
+        }
     }
 }

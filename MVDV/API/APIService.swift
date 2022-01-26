@@ -55,18 +55,39 @@ final class APIService {
     }
     
     // Raw request.rx method
-    func request<D: Decodable>(_ target: MVDBTarget) -> Single<D> {
+    func request<D: Decodable>(_ target: MVDBTarget) -> Observable<D> {
         provider.rx
             .request(MultiTarget(target))
             .filterSuccessfulStatusCodes()
             .map(D.self)
+            .asObservable()
     }
 }
 
 // MARK: Target requests
 
 extension APIService {
-    func configuration() -> Single<ConfigurationResponse> {
+    func configuration() -> Observable<ConfigurationResponse> {
         request(ConfigurationTarget.configuration)
+    }
+
+    func genres() -> Observable<GenreResponse> {
+        request(MovieTarget.genres)
+    }
+    
+    func nowPlaying() -> Observable<NowPlayingMovieResponse> {
+        request(MovieTarget.nowPlaying)
+    }
+    
+    func popular() -> Observable<PopularMovieResponse> {
+        request(MovieTarget.popular)
+    }
+    
+    func topRated() -> Observable<TopRatedMovieResponse> {
+        request(MovieTarget.topRated)
+    }
+    
+    func upcomming() -> Observable<UpcomingMovieResponse> {
+        request(MovieTarget.upcomming)
     }
 }

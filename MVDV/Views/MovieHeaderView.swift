@@ -21,6 +21,10 @@ class MovieHeaderView: UICollectionReusableView {
     }
 
     func configure() {
+        backgroundColor = .lightGray
+        layer.borderColor = UIColor.white.cgColor
+        layer.borderWidth = 1
+        
         addSubview(label)
         
         label.snp.makeConstraints {

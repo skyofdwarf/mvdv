@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Movie: Decodable {
+struct Movie: Decodable, Hashable {
     let poster_path: String?
     let adult: Bool
     let overview: String

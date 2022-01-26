@@ -7,18 +7,18 @@
 
 import Foundation
 
-struct ConfigurationImage: Decodable {
-    let base_url: String
-    let secure_base_url: String
-    let backdrop_sizes: [String]
-    let logo_sizes: [String]
-    let poster_sizes: [String]
-    let profile_sizes: [String]
-    let still_sizes: [String]
+struct ImageConfiguration: Decodable {
+    var base_url: String = "http://image.tmdb.org/t/p/"
+    var secure_base_url: String = "https://image.tmdb.org/t/p/"
+    var backdrop_sizes: [String] = []
+    var logo_sizes: [String] = []
+    var poster_sizes: [String] = []
+    var profile_sizes: [String] = []
+    var still_sizes: [String] = []
 }
 
 struct ConfigurationResponse: Decodable {
-    let images: ConfigurationImage
+    let images: ImageConfiguration
     let change_keys: [String]    
 }
 
