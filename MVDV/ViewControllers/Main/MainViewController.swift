@@ -12,7 +12,8 @@ class MainViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tabBar.tintColor = .purple
+        tabBar.tintColor = .white
+        tabBar.barTintColor = .darkGray
     }
     
     override func viewWillAppear(_ animated: Bool) {

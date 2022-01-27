@@ -21,15 +21,14 @@ class MovieHeaderView: UICollectionReusableView {
     }
 
     func configure() {
-        backgroundColor = .lightGray
-        layer.borderColor = UIColor.white.cgColor
-        layer.borderWidth = 1
-        
         addSubview(label)
         
         label.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(10)
         }
+        
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        label.textColor = .white
     }
 }
 

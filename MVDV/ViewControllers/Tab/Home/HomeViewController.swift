@@ -14,13 +14,18 @@ import RxRelay
 import Accelerate
 import Kingfisher
 
+struct SectionedItem: Hashable {
+    let section: HomeSection
+    let item: HomeItem
+}
+
 class HomeViewController: UIViewController {
     enum SectionHeaderElementKind: String {
         case header
     }
 
     private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<HomeSection, HomeItem>!
+    private var dataSource: UICollectionViewDiffableDataSource<HomeSection, SectionedItem>!
     private var indicator: UIActivityIndicatorView!
     
     private(set) var db = DisposeBag()
@@ -32,7 +37,6 @@ class HomeViewController: UIViewController {
         tabBarItem = UITabBarItem(title: Strings.Common.Title.home,
                                   image: UIImage(systemName: "house"),
                                   tag: 0)
-        view.backgroundColor = .white
     }
     
     required init?(coder: NSCoder) {
@@ -80,7 +84,7 @@ private extension HomeViewController {
                 $0.center.equalToSuperview()
             }
             
-            $0.tintColor = .red
+            $0.color = .red
             $0.hidesWhenStopped = true
         }
     }
@@ -93,36 +97,63 @@ private extension HomeViewController {
                 make.edges.equalToSuperview()
             }
             
-            $0.backgroundColor = .darkGray
+            $0.backgroundColor = .black
         }
     }
     
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5),
-                                                  heightDimension: .fractionalHeight(1))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize).then {
-                $0.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-            }
-            
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.8),
-                                                   heightDimension: .fractionalHeight(0.35))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            
-            return NSCollectionLayoutSection(group: group).then {
-                $0.orthogonalScrollingBehavior = .continuous
-                
-                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                        heightDimension: .estimated(60))
-                let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                                elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                $0.boundarySupplementaryItems = [sectionHeader]
+            switch HomeSection(rawValue: section) {
+                case .genres:
+                    return Self.createGenreSection()
+                    
+                default:
+                    return Self.createMovieSection()
             }
         }
     }
     
+    static func createMovieSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
+                                               heightDimension: .fractionalHeight(0.35))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        return NSCollectionLayoutSection(group: group).then {
+            $0.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+            $0.interGroupSpacing = 10
+            
+            $0.orthogonalScrollingBehavior = .continuous
+            
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                    heightDimension: .estimated(60))
+            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                            elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+            $0.boundarySupplementaryItems = [sectionHeader]
+        }
+    }
+    
+    static func createGenreSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100),
+                                              heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(100),
+                                               heightDimension: .absolute(30))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        return NSCollectionLayoutSection(group: group).then {
+            $0.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+            $0.interGroupSpacing = 10
+            $0.orthogonalScrollingBehavior = .continuous
+        }
+    }
+    
     func createDataSource() {
-        let genreCellRegistration = UICollectionView.CellRegistration<MoviePosterCell, Genre> {
+        let genreCellRegistration = UICollectionView.CellRegistration<GenreCell, Genre> {
             (cell, indexPath, genre) in
             cell.label.text = genre.name
         }
@@ -134,11 +165,11 @@ private extension HomeViewController {
             cell.label.text = movie.title
             
             let sizes: [String] = self.vm.state.imageConfiguration.poster_sizes
-            let sizeIndex: Int = (sizes.firstIndex(of: "w185") ??
-                                  sizes.firstIndex(of: "w342") ??
+            let sizeIndex: Int = (sizes.firstIndex(of: "w342") ??
                                   sizes.firstIndex(of: "w500") ??
                                   sizes.firstIndex(of: "w780") ??
                                   sizes.firstIndex(of: "original") ??
+                                  sizes.firstIndex(of: "w185") ??
                                   sizes.firstIndex(of: "w154") ??
                                   0)
             
@@ -153,10 +184,10 @@ private extension HomeViewController {
             cell.imageView.kf.setImage(with: imageUrl)
         }
         
-        dataSource = UICollectionViewDiffableDataSource<HomeSection, HomeItem>(collectionView: collectionView) {
+        dataSource = UICollectionViewDiffableDataSource<HomeSection, SectionedItem>(collectionView: collectionView) {
             (collectionView, indexPath, identifier) in
-            
-            switch identifier {
+                        
+            switch identifier.item {
                 case .genre(let genre):
                     return collectionView.dequeueConfiguredReusableCell(using: genreCellRegistration, for: indexPath, item: genre)
                 case .movie(let movie):
@@ -177,13 +208,14 @@ private extension HomeViewController {
     }
     
     func applyDataSource(data: [HomeSection: [HomeItem]]) {
-        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, HomeItem>()
+        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, SectionedItem>()
         
         snapshot.appendSections(HomeSection.allCases)
         
-        HomeSection.allCases.forEach {
-            guard let items = data[$0] else { return }
-            snapshot.appendItems(items, toSection: $0)
+        HomeSection.allCases.forEach { section in
+            guard let items = data[section] else { return }
+            let sectionedItems = items.map { SectionedItem(section: section, item: $0) }
+            snapshot.appendItems(sectionedItems, toSection: section)
         }
         
         dataSource.apply(snapshot, animatingDifferences: false)
