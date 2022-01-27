@@ -7,11 +7,16 @@
 
 import UIKit
 import RxSwift
+import Kingfisher
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        #if DEBUG
+        ImageCache.default.clearCache(completion: nil)
+        #endif
+        
         // Override point for customization after application launch.
         
 //        APIService.shared.request(ConfigurationTarget.configuration) { (model: ConfigurationResponse) in
