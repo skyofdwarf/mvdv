@@ -29,8 +29,8 @@ class MoviePosterCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
         
-        contentView.addSubview(imageView)
         contentView.addSubview(label)
+        contentView.addSubview(imageView)        
         
         imageView.snp.makeConstraints {
             $0.edges.equalToSuperview()

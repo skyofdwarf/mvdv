@@ -90,4 +90,8 @@ extension APIService {
     func upcomming() -> Observable<UpcomingMovieResponse> {
         request(MovieTarget.upcomming)
     }
+    
+    func trending() -> Observable<TrendingMovieResponse> {
+        request(MovieTarget.trending)
+    }
 }

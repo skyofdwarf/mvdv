@@ -15,6 +15,7 @@ enum MovieTarget: String, MVDBTarget {
     case nowPlaying = "/movie/now_playing"
     case popular = "/movie/popular"
     case topRated = "/movie/top_rated"
+    case trending = "/trending/movie/day"
     case upcomming = "/movie/upcoming"
 
     case discover = "/discover/movie"

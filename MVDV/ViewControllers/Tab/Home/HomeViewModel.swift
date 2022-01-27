@@ -25,15 +25,17 @@ enum HomeMutation: ViewModelMutation {
 }
 
 enum HomeSection: Int, CaseIterable {
-    case genres
     case nowPlaying
+    case genres
+    case trending
     case popuplar
     case topRated
     
     var title: String {
         switch self {
-            case .genres: return "Genres"
             case .nowPlaying: return "Now Playing"
+            case .genres: return "Genres"
+            case .trending: return "Trending"
             case .popuplar: return "Popular"
             case .topRated: return "Top Rated"
         }
@@ -109,12 +111,14 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
             case .ready:
                 // TODO: fetch all movies
                 return Observable.combineLatest(APIService.shared.configuration(),
+                                                APIService.shared.trending(),
                                                 APIService.shared.genres(),
                                                 APIService.shared.topRated(),
                                                 APIService.shared.popular(),
                                                 APIService.shared.nowPlaying())
-                    .flatMap { (configuration, genres, topRated, popular, nowPlaying) -> Observable<Reaction> in
+                    .flatMap { (configuration, trending, genres, topRated, popular, nowPlaying) -> Observable<Reaction> in
                         let data: [HomeSection: [HomeItem]] = [ .genres: genres.genres.map(HomeItem.genre),
+                                                                .trending: trending.results.map(HomeItem.movie),
                                                                 .nowPlaying: nowPlaying.results.map(HomeItem.movie),
                                                                 .popuplar: popular.results.map(HomeItem.movie),
                                                                 .topRated: topRated.results.map(HomeItem.movie) ]
