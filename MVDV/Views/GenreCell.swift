@@ -21,11 +21,11 @@ class GenreCell: UICollectionViewCell {
     }
     
     func configure() {
-        contentView.layer.borderColor = UIColor.white.cgColor
+        contentView.layer.borderColor = R.color.tmdbColorSecondaryLightBlue()?.cgColor
         contentView.layer.borderWidth = 1
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
-        contentView.backgroundColor = .black
+        contentView.backgroundColor = R.color.tmdbColorPrimaryDarkBlue()
         
         contentView.addSubview(label)
         
@@ -34,7 +34,7 @@ class GenreCell: UICollectionViewCell {
             $0.leading.trailing.equalToSuperview().inset(10)
         }
         
-        label.textColor = .white
+        label.textColor = R.color.tmdbColorSecondaryLightBlue()
         label.textAlignment = .center
         label.numberOfLines = 1
         label.baselineAdjustment = .alignCenters

@@ -12,17 +12,29 @@ class MainViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tabBar.tintColor = .white
-        tabBar.barTintColor = .darkGray
+        tabBar.tintColor = R.color.tmdbColorSecondaryLightBlue()
+        tabBar.barTintColor = R.color.tmdbColorPrimaryDarkBlue()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        viewControllers = [ HomeViewController(),
-                            UpcomingViewController(),
-                            SearchViewController(),
-                            ProfileViewController() ]
+        let navigation = {
+            UINavigationController(rootViewController: $0)
+                .then {
+                    $0.navigationBar.barStyle = .black
+                    $0.navigationBar.barTintColor = R.color.tmdbColorPrimaryDarkBlue()
+                    $0.navigationBar.titleTextAttributes = [
+                        .foregroundColor: R.color.tmdbColorTertiaryLightGreen()!,
+                        .font: UIFont.boldSystemFont(ofSize: 24),
+                    ]
+                }
+        }
+        
+        viewControllers = [ navigation(HomeViewController()),
+                            navigation(UpcomingViewController()),
+                            navigation(SearchViewController()),
+                            navigation(ProfileViewController()) ]
     }
     
 

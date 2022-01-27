@@ -114,10 +114,16 @@ struct R: Rswift.Validatable {
   }
   #endif
 
-  /// This `R.color` struct is generated, and contains static references to 1 colors.
+  /// This `R.color` struct is generated, and contains static references to 4 colors.
   struct color {
     /// Color `AccentColor`.
     static let accentColor = Rswift.ColorResource(bundle: R.hostingBundle, name: "AccentColor")
+    /// Color `tmdb-color-primary-dark-blue`.
+    static let tmdbColorPrimaryDarkBlue = Rswift.ColorResource(bundle: R.hostingBundle, name: "tmdb-color-primary-dark-blue")
+    /// Color `tmdb-color-secondary-light-blue`.
+    static let tmdbColorSecondaryLightBlue = Rswift.ColorResource(bundle: R.hostingBundle, name: "tmdb-color-secondary-light-blue")
+    /// Color `tmdb-color-tertiary-light-green`.
+    static let tmdbColorTertiaryLightGreen = Rswift.ColorResource(bundle: R.hostingBundle, name: "tmdb-color-tertiary-light-green")
 
     #if os(iOS) || os(tvOS)
     /// `UIColor(named: "AccentColor", bundle: ..., traitCollection: ...)`
@@ -128,11 +134,113 @@ struct R: Rswift.Validatable {
     }
     #endif
 
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "tmdb-color-primary-dark-blue", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func tmdbColorPrimaryDarkBlue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.tmdbColorPrimaryDarkBlue, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "tmdb-color-secondary-light-blue", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func tmdbColorSecondaryLightBlue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.tmdbColorSecondaryLightBlue, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "tmdb-color-tertiary-light-green", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func tmdbColorTertiaryLightGreen(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.tmdbColorTertiaryLightGreen, compatibleWith: traitCollection)
+    }
+    #endif
+
     #if os(watchOS)
     /// `UIColor(named: "AccentColor", bundle: ..., traitCollection: ...)`
     @available(watchOSApplicationExtension 4.0, *)
     static func accentColor(_: Void = ()) -> UIKit.UIColor? {
       return UIKit.UIColor(named: R.color.accentColor.name)
+    }
+    #endif
+
+    #if os(watchOS)
+    /// `UIColor(named: "tmdb-color-primary-dark-blue", bundle: ..., traitCollection: ...)`
+    @available(watchOSApplicationExtension 4.0, *)
+    static func tmdbColorPrimaryDarkBlue(_: Void = ()) -> UIKit.UIColor? {
+      return UIKit.UIColor(named: R.color.tmdbColorPrimaryDarkBlue.name)
+    }
+    #endif
+
+    #if os(watchOS)
+    /// `UIColor(named: "tmdb-color-secondary-light-blue", bundle: ..., traitCollection: ...)`
+    @available(watchOSApplicationExtension 4.0, *)
+    static func tmdbColorSecondaryLightBlue(_: Void = ()) -> UIKit.UIColor? {
+      return UIKit.UIColor(named: R.color.tmdbColorSecondaryLightBlue.name)
+    }
+    #endif
+
+    #if os(watchOS)
+    /// `UIColor(named: "tmdb-color-tertiary-light-green", bundle: ..., traitCollection: ...)`
+    @available(watchOSApplicationExtension 4.0, *)
+    static func tmdbColorTertiaryLightGreen(_: Void = ()) -> UIKit.UIColor? {
+      return UIKit.UIColor(named: R.color.tmdbColorTertiaryLightGreen.name)
+    }
+    #endif
+
+    fileprivate init() {}
+  }
+
+  /// This `R.image` struct is generated, and contains static references to 5 images.
+  struct image {
+    /// Image `tmdb-logo-alt-long-blue`.
+    static let tmdbLogoAltLongBlue = Rswift.ImageResource(bundle: R.hostingBundle, name: "tmdb-logo-alt-long-blue")
+    /// Image `tmdb-logo-alt-short-blue`.
+    static let tmdbLogoAltShortBlue = Rswift.ImageResource(bundle: R.hostingBundle, name: "tmdb-logo-alt-short-blue")
+    /// Image `tmdb-logo-primary-full`.
+    static let tmdbLogoPrimaryFull = Rswift.ImageResource(bundle: R.hostingBundle, name: "tmdb-logo-primary-full")
+    /// Image `tmdb-logo-primary-long-blue`.
+    static let tmdbLogoPrimaryLongBlue = Rswift.ImageResource(bundle: R.hostingBundle, name: "tmdb-logo-primary-long-blue")
+    /// Image `tmdb-logo-primary-short-blue`.
+    static let tmdbLogoPrimaryShortBlue = Rswift.ImageResource(bundle: R.hostingBundle, name: "tmdb-logo-primary-short-blue")
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "tmdb-logo-alt-long-blue", bundle: ..., traitCollection: ...)`
+    static func tmdbLogoAltLongBlue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.tmdbLogoAltLongBlue, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "tmdb-logo-alt-short-blue", bundle: ..., traitCollection: ...)`
+    static func tmdbLogoAltShortBlue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.tmdbLogoAltShortBlue, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "tmdb-logo-primary-full", bundle: ..., traitCollection: ...)`
+    static func tmdbLogoPrimaryFull(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.tmdbLogoPrimaryFull, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "tmdb-logo-primary-long-blue", bundle: ..., traitCollection: ...)`
+    static func tmdbLogoPrimaryLongBlue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.tmdbLogoPrimaryLongBlue, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "tmdb-logo-primary-short-blue", bundle: ..., traitCollection: ...)`
+    static func tmdbLogoPrimaryShortBlue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.tmdbLogoPrimaryShortBlue, compatibleWith: traitCollection)
     }
     #endif
 

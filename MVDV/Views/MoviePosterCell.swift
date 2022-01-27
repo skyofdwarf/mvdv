@@ -42,7 +42,7 @@ class MoviePosterCell: UICollectionViewCell {
         }
         
         label.numberOfLines = 0
-        label.textColor = .white
+        label.textColor = R.color.tmdbColorTertiaryLightGreen()
         label.textAlignment = .center
         label.font = UIFont.preferredFont(forTextStyle: .body)
     }

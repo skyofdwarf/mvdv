@@ -34,9 +34,17 @@ class HomeViewController: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
         
+        title = "ㅁㅂㄷㅂ"
+        
         tabBarItem = UITabBarItem(title: Strings.Common.Title.home,
                                   image: UIImage(systemName: "house"),
                                   tag: 0)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle.fill"),
+                                                            style: .plain,
+                                                            target: nil,
+                                                            action: nil)
+            .then { $0.tintColor = R.color.tmdbColorTertiaryLightGreen() }
     }
     
     required init?(coder: NSCoder) {
@@ -84,7 +92,7 @@ private extension HomeViewController {
                 $0.center.equalToSuperview()
             }
             
-            $0.color = .red
+            $0.color = R.color.tmdbColorTertiaryLightGreen()
             $0.hidesWhenStopped = true
         }
     }

@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "tmdb-logo-alt-long-blue.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
