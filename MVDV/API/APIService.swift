@@ -18,8 +18,10 @@ final class APIService {
     
     fileprivate lazy var provider: MoyaProvider<MultiTarget> = {
 #if DEBUG
+        let configuration = NetworkLoggerPlugin.Configuration(logOptions: .verbose)
+        
         let plugins: [PluginType] = [
-            NetworkLoggerPlugin(),
+            NetworkLoggerPlugin(configuration: configuration),
             AccessTokenPlugin(tokenClosure: { _ in accessToken })
         ]
         
