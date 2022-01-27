@@ -115,29 +115,55 @@ private extension HomeViewController {
                 case .genres:
                     return Self.createGenreSection()
                     
+                case .nowPlaying:
+                    return Self.createMovieBackdropSection()
+                    
                 default:
-                    return Self.createMovieSection()
+                    return Self.createMoviePosterSection()
             }
         }
     }
     
-    static func createMovieSection() -> NSCollectionLayoutSection {
+    static func createMovieBackdropSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                               heightDimension: .fractionalWidth(1/1.78))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        return NSCollectionLayoutSection(group: group).then {
+            $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0)
+            $0.orthogonalScrollingBehavior = .paging
+            
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                    heightDimension: .estimated(50))
+            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                            elementKind: UICollectionView.elementKindSectionHeader,
+                                                                            alignment: .top,
+                                                                            absoluteOffset: CGPoint(x: 10, y: 0))
+            //sectionHeader.extendsBoundary = false
+            $0.boundarySupplementaryItems = [sectionHeader]
+        }
+    }
+    
+    static func createMoviePosterSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
-                                               heightDimension: .fractionalHeight(0.35))
+                                               heightDimension: .fractionalWidth(0.4*1.5))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         return NSCollectionLayoutSection(group: group).then {
-            $0.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+            $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
             $0.interGroupSpacing = 10
-            
             $0.orthogonalScrollingBehavior = .continuous
             
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                    heightDimension: .estimated(60))
+                                                    heightDimension: .estimated(50))
             let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
                                                                             elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
             $0.boundarySupplementaryItems = [sectionHeader]
@@ -154,9 +180,15 @@ private extension HomeViewController {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         return NSCollectionLayoutSection(group: group).then {
-            $0.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+            $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
             $0.interGroupSpacing = 10
             $0.orthogonalScrollingBehavior = .continuous
+            
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                    heightDimension: .estimated(50))
+            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                            elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+            $0.boundarySupplementaryItems = [sectionHeader]
         }
     }
     
@@ -166,7 +198,7 @@ private extension HomeViewController {
             cell.label.text = genre.name
         }
         
-        let movieCellRegistration = UICollectionView.CellRegistration<MoviePosterCell, Movie> {
+        let moviePosterCellRegistration = UICollectionView.CellRegistration<MoviePosterCell, Movie> {
             [weak self] (cell, indexPath, movie) in
             guard let self = self else { return }
             
@@ -192,14 +224,45 @@ private extension HomeViewController {
             cell.imageView.kf.setImage(with: imageUrl)
         }
         
+        let movieBackdropCellRegistration = UICollectionView.CellRegistration<MovieBackdropCell, Movie> {
+            [weak self] (cell, indexPath, movie) in
+            guard let self = self else { return }
+            
+            cell.label.text = movie.title
+            
+            let sizes: [String] = self.vm.state.imageConfiguration.backdrop_sizes
+            let sizeIndex: Int = (sizes.firstIndex(of: "w780") ??
+                                  sizes.firstIndex(of: "w1280") ??
+                                  sizes.firstIndex(of: "w300") ??
+                                  sizes.firstIndex(of: "original") ??
+                                  max(0, sizes.count - 1))
+            
+            guard let baseUrl = URL(string: self.vm.state.imageConfiguration.secure_base_url),
+                  sizes.count > sizeIndex,
+                  let posterPath = movie.backdrop_path
+            else { return }
+            
+            let imageUrl = baseUrl
+                .appendingPathComponent(sizes[sizeIndex])
+                .appendingPathComponent(posterPath)
+            cell.imageView.kf.setImage(with: imageUrl)
+        }
+        
         dataSource = UICollectionViewDiffableDataSource<HomeSection, SectionedItem>(collectionView: collectionView) {
             (collectionView, indexPath, identifier) in
+            
+            guard let section = HomeSection(rawValue: indexPath.section) else { return nil }
                         
             switch identifier.item {
                 case .genre(let genre):
                     return collectionView.dequeueConfiguredReusableCell(using: genreCellRegistration, for: indexPath, item: genre)
                 case .movie(let movie):
-                    return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
+                    switch section {
+                        case .nowPlaying:
+                            return collectionView.dequeueConfiguredReusableCell(using: movieBackdropCellRegistration, for: indexPath, item: movie)
+                        default:
+                            return collectionView.dequeueConfiguredReusableCell(using: moviePosterCellRegistration, for: indexPath, item: movie)
+                    }
             }
         }.then {
             let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {

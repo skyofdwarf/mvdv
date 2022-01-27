@@ -24,7 +24,7 @@ class MovieHeaderView: UICollectionReusableView {
         addSubview(label)
         
         label.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(10)
+            $0.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0))
         }
         
         label.font = UIFont.preferredFont(forTextStyle: .headline)
