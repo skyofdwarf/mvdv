@@ -96,4 +96,8 @@ extension APIService {
     func trending() -> Observable<TrendingMovieResponse> {
         request(MovieTarget.trending)
     }
+    
+    func detail(id: Int) -> Observable<MovieDetailResponse> {
+        request(MovieTarget.detail(id))
+    }
 }

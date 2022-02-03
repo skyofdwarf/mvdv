@@ -65,5 +65,11 @@ class LastestMovieResponseTests: XCTestCase {
         
         XCTAssertNoThrow(try JSONDecoder().decode(UpcomingMovieResponse.self, from: data!))
     }
+    
+    func testResponseParsing_movieDetail() throws {
+        let data = MovieDetailResponse.json.data(using: .utf8)
+        
+        XCTAssertNoThrow(try JSONDecoder().decode(MovieDetailResponse.self, from: data!))
+    }
 }
 

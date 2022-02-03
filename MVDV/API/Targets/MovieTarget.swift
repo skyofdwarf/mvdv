@@ -8,15 +8,30 @@
 import Foundation
 import Moya
 
-enum MovieTarget: String, MVDBTarget {
-    case genres = "genre/movie/list"
+enum MovieTarget: MVDBTarget {
+    case genres
+    case detail(Int)
+    case latest
+    case nowPlaying
+    case popular
+    case topRated
+    case trending
+    case upcomming
+    case discover
+}
 
-    case latest = "/movie/latest"
-    case nowPlaying = "/movie/now_playing"
-    case popular = "/movie/popular"
-    case topRated = "/movie/top_rated"
-    case trending = "/trending/movie/day"
-    case upcomming = "/movie/upcoming"
-
-    case discover = "/discover/movie"
+extension MovieTarget {
+    var path: String {
+        switch self {
+            case .genres: return "genre/movie/list"
+            case .detail(let id): return "/movie/\(id)"
+            case .latest: return "/movie/latest"
+            case .nowPlaying: return "/movie/now_playing"
+            case .popular: return "/movie/popular"
+            case .topRated: return "/movie/top_rated"
+            case .trending: return "/trending/movie/day"
+            case .upcomming: return "/movie/upcoming"
+            case .discover: return "/discover/movie"
+        }
+    }
 }
