@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MovieDetailResponse: Decodable {
+struct MovieDetailResponse: Decodable, Hashable {
     enum Status: String, Decodable {
         case Rumored, Planned, InProduction = "In Production",
              PostProduction = "Post Production",

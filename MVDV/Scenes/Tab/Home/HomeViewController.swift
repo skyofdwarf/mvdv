@@ -80,6 +80,33 @@ private extension HomeViewController {
     }
 }
 
+// MARK: UICollectionViewDelegate
+
+extension HomeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let sectionedItem = dataSource.itemIdentifier(for: indexPath),
+              case .movie(let movie) = sectionedItem.item,
+              let size = vm.state.imageConfiguration.backdrop_sizes.last
+        else {
+            return
+        }
+        
+        guard let baseUrl = URL(string: vm.state.imageConfiguration.secure_base_url),
+              let posterPath = movie.backdrop_path
+        else { return }
+        
+        let imageUrl = baseUrl
+            .appendingPathComponent(size)
+            .appendingPathComponent(posterPath)
+        
+        let vc = MovieDetailViewController().then {
+            $0.vm = MovieDetailViewModel(movieId: movie.id, backdrop: imageUrl)
+        }
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
 
 // MARK: UI
 
@@ -105,6 +132,7 @@ private extension HomeViewController {
                 make.edges.equalToSuperview()
             }
             
+            $0.delegate = self
             $0.backgroundColor = .black
         }
     }
