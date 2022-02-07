@@ -44,7 +44,6 @@ class HomeViewController: UIViewController {
                                                             style: .plain,
                                                             target: nil,
                                                             action: nil)
-            .then { $0.tintColor = R.color.tmdbColorTertiaryLightGreen() }
     }
     
     required init?(coder: NSCoder) {

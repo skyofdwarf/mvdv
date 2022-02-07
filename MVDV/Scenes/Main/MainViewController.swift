@@ -23,7 +23,9 @@ class MainViewController: UITabBarController {
             UINavigationController(rootViewController: $0)
                 .then {
                     $0.navigationBar.barStyle = .black
+                    $0.navigationBar.isTranslucent = true
                     $0.navigationBar.barTintColor = R.color.tmdbColorPrimaryDarkBlue()
+                    $0.navigationBar.tintColor = R.color.tmdbColorTertiaryLightGreen()
                     $0.navigationBar.titleTextAttributes = [
                         .foregroundColor: R.color.tmdbColorTertiaryLightGreen()!,
                         .font: UIFont.boldSystemFont(ofSize: 24),

@@ -21,25 +21,24 @@ class MovieDetailViewController: UIViewController {
     
     private(set) var db = DisposeBag()
     var vm: MovieDetailViewModel!
-    
+
+    private var backgroundView: UIView!
     private var imageView: UIImageView!
+    private var imageDefaultHeight: CGFloat = 0
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.clipsToBounds = true
         view.backgroundColor = .black
-        
-        imageView = UIImageView().then {
-            $0.contentMode = .scaleAspectFill
-            
-            view.addSubview($0)
-            
-            $0.snp.makeConstraints { make in
-                make.top.leading.trailing.equalToSuperview()
-                make.height.equalTo(300)
-            }
-        }
         
         createCollectionView()
         createDataSource()
@@ -54,6 +53,13 @@ class MovieDetailViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        imageDefaultHeight = (view.bounds.width / 1.78)
+        collectionView.contentInset = UIEdgeInsets(top: imageDefaultHeight, left: 0, bottom: 0, right: 0)
     }
 }
 
@@ -83,6 +89,7 @@ private extension MovieDetailViewController {
             .disposed(by: db)
     }
 }
+
 // MARK: UI
 
 private extension MovieDetailViewController {
@@ -100,6 +107,18 @@ private extension MovieDetailViewController {
     }
     
     func createCollectionView() {
+        backgroundView = UIView().then {
+            $0.backgroundColor = .black
+            $0.frame = view.bounds
+            
+            imageView = UIImageView()
+            imageView.contentMode = .scaleAspectFill
+            imageView.autoresizingMask = [ .flexibleLeftMargin, .flexibleTopMargin, .flexibleRightMargin ]
+            imageView.frame = view.bounds.with { $0.size.height = $0.size.width / 1.78 }
+            
+            $0.addSubview(imageView)
+        }
+        
         let layout = createLayout()
         collectionView = UICollectionView(frame:  view.bounds, collectionViewLayout: layout).then {
             view.addSubview($0)
@@ -107,9 +126,10 @@ private extension MovieDetailViewController {
                 make.edges.equalToSuperview()
             }
             
-            $0.backgroundColor = .clear
-            $0.contentInset = UIEdgeInsets(top: 300, left: 0, bottom: 0, right: 0)
             
+            $0.delegate = self
+            $0.backgroundView = backgroundView
+            $0.contentInset = UIEdgeInsets(top: view.bounds.width / 1.78, left: 0, bottom: 0, right: 0)
         }
     }
     
@@ -158,6 +178,28 @@ private extension MovieDetailViewController {
 //        }
 //
         dataSource.apply(snapshot, animatingDifferences: false)
+    }
+}
+
+// MARK: UICollectionViewDelegate
+
+extension MovieDetailViewController: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let y = scrollView.contentInset.top + scrollView.safeAreaInsets.top
+        
+        if scrollView.contentOffset.y < -y {
+            let height = imageDefaultHeight + abs(y + scrollView.contentOffset.y)
+            
+            imageView.frame = backgroundView.bounds.with { $0.size.height = height }
+            
+        } else {
+            let y = scrollView.contentOffset.y + y
+                
+            imageView.frame = backgroundView.bounds.with {
+                $0.size.height = imageDefaultHeight
+                $0.origin.y = -abs(y)
+            }
+        }
     }
 }
 
