@@ -14,7 +14,7 @@ class MovieBackdropCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        setup()
     }
     
     required init?(coder: NSCoder) {
@@ -25,7 +25,7 @@ class MovieBackdropCell: UICollectionViewCell {
         imageView.kf.cancelDownloadTask()
     }
 
-    func configure() {
+    func setup() {
         contentView.addSubview(label)
         contentView.addSubview(imageView)
         

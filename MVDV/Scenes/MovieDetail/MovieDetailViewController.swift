@@ -25,6 +25,7 @@ class MovieDetailViewController: UIViewController {
     private var backgroundView: UIView!
     private var imageView: UIImageView!
     private var imageDefaultHeight: CGFloat = 0
+    var imageViewHeightConstraint: Constraint!
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -36,6 +37,8 @@ class MovieDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        edgesForExtendedLayout = [ .top ]
         
         view.clipsToBounds = true
         view.backgroundColor = .black
@@ -59,7 +62,10 @@ class MovieDetailViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         imageDefaultHeight = (view.bounds.width / 1.78)
-        collectionView.contentInset = UIEdgeInsets(top: imageDefaultHeight, left: 0, bottom: 0, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: imageDefaultHeight - view.safeAreaInsets.top,
+                                                   left: 0,
+                                                   bottom: -imageDefaultHeight,
+                                                   right: 0)
     }
 }
 
@@ -107,16 +113,22 @@ private extension MovieDetailViewController {
     }
     
     func createCollectionView() {
+        imageDefaultHeight = (view.bounds.width / 1.78)
+        
         backgroundView = UIView().then {
             $0.backgroundColor = .black
             $0.frame = view.bounds
             
             imageView = UIImageView()
             imageView.contentMode = .scaleAspectFill
-            imageView.autoresizingMask = [ .flexibleLeftMargin, .flexibleTopMargin, .flexibleRightMargin ]
-            imageView.frame = view.bounds.with { $0.size.height = $0.size.width / 1.78 }
             
             $0.addSubview(imageView)
+            
+            imageView.snp.makeConstraints { make in
+                make.top.equalToSuperview()
+                make.leading.trailing.equalToSuperview()
+                imageViewHeightConstraint = make.height.equalTo(imageDefaultHeight).constraint
+            }
         }
         
         let layout = createLayout()
@@ -126,10 +138,9 @@ private extension MovieDetailViewController {
                 make.edges.equalToSuperview()
             }
             
-            
             $0.delegate = self
+            $0.indicatorStyle = .white
             $0.backgroundView = backgroundView
-            $0.contentInset = UIEdgeInsets(top: view.bounds.width / 1.78, left: 0, bottom: 0, right: 0)
         }
     }
     
@@ -148,9 +159,9 @@ private extension MovieDetailViewController {
     }
     
     func createDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, MovieDetailResponse> {
-            (cell, indexPath, genre) in
-            //cell.label.text = genre.title
+        let cellRegistration = UICollectionView.CellRegistration<MovieDetailCell, MovieDetailResponse> {
+            (cell, indexPath, detail) in
+            cell.configure(detail)
         }
         
         dataSource = UICollectionViewDiffableDataSource<MovieDetailSection, MovieDetailResponse>(collectionView: collectionView) {
@@ -190,15 +201,18 @@ extension MovieDetailViewController: UICollectionViewDelegate {
         if scrollView.contentOffset.y < -y {
             let height = imageDefaultHeight + abs(y + scrollView.contentOffset.y)
             
-            imageView.frame = backgroundView.bounds.with { $0.size.height = height }
+            imageView.frame = backgroundView.bounds//.with { /* $0.size.height = height*/ }
+            self.imageViewHeightConstraint!.update(offset: height)
+            
             
         } else {
             let y = scrollView.contentOffset.y + y
                 
             imageView.frame = backgroundView.bounds.with {
-                $0.size.height = imageDefaultHeight
+                //$0.size.height = imageDefaultHeight
                 $0.origin.y = -abs(y)
             }
+            self.imageViewHeightConstraint!.update(offset: imageDefaultHeight)
         }
     }
 }

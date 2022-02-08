@@ -14,7 +14,7 @@ class MoviePosterCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        setup()
     }
     
     required init?(coder: NSCoder) {
@@ -25,7 +25,7 @@ class MoviePosterCell: UICollectionViewCell {
         imageView.kf.cancelDownloadTask()
     }
 
-    func configure() {
+    func setup() {
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
         

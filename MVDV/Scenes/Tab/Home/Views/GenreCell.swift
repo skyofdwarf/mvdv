@@ -13,14 +13,14 @@ class GenreCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        setup()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure() {
+    func setup() {
         contentView.layer.borderColor = R.color.tmdbColorSecondaryLightBlue()?.cgColor
         contentView.layer.borderWidth = 1
         contentView.layer.cornerRadius = 10

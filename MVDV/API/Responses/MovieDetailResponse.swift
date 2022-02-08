@@ -30,6 +30,8 @@ struct MovieDetailResponse: Decodable, Hashable {
     let overview: String?
     let popularity: Float
     let poster_path: String?
+    let release_date: String
+    let runtime: Int?
     let status: Status
     let tagline: String?
     let title: String
