@@ -100,4 +100,8 @@ extension APIService {
     func detail(id: Int) -> Observable<MovieDetailResponse> {
         request(MovieTarget.detail(id))
     }
+    
+    func similar(id: Int) -> Observable<MovieDetailResponse> {
+        request(MovieTarget.similar(id))
+    }
 }
