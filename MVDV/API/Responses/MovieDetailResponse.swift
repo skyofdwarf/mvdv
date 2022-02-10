@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MovieDetailResponse: Decodable, Hashable {
+struct MovieDetailResponse: Decodable {
     enum Status: String, Decodable {
         case Rumored, Planned, InProduction = "In Production",
              PostProduction = "Post Production",
@@ -38,7 +38,22 @@ struct MovieDetailResponse: Decodable, Hashable {
     let video: Bool
     let vote_average: Float
     let vote_count: Int
+    
+    let videos: MovieVideosResponse
+    let images: MovieImagesResponse
+    let similar: SimilarMovieResponse
 }
+
+extension MovieDetailResponse: Hashable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
 
 #if DEBUG
 extension MovieDetailResponse {
