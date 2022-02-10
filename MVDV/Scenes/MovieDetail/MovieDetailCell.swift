@@ -68,7 +68,6 @@ class MovieDetailCell: UICollectionViewCell {
             sv.addArrangedSubview(runtimeAndDateView)
             sv.addArrangedSubview(genresLabel)
             sv.addArrangedSubview(overviewLabel)
-            
         }
     }
     

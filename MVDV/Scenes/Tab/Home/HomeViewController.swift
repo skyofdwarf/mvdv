@@ -31,6 +31,8 @@ class HomeViewController: UIViewController {
     private(set) var db = DisposeBag()
     let vm = HomeViewModel()
     
+    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
+
     init() {
         super.init(nibName: nil, bundle: nil)
         
@@ -39,11 +41,30 @@ class HomeViewController: UIViewController {
         tabBarItem = UITabBarItem(title: Strings.Common.Title.home,
                                   image: UIImage(systemName: "house"),
                                   tag: 0)
-        
+        if #available(iOS 14, *) {
+            navigationItem.backButtonDisplayMode = .minimal
+        } else {
+            navigationItem.backButtonTitle = ""
+        }
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle.fill"),
                                                             style: .plain,
                                                             target: nil,
                                                             action: nil)
+        navigationItem.standardAppearance = UINavigationBarAppearance().then {
+            $0.backgroundColor = R.color.tmdbColorPrimaryDarkBlue()
+            $0.titleTextAttributes = [
+                .foregroundColor: R.color.tmdbColorTertiaryLightGreen()!,
+                .font: UIFont.boldSystemFont(ofSize: 24),
+            ]
+        }
+        navigationItem.scrollEdgeAppearance = UINavigationBarAppearance().then {
+            $0.configureWithTransparentBackground()
+            $0.titleTextAttributes = [
+                .foregroundColor: R.color.tmdbColorTertiaryLightGreen()!,
+                .font: UIFont.boldSystemFont(ofSize: 24),
+            ]
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -101,7 +122,6 @@ extension HomeViewController: UICollectionViewDelegate {
         let vc = MovieDetailViewController().then {
             $0.vm = MovieDetailViewModel(movieId: movie.id, backdrop: imageUrl)
         }
-        
         navigationController?.pushViewController(vc, animated: true)
     }
 }

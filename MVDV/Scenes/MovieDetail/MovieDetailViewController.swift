@@ -25,10 +25,19 @@ class MovieDetailViewController: UIViewController {
     private var backgroundView: UIView!
     private var imageView: UIImageView!
     private var imageDefaultHeight: CGFloat = 0
-    var imageViewHeightConstraint: Constraint!
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
     
     init() {
         super.init(nibName: nil, bundle: nil)
+        
+        navigationItem.standardAppearance = .init().then {
+            $0.configureWithTransparentBackground()
+        }
+        
+        navigationItem.scrollEdgeAppearance = .init().then {
+            $0.configureWithTransparentBackground()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -37,8 +46,6 @@ class MovieDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        edgesForExtendedLayout = [ .top ]
         
         view.clipsToBounds = true
         view.backgroundColor = .black
@@ -58,14 +65,14 @@ class MovieDetailViewController: UIViewController {
         super.viewWillAppear(animated)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        imageDefaultHeight = (view.bounds.width / 1.78)
-        collectionView.contentInset = UIEdgeInsets(top: imageDefaultHeight - view.safeAreaInsets.top,
-                                                   left: 0,
-                                                   bottom: -imageDefaultHeight,
-                                                   right: 0)
+        updateBackdrop()
     }
 }
 
@@ -122,13 +129,9 @@ private extension MovieDetailViewController {
             imageView = UIImageView()
             imageView.contentMode = .scaleAspectFill
             
-            $0.addSubview(imageView)
+            imageView.frame = $0.bounds.with { $0.size.height = imageDefaultHeight }
             
-            imageView.snp.makeConstraints { make in
-                make.top.equalToSuperview()
-                make.leading.trailing.equalToSuperview()
-                imageViewHeightConstraint = make.height.equalTo(imageDefaultHeight).constraint
-            }
+            $0.addSubview(imageView)
         }
         
         let layout = createLayout()
@@ -146,13 +149,11 @@ private extension MovieDetailViewController {
     
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                                  heightDimension: .fractionalHeight(1))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .estimated(200))
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                                   heightDimension: .fractionalHeight(1))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            let item = NSCollectionLayoutItem(layoutSize: size)
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitems: [item])
             
             return NSCollectionLayoutSection(group: group)
         }
@@ -190,30 +191,39 @@ private extension MovieDetailViewController {
 //
         dataSource.apply(snapshot, animatingDifferences: false)
     }
+    
+    func updateBackdrop() {
+        imageDefaultHeight = (view.bounds.width / 1.78)
+        collectionView.contentInset = UIEdgeInsets(top: imageDefaultHeight - view.safeAreaInsets.top,
+                                                   left: 0,
+                                                   bottom: 0,//-imageDefaultHeight,
+                                                   right: 0)
+        updateBackdropHeight(defaultHeight: imageDefaultHeight, scrollView: collectionView)
+    }
+    
+    func updateBackdropHeight(defaultHeight: CGFloat, scrollView: UIScrollView) {
+        let y = scrollView.contentInset.top + scrollView.safeAreaInsets.top
+        
+        if scrollView.contentOffset.y < -y {
+            let height = imageDefaultHeight + abs(y + scrollView.contentOffset.y)
+            
+            imageView.frame = scrollView.frame.with { $0.size.height = height }
+        } else {
+            let y = scrollView.contentOffset.y + y
+                
+            imageView.frame = scrollView.frame.with {
+                $0.size.height = imageDefaultHeight
+                $0.origin.y = -abs(y)
+            }
+        }
+    }
 }
 
 // MARK: UICollectionViewDelegate
 
 extension MovieDetailViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let y = scrollView.contentInset.top + scrollView.safeAreaInsets.top
-        
-        if scrollView.contentOffset.y < -y {
-            let height = imageDefaultHeight + abs(y + scrollView.contentOffset.y)
-            
-            imageView.frame = backgroundView.bounds//.with { /* $0.size.height = height*/ }
-            self.imageViewHeightConstraint!.update(offset: height)
-            
-            
-        } else {
-            let y = scrollView.contentOffset.y + y
-                
-            imageView.frame = backgroundView.bounds.with {
-                //$0.size.height = imageDefaultHeight
-                $0.origin.y = -abs(y)
-            }
-            self.imageViewHeightConstraint!.update(offset: imageDefaultHeight)
-        }
+        updateBackdropHeight(defaultHeight: imageDefaultHeight, scrollView: scrollView)
     }
 }
 
