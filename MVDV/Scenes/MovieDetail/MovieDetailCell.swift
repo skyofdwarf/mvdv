@@ -29,8 +29,8 @@ class MovieDetailCell: UICollectionViewCell {
     
     func setup() {
         titleLabel.font = UIFont.preferredFont(forTextStyle: .title1)
-        releaseDateLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
-        runtimeLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+        releaseDateLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        runtimeLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         overviewLabel.font = UIFont.preferredFont(forTextStyle: .body)
         genresLabel.font = UIFont.preferredFont(forTextStyle: .caption2)
         
@@ -52,8 +52,7 @@ class MovieDetailCell: UICollectionViewCell {
             
             contentView.addSubview(sv)
             sv.snp.makeConstraints { make in
-                make.top.leading.trailing.equalToSuperview().inset(UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18))
-                make.bottom.lessThanOrEqualToSuperview()
+                make.edges.equalToSuperview()
             }
             
             let runtimeAndDateView = UIStackView().then {

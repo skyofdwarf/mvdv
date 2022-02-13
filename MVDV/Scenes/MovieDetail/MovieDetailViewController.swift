@@ -15,8 +15,27 @@ import Kingfisher
 import Moya
 
 class MovieDetailViewController: UIViewController {
+    enum Section: Int, CaseIterable {
+        case detail
+        //case video
+        case similar
+        
+        var title: String {
+            switch self {
+                case .detail: return "Details"
+                //case .video: return "Videos"
+                case .similar: return "Similar movies"
+            }
+        }
+    }
+    
+    enum Item: Hashable {
+        case detail(MovieDetailResponse)
+        case movie(Movie)
+    }
+    
     private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<MovieDetailSection, MovieDetailResponse>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var indicator: UIActivityIndicatorView!
     
     private(set) var db = DisposeBag()
@@ -149,46 +168,110 @@ private extension MovieDetailViewController {
     
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
-            let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: .estimated(200))
-            
-            let item = NSCollectionLayoutItem(layoutSize: size)
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitems: [item])
-            
-            return NSCollectionLayoutSection(group: group)
+            switch Section(rawValue: section) {
+                case .detail:
+                    let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                                      heightDimension: .estimated(200))
+                    
+                    let item = NSCollectionLayoutItem(layoutSize: size)
+                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitems: [item])
+                    return NSCollectionLayoutSection(group: group).then {
+                        $0.contentInsets = NSDirectionalEdgeInsets(top: 18, leading: 18, bottom: 18, trailing: 18)
+                    }
+                case .similar:
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                                          heightDimension: .fractionalHeight(1))
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    
+                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
+                                                           heightDimension: .fractionalWidth(0.4*1.5))
+                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                    
+                    return NSCollectionLayoutSection(group: group).then {
+                        $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
+                        $0.interGroupSpacing = 10
+                        $0.orthogonalScrollingBehavior = .continuous
+                        
+                        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                                heightDimension: .estimated(50))
+                        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                                        elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                        $0.boundarySupplementaryItems = [sectionHeader]
+                    }
+                default:
+                    return nil
+            }
         }
     }
     
     func createDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<MovieDetailCell, MovieDetailResponse> {
+        let detailCellRegistration = UICollectionView.CellRegistration<MovieDetailCell, MovieDetailResponse> {
             (cell, indexPath, detail) in
             cell.configure(detail)
         }
         
-        dataSource = UICollectionViewDiffableDataSource<MovieDetailSection, MovieDetailResponse>(collectionView: collectionView) {
+        let movieCellRegistration = UICollectionView.CellRegistration<MoviePosterCell, Movie> {
+            [weak self] (cell, indexPath, movie) in
+            guard let self = self else { return }
+            
+            cell.label.text = movie.title
+            
+            let sizes: [String] = self.vm.imageConfiguration.poster_sizes
+            let sizeIndex: Int = (sizes.firstIndex(of: "w342") ??
+                                  sizes.firstIndex(of: "w500") ??
+                                  sizes.firstIndex(of: "w780") ??
+                                  sizes.firstIndex(of: "original") ??
+                                  sizes.firstIndex(of: "w185") ??
+                                  sizes.firstIndex(of: "w154") ??
+                                  0)
+            
+            guard let baseUrl = URL(string: self.vm.imageConfiguration.secure_base_url),
+                  sizes.count > sizeIndex,
+                  let posterPath = movie.poster_path
+            else { return }
+            
+            let imageUrl = baseUrl
+                .appendingPathComponent(sizes[sizeIndex])
+                .appendingPathComponent(posterPath)
+            cell.imageView.kf.setImage(with: imageUrl)
+        }
+        
+        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
             (collectionView, indexPath, identifier) in
             
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+            switch identifier {
+                case .detail(let detail):
+                    return collectionView.dequeueConfiguredReusableCell(using: detailCellRegistration, for: indexPath, item: detail)
+                case .movie(let movie):
+                    return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
+            }
+        }.then {
+            let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {
+                (view, kind, indexPath) in
+                
+                guard let section = Section(rawValue: indexPath.section) else { return }
+                view.label.text = section.title
+            }
+            
+            $0.supplementaryViewProvider = { (cv, kind, indexPath) in
+                return cv.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+            }
         }
     }
     
     func applyDataSource(detail: MovieDetailResponse?) {
-        var snapshot = NSDiffableDataSourceSnapshot<MovieDetailSection, MovieDetailResponse>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
-        snapshot.appendSections(MovieDetailSection.allCases)
+        snapshot.appendSections(Section.allCases)
         
-        if let detail = detail {
-            snapshot.appendItems([detail], toSection: MovieDetailSection.detail)
-        } else {
-            snapshot.appendItems([], toSection: MovieDetailSection.detail)
+        guard let detail = detail else {
+            dataSource.apply(snapshot, animatingDifferences: false)
+            return
         }
-//
-//        HomeSection.allCases.forEach { section in
-//            guard let items = data[section] else { return }
-//            let sectionedItems = items.map { SectionedItem(section: section, item: $0) }
-//            snapshot.appendItems(sectionedItems, toSection: section)
-//        }
-//
+        
+        snapshot.appendItems([.detail(detail)], toSection: .detail)
+        snapshot.appendItems(detail.similar.results.map(Item.movie), toSection: .similar)
+
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
@@ -224,6 +307,29 @@ private extension MovieDetailViewController {
 extension MovieDetailViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateBackdropHeight(defaultHeight: imageDefaultHeight, scrollView: scrollView)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard case .movie(let movie) = dataSource.itemIdentifier(for: indexPath),
+              let size = vm.imageConfiguration.backdrop_sizes.last
+        else {
+            return
+        }
+        
+        guard let baseUrl = URL(string: vm.imageConfiguration.secure_base_url),
+              let posterPath = movie.backdrop_path
+        else { return }
+        
+        let imageUrl = baseUrl
+            .appendingPathComponent(size)
+            .appendingPathComponent(posterPath)
+        
+        let vc = MovieDetailViewController().then {
+            $0.vm = MovieDetailViewModel(imageConfiguration: vm.imageConfiguration,
+                                         movieId: movie.id,
+                                         backdrop: imageUrl)
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

@@ -120,7 +120,9 @@ extension HomeViewController: UICollectionViewDelegate {
             .appendingPathComponent(posterPath)
         
         let vc = MovieDetailViewController().then {
-            $0.vm = MovieDetailViewModel(movieId: movie.id, backdrop: imageUrl)
+            $0.vm = MovieDetailViewModel(imageConfiguration: vm.state.imageConfiguration,
+                                         movieId: movie.id,
+                                         backdrop: imageUrl)
         }
         navigationController?.pushViewController(vc, animated: true)
     }

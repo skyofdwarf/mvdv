@@ -22,31 +22,20 @@ enum MovieDetailMutation: ViewModelMutation {
     case detail(MovieDetailResponse)
 }
 
-enum MovieDetailSection: Int, CaseIterable {
-    case detail
-    
-    var title: String {
-        switch self {
-            case .detail: return "Details"
-        }
-    }
-}
-
 struct MovieDetailState: ViewModelState {
     @Driving var fetching: Bool = false
     @Driving var detail: MovieDetailResponse? = nil
     @Driving var backdrop: URL?
-    
-    var imageConfiguration = ImageConfiguration()
 }
 
 final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutation, MovieDetailState, MovieDetailEvent> {
     private(set) var db = DisposeBag()
     
+    let imageConfiguration: ImageConfiguration
     let movieId: Int
     let backdrop: URL    
     
-    init(movieId: Int, backdrop: URL) {
+    init(imageConfiguration: ImageConfiguration, movieId: Int, backdrop: URL) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -75,13 +64,13 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
             }
         ]
         
+        self.imageConfiguration = imageConfiguration
         self.movieId = movieId
         self.backdrop = backdrop
         
         let state = State(fetching: false,
                           detail: nil,
-                          backdrop: backdrop,
-                          imageConfiguration: ImageConfiguration())
+                          backdrop: backdrop)
         
         super.init(state: state,
                    actionMiddlewares: actionMiddlewares,
