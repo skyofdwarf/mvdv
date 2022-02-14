@@ -14,7 +14,7 @@ enum MovieTarget: MVDBTarget {
     case similar(Int)
     //case images(Int)
     //case videos(Int)
-    
+    //case credits(Int)
     case latest
     case nowPlaying
     case popular
@@ -32,6 +32,7 @@ extension MovieTarget {
             case .similar(let id): return "/movie/\(id)/similar"
             //case .images(let id): return "/movie/\(id)/images"
             //case .videos(let id): return "/movie/\(id)/videos"
+            //case .credits(let id): return "/movie/\(id)/credits"
             case .latest: return "/movie/latest"
             case .nowPlaying: return "/movie/now_playing"
             case .popular: return "/movie/popular"
@@ -45,7 +46,7 @@ extension MovieTarget {
     var task: Task {
         switch self {
             case .detail:
-                return .requestParameters(parameters: ["append_to_response": "videos,images,similar"],
+                return .requestParameters(parameters: ["append_to_response": "videos,images,similar,credits"],
                                           encoding: URLEncoding.queryString)
             default:
                 return .requestPlain

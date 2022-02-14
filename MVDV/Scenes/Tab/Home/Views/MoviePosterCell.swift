@@ -32,6 +32,7 @@ class MoviePosterCell: UICollectionViewCell {
         contentView.addSubview(label)
         contentView.addSubview(imageView)        
         
+        imageView.contentMode = .scaleAspectFill
         imageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
