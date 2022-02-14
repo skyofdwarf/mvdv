@@ -19,13 +19,19 @@ enum MovieDetailEvent: ViewModelEvent {
 
 enum MovieDetailMutation: ViewModelMutation {
     case fetching(Bool)
-    case detail(MovieDetailResponse)
+    case sections(MovieDetailState.Sections)
 }
 
 struct MovieDetailState: ViewModelState {
+    struct Sections {
+        var detail: MovieDetailResponse? = nil
+        //case video
+        var similar: [Movie] = []
+    }
+    
     @Driving var fetching: Bool = false
-    @Driving var detail: MovieDetailResponse? = nil
     @Driving var backdrop: URL?
+    @Driving var sections: Sections = .init()
 }
 
 final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutation, MovieDetailState, MovieDetailEvent> {
@@ -68,9 +74,7 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         self.movieId = movieId
         self.backdrop = backdrop
         
-        let state = State(fetching: false,
-                          detail: nil,
-                          backdrop: backdrop)
+        let state = State(backdrop: backdrop)
         
         super.init(state: state,
                    actionMiddlewares: actionMiddlewares,
@@ -87,7 +91,9 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
                 // TODO: fetch all movies
                 return APIService.shared.detail(id: movieId)
                     .map { detail -> Reaction in
-                        .mutation(.detail(detail))
+                        let sections = State.Sections(detail: detail,
+                                                      similar: detail.similar.results)
+                        return .mutation(.sections(sections))
                     }
                     .catch {
                         .from([.mutation(.fetching(false)),
@@ -104,8 +110,8 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         switch mutation {
             case .fetching(let fetching):
                 state.fetching = fetching
-            case .detail(let detail):
-                state.detail = detail
+            case .sections(let sections):
+                state.sections = sections
         }
         return state
     }

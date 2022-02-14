@@ -28,12 +28,13 @@ class MovieDetailViewController: UIViewController {
             }
         }
     }
-    
+
     enum Item: Hashable {
         case detail(MovieDetailResponse)
         case movie(Movie)
     }
-    
+
+
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var indicator: UIActivityIndicatorView!
@@ -110,7 +111,7 @@ private extension MovieDetailViewController {
             })
             .disposed(by: db)
         
-        vm.state.$detail
+        vm.state.$sections
             .drive(rx.dataSource)
             .disposed(by: db)
         
@@ -259,18 +260,15 @@ private extension MovieDetailViewController {
         }
     }
     
-    func applyDataSource(detail: MovieDetailResponse?) {
+    func applyDataSource(sections: MovieDetailState.Sections) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
         snapshot.appendSections(Section.allCases)
         
-        guard let detail = detail else {
-            dataSource.apply(snapshot, animatingDifferences: false)
-            return
+        if let detail = sections.detail {
+            snapshot.appendItems([.detail(detail)], toSection: Section.detail)
         }
-        
-        snapshot.appendItems([.detail(detail)], toSection: .detail)
-        snapshot.appendItems(detail.similar.results.map(Item.movie), toSection: .similar)
+        snapshot.appendItems(sections.similar.map(Item.movie), toSection: Section.similar)
 
         dataSource.apply(snapshot, animatingDifferences: false)
     }
@@ -334,9 +332,9 @@ extension MovieDetailViewController: UICollectionViewDelegate {
 }
 
 extension Reactive where Base: MovieDetailViewController {
-    var dataSource: Binder<MovieDetailResponse?> {
+    var dataSource: Binder<MovieDetailState.Sections> {
         Binder(base) {
-            $0.applyDataSource(detail: $1)
+            $0.applyDataSource(sections: $1)
         }
     }
     
