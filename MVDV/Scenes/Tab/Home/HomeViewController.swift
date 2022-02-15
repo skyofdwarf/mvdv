@@ -14,18 +14,36 @@ import RxRelay
 import Accelerate
 import Kingfisher
 
-struct SectionedItem: Hashable {
-    let section: HomeSection
-    let item: HomeItem
-}
-
 class HomeViewController: UIViewController {
+    enum Section: Int, CaseIterable {
+        case nowPlaying
+        case genres
+        case trending
+        case popuplar
+        case topRated
+        
+        var title: String {
+            switch self {
+                case .nowPlaying: return "Now Playing"
+                case .genres: return "Genres"
+                case .trending: return "Trending"
+                case .popuplar: return "Popular"
+                case .topRated: return "Top Rated"
+            }
+        }
+    }
+    
+    enum Item: Hashable {
+        case genre(Genre)
+        case movie(Movie)
+    }
+
     enum SectionHeaderElementKind: String {
         case header
     }
 
     private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<HomeSection, SectionedItem>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var indicator: UIActivityIndicatorView!
     
     private(set) var db = DisposeBag()
@@ -94,7 +112,7 @@ private extension HomeViewController {
             .drive(indicator.rx.isAnimating)
             .disposed(by: db)
         
-        vm.state.$data
+        vm.state.$sections
             .drive(rx.dataSource)
             .disposed(by: db)
     }
@@ -104,8 +122,8 @@ private extension HomeViewController {
 
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let sectionedItem = dataSource.itemIdentifier(for: indexPath),
-              case .movie(let movie) = sectionedItem.item,
+        guard let item = dataSource.itemIdentifier(for: indexPath),
+              case .movie(let movie) = item,
               let size = vm.state.imageConfiguration.backdrop_sizes.last
         else {
             return
@@ -160,7 +178,7 @@ private extension HomeViewController {
     
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
-            switch HomeSection(rawValue: section) {
+            switch Section(rawValue: section) {
                 case .genres:
                     return Self.createGenreSection()
                     
@@ -297,12 +315,12 @@ private extension HomeViewController {
             cell.imageView.kf.setImage(with: imageUrl)
         }
         
-        dataSource = UICollectionViewDiffableDataSource<HomeSection, SectionedItem>(collectionView: collectionView) {
+        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
             (collectionView, indexPath, identifier) in
             
-            guard let section = HomeSection(rawValue: indexPath.section) else { return nil }
+            guard let section = Section(rawValue: indexPath.section) else { return nil }
                         
-            switch identifier.item {
+            switch identifier {
                 case .genre(let genre):
                     return collectionView.dequeueConfiguredReusableCell(using: genreCellRegistration, for: indexPath, item: genre)
                 case .movie(let movie):
@@ -317,7 +335,7 @@ private extension HomeViewController {
             let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {
                 (view, kind, indexPath) in
                 
-                guard let section = HomeSection(rawValue: indexPath.section) else { return }
+                guard let section = Section(rawValue: indexPath.section) else { return }
                 view.label.text = section.title
             }
             
@@ -327,25 +345,25 @@ private extension HomeViewController {
         }
     }
     
-    func applyDataSource(data: [HomeSection: [HomeItem]]) {
-        var snapshot = NSDiffableDataSourceSnapshot<HomeSection, SectionedItem>()
+    func applyDataSource(sections: HomeState.Sections) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
-        snapshot.appendSections(HomeSection.allCases)
+        snapshot.appendSections(Section.allCases)
         
-        HomeSection.allCases.forEach { section in
-            guard let items = data[section] else { return }
-            let sectionedItems = items.map { SectionedItem(section: section, item: $0) }
-            snapshot.appendItems(sectionedItems, toSection: section)
-        }
+        snapshot.appendItems(sections.nowPlaying.map(Item.movie), toSection: .nowPlaying)
+        snapshot.appendItems(sections.genres.map(Item.genre), toSection: .genres)
+        snapshot.appendItems(sections.trending.map(Item.movie), toSection: .trending)
+        snapshot.appendItems(sections.popuplar.map(Item.movie), toSection: .popuplar)
+        snapshot.appendItems(sections.topRated.map(Item.movie), toSection: .topRated)
         
         dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
 extension Reactive where Base: HomeViewController {
-    var dataSource: Binder<[HomeSection: [HomeItem]]> {
+    var dataSource: Binder<HomeState.Sections> {
         Binder(base) {
-            $0.applyDataSource(data: $1)
+            $0.applyDataSource(sections: $1)
         }
     }
 }

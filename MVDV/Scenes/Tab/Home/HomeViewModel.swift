@@ -15,52 +15,26 @@ enum HomeAction: ViewModelAction {
 }
 
 enum HomeEvent: ViewModelEvent {
-    case alert
+    case alert(String)
 }
 
 enum HomeMutation: ViewModelMutation {
     case fetching(Bool)
     case imageConfiguration(ImageConfiguration)
-    case data([HomeSection: [HomeItem]])
-}
-
-enum HomeSection: Int, CaseIterable {
-    case nowPlaying
-    case genres
-    case trending
-    case popuplar
-    case topRated
-    
-    var title: String {
-        switch self {
-            case .nowPlaying: return "Now Playing"
-            case .genres: return "Genres"
-            case .trending: return "Trending"
-            case .popuplar: return "Popular"
-            case .topRated: return "Top Rated"
-        }
-    }
-}
-
-enum HomeItem: Hashable {
-    case genre(Genre)
-    case movie(Movie)
-    
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-            case let (.genre(r), .genre(l)):
-                return r == l
-            case let (.movie(r), .movie(l)):
-                return r == l
-            default:
-                return false
-        }
-    }
+    case sections(HomeState.Sections)
 }
 
 struct HomeState: ViewModelState {
+    struct Sections {
+        var nowPlaying: [Movie] = []
+        var genres: [Genre] = []
+        var trending: [Movie] = []
+        var popuplar: [Movie] = []
+        var topRated: [Movie] = []
+    }
+    
     @Driving var fetching: Bool = false
-    @Driving var data: [HomeSection: [HomeItem]] = [:]
+    @Driving var sections: Sections = .init()
     
     var imageConfiguration = ImageConfiguration()
 }
@@ -109,7 +83,7 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
     override func react(action: Action, state: State) -> Observable<Reaction> {
         switch action {
             case .ready:
-                // TODO: fetch all movies
+                // TODO: catch individual errors
                 return Observable.combineLatest(APIService.shared.configuration(),
                                                 APIService.shared.trending(),
                                                 APIService.shared.genres(),
@@ -117,13 +91,16 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
                                                 APIService.shared.popular(),
                                                 APIService.shared.nowPlaying())
                     .flatMap { (configuration, trending, genres, topRated, popular, nowPlaying) -> Observable<Reaction> in
-                        let data: [HomeSection: [HomeItem]] = [ .genres: genres.genres.map(HomeItem.genre),
-                                                                .trending: trending.results.map(HomeItem.movie),
-                                                                .nowPlaying: nowPlaying.results.map(HomeItem.movie),
-                                                                .popuplar: popular.results.map(HomeItem.movie),
-                                                                .topRated: topRated.results.map(HomeItem.movie) ]
+                        let section = State.Sections(nowPlaying: nowPlaying.results,
+                                                     genres: genres.genres,
+                                                     trending: trending.results,
+                                                     popuplar: popular.results,
+                                                     topRated: topRated.results)
                         return .from([.mutation(.imageConfiguration(configuration.images)),
-                                      .mutation(.data(data))])
+                                      .mutation(.sections(section))])
+                    }
+                    .catch { _ in
+                        .just(.event(.alert("Network error")))
                     }
                     .startWith(Reaction.mutation(.fetching(true)))
                     .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
@@ -141,8 +118,8 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
                 state.fetching = fetching
             case .imageConfiguration(let imageConfiguration):
                 state.imageConfiguration = imageConfiguration
-            case .data(let data):
-                state.data = data
+            case .sections(let sections):
+                state.sections = sections
         }
         return state
     }
