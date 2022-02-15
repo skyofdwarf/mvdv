@@ -28,7 +28,6 @@ class MovieHeaderView: UICollectionReusableView {
         }
         
         label.font = UIFont.preferredFont(forTextStyle: .headline)
-        label.textColor = .white
+        label.textColor = R.color.tmdbColorTertiaryLightGreen()
     }
 }
-
