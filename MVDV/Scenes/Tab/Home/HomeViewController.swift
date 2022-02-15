@@ -115,6 +115,10 @@ private extension HomeViewController {
         vm.state.$sections
             .drive(rx.dataSource)
             .disposed(by: db)
+        
+        vm.event
+            .emit(to: rx.event)
+            .disposed(by: db)
     }
 }
 
@@ -358,12 +362,29 @@ private extension HomeViewController {
         
         dataSource.apply(snapshot, animatingDifferences: false)
     }
+    
+    func showEvent(_ event: HomeEvent) {
+        switch event {
+            case .alert(let msg):
+                let alert = UIAlertController(title: Strings.Common.Alert.title,
+                                              message: msg,
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: Strings.Common.Alert.ok, style: .default))
+                present(alert, animated: true, completion: nil)
+        }
+    }
 }
 
 extension Reactive where Base: HomeViewController {
     var dataSource: Binder<HomeState.Sections> {
         Binder(base) {
             $0.applyDataSource(sections: $1)
+        }
+    }
+    
+    var event: Binder<HomeEvent> {
+        Binder(base) {
+            $0.showEvent($1)
         }
     }
 }
