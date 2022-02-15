@@ -47,11 +47,13 @@ class HomeViewController: UIViewController {
     private var indicator: UIActivityIndicatorView!
     
     private(set) var db = DisposeBag()
-    let vm = HomeViewModel()
+    let vm: HomeViewModel
     
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
 
-    init() {
+    init(vm: HomeViewModel) {
+        self.vm = vm
+        
         super.init(nibName: nil, bundle: nil)
         
         title = "ㅁㅂㄷㅂ"
@@ -128,12 +130,12 @@ extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath),
               case .movie(let movie) = item,
-              let size = vm.state.imageConfiguration.backdrop_sizes.last
+              let size = vm.imageConfiguration.backdrop_sizes.last
         else {
             return
         }
         
-        guard let baseUrl = URL(string: vm.state.imageConfiguration.secure_base_url),
+        guard let baseUrl = URL(string: vm.imageConfiguration.secure_base_url),
               let posterPath = movie.backdrop_path
         else { return }
         
@@ -142,7 +144,7 @@ extension HomeViewController: UICollectionViewDelegate {
             .appendingPathComponent(posterPath)
         
         let vc = MovieDetailViewController().then {
-            $0.vm = MovieDetailViewModel(imageConfiguration: vm.state.imageConfiguration,
+            $0.vm = MovieDetailViewModel(imageConfiguration: vm.imageConfiguration,
                                          movieId: movie.id,
                                          backdrop: imageUrl)
         }
@@ -275,7 +277,7 @@ private extension HomeViewController {
             
             cell.label.text = movie.title
             
-            let sizes: [String] = self.vm.state.imageConfiguration.poster_sizes
+            let sizes: [String] = self.vm.imageConfiguration.poster_sizes
             let sizeIndex: Int = (sizes.firstIndex(of: "w342") ??
                                   sizes.firstIndex(of: "w500") ??
                                   sizes.firstIndex(of: "w780") ??
@@ -284,7 +286,7 @@ private extension HomeViewController {
                                   sizes.firstIndex(of: "w154") ??
                                   0)
             
-            guard let baseUrl = URL(string: self.vm.state.imageConfiguration.secure_base_url),
+            guard let baseUrl = URL(string: self.vm.imageConfiguration.secure_base_url),
                   sizes.count > sizeIndex,
                   let posterPath = movie.poster_path
             else { return }
@@ -301,14 +303,14 @@ private extension HomeViewController {
             
             cell.label.text = movie.title
             
-            let sizes: [String] = self.vm.state.imageConfiguration.backdrop_sizes
+            let sizes: [String] = self.vm.imageConfiguration.backdrop_sizes
             let sizeIndex: Int = (sizes.firstIndex(of: "w780") ??
                                   sizes.firstIndex(of: "w1280") ??
                                   sizes.firstIndex(of: "w300") ??
                                   sizes.firstIndex(of: "original") ??
                                   max(0, sizes.count - 1))
             
-            guard let baseUrl = URL(string: self.vm.state.imageConfiguration.secure_base_url),
+            guard let baseUrl = URL(string: self.vm.imageConfiguration.secure_base_url),
                   sizes.count > sizeIndex,
                   let posterPath = movie.backdrop_path
             else { return }

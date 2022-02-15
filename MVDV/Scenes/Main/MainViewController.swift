@@ -6,7 +6,10 @@
 //
 
 import UIKit
-
+import SnapKit
+import RxSwift
+import RxCocoa
+import RxRelay
 
 extension UIViewController {
     var navigationRooted: UINavigationController { CustomNavigationController(rootViewController: self) }
@@ -19,27 +22,107 @@ class CustomNavigationController: UINavigationController {
 }
 
 class MainViewController: UITabBarController {
+    private(set) var db = DisposeBag()
+    let vm = MainViewModel()
+    
+    private var indicator: UIActivityIndicatorView!
+    
     override var childForStatusBarStyle: UIViewController? {
         selectedViewController
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        view.backgroundColor = .black
+        
         tabBar.tintColor = R.color.tmdbColorSecondaryLightBlue()
         tabBar.barTintColor = R.color.tmdbColorPrimaryDarkBlue()
         
         UINavigationBar.appearance().tintColor = R.color.tmdbColorTertiaryLightGreen()
-        UINavigationBar.appearance().barStyle = .black
-        UINavigationBar.appearance().isTranslucent = true
+//        UINavigationBar.appearance().barStyle = .black
+//        UINavigationBar.appearance().isTranslucent = true
         
-        viewControllers = [ HomeViewController(),
+//        viewControllers = [ HomeViewController(),
+//                            UpcomingViewController(),
+//                            SearchViewController(),
+//                            ProfileViewController() ].map { $0.navigationRooted }
+        
+        viewControllers = []
+        
+        createIndicator()
+        bindViewModel()
+
+        Observable.just(MainAction.ready)
+            .bind(to: vm.action)
+            .disposed(by: db)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+}
+
+// MARK: ViewModel
+
+private extension MainViewController {
+    func bindViewModel() {
+        vm.state.$fetching
+            .drive(indicator.rx.isAnimating)
+            .disposed(by: db)
+        
+        vm.state.$imageConfiguration
+            .compactMap { $0 }
+            .drive(rx.imageConfiguration)
+            .disposed(by: db)
+        
+        vm.event
+            .emit(to: rx.event)
+            .disposed(by: db)
+    }
+    
+    func createIndicator() {
+        indicator = UIActivityIndicatorView(style: .large).then {
+            view.addSubview($0)
+            
+            $0.snp.makeConstraints {
+                $0.center.equalToSuperview()
+            }
+            
+            $0.color = R.color.tmdbColorTertiaryLightGreen()
+            $0.hidesWhenStopped = true
+        }
+    }
+    
+    func showTabs(imageConfiguration: ImageConfiguration) {
+        viewControllers = [ HomeViewController(vm: HomeViewModel(imageConfiguration: imageConfiguration)),
                             UpcomingViewController(),
                             SearchViewController(),
                             ProfileViewController() ].map { $0.navigationRooted }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    func showEvent(_ event: MainEvent) {
+        switch event {
+            case .alert(let msg):
+                let alert = UIAlertController(title: Strings.Common.Alert.title,
+                                              message: msg,
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: Strings.Common.Alert.ok, style: .default))
+                present(alert, animated: true, completion: nil)
+        }
+    }
+}
+
+extension Reactive where Base: MainViewController {
+    var imageConfiguration: Binder<ImageConfiguration> {
+        Binder(base) {
+            $0.showTabs(imageConfiguration: $1)
+        }
+    }
+    
+    var event: Binder<MainEvent> {
+        Binder(base) {
+            $0.showEvent($1)
+        }
     }
 }

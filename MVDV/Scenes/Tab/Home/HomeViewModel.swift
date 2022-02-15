@@ -20,7 +20,6 @@ enum HomeEvent: ViewModelEvent {
 
 enum HomeMutation: ViewModelMutation {
     case fetching(Bool)
-    case imageConfiguration(ImageConfiguration)
     case sections(HomeState.Sections)
 }
 
@@ -35,14 +34,14 @@ struct HomeState: ViewModelState {
     
     @Driving var fetching: Bool = false
     @Driving var sections: Sections = .init()
-    
-    var imageConfiguration = ImageConfiguration()
 }
 
 final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEvent> {
     private(set) var db = DisposeBag()
     
-    init(state initialState: HomeState = HomeState()) {
+    let imageConfiguration: ImageConfiguration
+    
+    init(imageConfiguration: ImageConfiguration, state initialState: HomeState = HomeState()) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -71,6 +70,8 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
             }
         ]
         
+        self.imageConfiguration = imageConfiguration
+        
         super.init(state: initialState,
                    actionMiddlewares: actionMiddlewares,
                    /*mutationMiddlewares: mutationMiddlewares,*/
@@ -96,8 +97,7 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
                                                      trending: trending.results,
                                                      popuplar: popular.results,
                                                      topRated: topRated.results)
-                        return .from([.mutation(.imageConfiguration(configuration.images)),
-                                      .mutation(.sections(section))])
+                        return .just(.mutation(.sections(section)))
                     }
                     .catch { _ in
                         .just(.event(.alert("Network error")))
@@ -116,8 +116,6 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
         switch mutation {
             case .fetching(let fetching):
                 state.fetching = fetching
-            case .imageConfiguration(let imageConfiguration):
-                state.imageConfiguration = imageConfiguration
             case .sections(let sections):
                 state.sections = sections
         }
