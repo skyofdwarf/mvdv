@@ -368,11 +368,7 @@ private extension HomeViewController {
     func showEvent(_ event: HomeEvent) {
         switch event {
             case .alert(let msg):
-                let alert = UIAlertController(title: Strings.Common.Alert.title,
-                                              message: msg,
-                                              preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: Strings.Common.Alert.ok, style: .default))
-                present(alert, animated: true, completion: nil)
+                alert(message: msg)
         }
     }
 }

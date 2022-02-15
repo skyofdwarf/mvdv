@@ -104,11 +104,7 @@ private extension MainViewController {
     func showEvent(_ event: MainEvent) {
         switch event {
             case .alert(let msg):
-                let alert = UIAlertController(title: Strings.Common.Alert.title,
-                                              message: msg,
-                                              preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: Strings.Common.Alert.ok, style: .default))
-                present(alert, animated: true, completion: nil)
+                alert(message: msg)
         }
     }
 }
