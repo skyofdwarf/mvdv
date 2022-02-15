@@ -6,7 +6,11 @@
   
 */
 
-"title.home" = "Home";
-"title.upcoming" = "Upcoming";
-"title.search" = "Search";
-"title.profile" = "Profile";
+"alert.title" = "MVDV";
+"alert.ok" = "Ok";
+"alert.cancel" = "Cancel";
+
+"home.title" = "Home";
+"upcoming.title" = "Upcoming";
+"search.title" = "Search";
+"profile.title" = "Profile";

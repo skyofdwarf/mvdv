@@ -11,15 +11,29 @@ import Foundation
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum Strings {
   internal enum Common {
-    internal enum Title {
+    internal enum Alert {
+      /// Cancel
+      internal static let cancel = Strings.tr("Common", "alert.cancel")
+      /// Ok
+      internal static let ok = Strings.tr("Common", "alert.ok")
+      /// MVDV
+      internal static let title = Strings.tr("Common", "alert.title")
+    }
+    internal enum Home {
       /// Home
-      internal static let home = Strings.tr("Common", "title.home")
+      internal static let title = Strings.tr("Common", "home.title")
+    }
+    internal enum Profile {
       /// Profile
-      internal static let profile = Strings.tr("Common", "title.profile")
+      internal static let title = Strings.tr("Common", "profile.title")
+    }
+    internal enum Search {
       /// Search
-      internal static let search = Strings.tr("Common", "title.search")
+      internal static let title = Strings.tr("Common", "search.title")
+    }
+    internal enum Upcoming {
       /// Upcoming
-      internal static let upcoming = Strings.tr("Common", "title.upcoming")
+      internal static let title = Strings.tr("Common", "upcoming.title")
     }
   }
   internal enum Home {

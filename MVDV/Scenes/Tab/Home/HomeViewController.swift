@@ -56,7 +56,7 @@ class HomeViewController: UIViewController {
         
         title = "ㅁㅂㄷㅂ"
         
-        tabBarItem = UITabBarItem(title: Strings.Common.Title.home,
+        tabBarItem = UITabBarItem(title: Strings.Common.Home.title,
                                   image: UIImage(systemName: "house"),
                                   tag: 0)
         if #available(iOS 14, *) {

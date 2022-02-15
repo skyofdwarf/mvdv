@@ -115,7 +115,7 @@
 		4283FC672799C77A00F3D753 /* Home.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Home.strings; sourceTree = "<group>"; };
 		4283FC682799C77A00F3D753 /* Main.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Main.strings; sourceTree = "<group>"; };
 		4283FC692799C77A00F3D753 /* Common.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Common.strings; sourceTree = "<group>"; };
-		4283FC6F2799CC9700F3D753 /* Strings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Strings+Generated.swift"; path = "Strings/Strings+Generated.swift"; sourceTree = "<group>"; };
+		4283FC6F2799CC9700F3D753 /* Strings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Strings+Generated.swift"; sourceTree = "<group>"; };
 		4283FC712799D0B400F3D753 /* Upcoming.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Upcoming.strings; sourceTree = "<group>"; };
 		4283FC732799D0BB00F3D753 /* Search.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Search.strings; sourceTree = "<group>"; };
 		4283FC752799D0C100F3D753 /* Profile.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Profile.strings; sourceTree = "<group>"; };
