@@ -89,8 +89,8 @@ extension APIService {
         request(MovieTarget.topRated)
     }
     
-    func upcomming() -> Observable<UpcomingMovieResponse> {
-        request(MovieTarget.upcomming)
+    func upcoming() -> Observable<UpcomingMovieResponse> {
+        request(MovieTarget.upcoming)
     }
     
     func trending() -> Observable<TrendingMovieResponse> {

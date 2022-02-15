@@ -96,7 +96,7 @@ private extension MainViewController {
     
     func showTabs(imageConfiguration: ImageConfiguration) {
         viewControllers = [ HomeViewController(vm: HomeViewModel(imageConfiguration: imageConfiguration)),
-                            UpcomingViewController(),
+                            UpcomingViewController(vm: UpcomingViewModel(imageConfiguration: imageConfiguration)),
                             SearchViewController(),
                             ProfileViewController() ].map { $0.navigationRooted }
     }

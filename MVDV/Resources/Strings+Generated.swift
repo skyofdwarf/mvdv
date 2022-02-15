@@ -11,6 +11,8 @@ import Foundation
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum Strings {
   internal enum Common {
+    /// ㅁㅂㄷㅂ
+    internal static let appName = Strings.tr("Common", "app-name")
     internal enum Alert {
       /// Cancel
       internal static let cancel = Strings.tr("Common", "alert.cancel")

@@ -56,7 +56,7 @@ class HomeViewController: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         
-        title = "ㅁㅂㄷㅂ"
+        title = Strings.Common.appName
         
         tabBarItem = UITabBarItem(title: Strings.Common.Home.title,
                                   image: UIImage(systemName: "house"),

@@ -1,67 +1,59 @@
 //
-//  MovieDetailViewModel.swift
+//  UpcomingViewModel.swift
 //  MVDV
 //
-//  Created by YEONGJUNG KIM on 2022/02/03.
+//  Created by YEONGJUNG KIM on 2022/02/15.
 //
 
 import Foundation
 import Reduxift
 import RxSwift
 
-enum MovieDetailAction: ViewModelAction {
+enum UpcomingAction: ViewModelAction {
     case ready
 }
 
-enum MovieDetailEvent: ViewModelEvent {
+enum UpcomingEvent: ViewModelEvent {
     case alert(String)
 }
 
-enum MovieDetailMutation: ViewModelMutation {
+enum UpcomingMutation: ViewModelMutation {
     case fetching(Bool)
-    case sections(MovieDetailState.Sections)
+    case sections(UpcomingState.Sections)
 }
 
-struct MovieDetailState: ViewModelState {
+struct UpcomingState: ViewModelState {
     struct Sections {
-        var detail: MovieDetailResponse? = nil
-        var similar: [Movie] = []
+        var movies: [Movie] = []
     }
     
     @Driving var fetching: Bool = false
-    @Driving var backdrop: URL?
     @Driving var sections: Sections = .init()
 }
 
-final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutation, MovieDetailState, MovieDetailEvent> {
+final class UpcomingViewModel: ViewModel<UpcomingAction, UpcomingMutation, UpcomingState, UpcomingEvent> {
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration
-    let movieId: Int
-    let backdrop: URL    
     
-    init(imageConfiguration: ImageConfiguration, movieId: Int, backdrop: URL) {
+    init(imageConfiguration: ImageConfiguration) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
                 return next(action)
             }
         ]
-
+        
         let eventMiddlewares = [
             Self.middleware.event { state, next, event in
                 print("[EVENT] \(event)")
                 return next(event)
             }
         ]
-        
+
         self.imageConfiguration = imageConfiguration
-        self.movieId = movieId
-        self.backdrop = backdrop
         
-        let state = State(backdrop: backdrop)
-        
-        super.init(state: state,
+        super.init(state: State(),
                    actionMiddlewares: actionMiddlewares,
                    /*mutationMiddlewares: mutationMiddlewares,*/
                    eventMiddlewares: eventMiddlewares/*,
@@ -74,19 +66,16 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         switch action {
             case .ready:
                 // TODO: fetch all movies
-                return APIService.shared.detail(id: movieId)
-                    .map { detail -> Reaction in
-                        let sections = State.Sections(detail: detail,
-                                                      similar: detail.similar.results)
+                return APIService.shared.upcoming()
+                    .map { upcoming -> Reaction in
+                        let sections = State.Sections(movies: upcoming.results)
                         return .mutation(.sections(sections))
                     }
                     .catch {
-                        .from([.mutation(.fetching(false)),
-                               .event(.alert($0.localizedDescription))])
+                        .just(.event(.alert($0.localizedDescription)))
                     }
                     .startWith(Reaction.mutation(.fetching(true)))
                     .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
-                    
         }
     }
     

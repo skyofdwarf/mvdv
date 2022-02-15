@@ -20,7 +20,7 @@ enum MovieTarget: MVDBTarget {
     case popular
     case topRated
     case trending
-    case upcomming
+    case upcoming
     case discover
 }
 
@@ -38,7 +38,7 @@ extension MovieTarget {
             case .popular: return "/movie/popular"
             case .topRated: return "/movie/top_rated"
             case .trending: return "/trending/movie/day"
-            case .upcomming: return "/movie/upcoming"
+            case .upcoming: return "/movie/upcoming"
             case .discover: return "/discover/movie"
         }
     }
