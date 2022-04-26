@@ -29,10 +29,6 @@ class UpcomingViewController: UIViewController {
         case movie(Movie)
     }
     
-    enum SectionHeaderElementKind: String {
-        case header
-    }
-    
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var indicator: UIActivityIndicatorView!
@@ -188,29 +184,19 @@ private extension UpcomingViewController {
     static func createMovieBackdropSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let item = NSCollectionLayoutItem(layoutSize: itemSize).then {
+                $0.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+            }
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                                heightDimension: .fractionalWidth(1/1.78))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
-        return NSCollectionLayoutSection(group: group).then {
-            $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0)
-            $0.orthogonalScrollingBehavior = .paging
-            
-            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                    heightDimension: .estimated(50))
-            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                            elementKind: UICollectionView.elementKindSectionHeader,
-                                                                            alignment: .top,
-                                                                            absoluteOffset: CGPoint(x: 10, y: 0))
-            //sectionHeader.extendsBoundary = false
-            $0.boundarySupplementaryItems = [sectionHeader]
-        }
+        return NSCollectionLayoutSection(group: group)
     }
     
     func createDataSource() {
-        let movieBackdropCellRegistration = UICollectionView.CellRegistration<MovieBackdropCell, Movie> {
+        let upcomingMovieCellRegistration = UICollectionView.CellRegistration<UpcomingMovieCell, Movie> {
             [weak self] (cell, indexPath, movie) in
             guard let self = self else { return }
             
@@ -239,18 +225,7 @@ private extension UpcomingViewController {
             
             switch identifier {
                 case .movie(let movie):
-                    return collectionView.dequeueConfiguredReusableCell(using: movieBackdropCellRegistration, for: indexPath, item: movie)
-            }
-        }.then {
-            let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {
-                (view, kind, indexPath) in
-                
-                guard let section = Section(rawValue: indexPath.section) else { return }
-                view.label.text = section.title
-            }
-            
-            $0.supplementaryViewProvider = { (cv, kind, indexPath) in
-                return cv.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+                    return collectionView.dequeueConfiguredReusableCell(using: upcomingMovieCellRegistration, for: indexPath, item: movie)
             }
         }
     }
