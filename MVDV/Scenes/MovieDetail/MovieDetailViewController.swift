@@ -51,6 +51,10 @@ class MovieDetailViewController: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
         
+        if #available(iOS 14, *) {
+            navigationItem.backButtonDisplayMode = .minimal
+        }
+        
         navigationItem.standardAppearance = .init().then {
             $0.configureWithTransparentBackground()
         }
