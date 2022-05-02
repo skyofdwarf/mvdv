@@ -40,7 +40,7 @@ class MovieDetailViewController: UIViewController {
     private var indicator: UIActivityIndicatorView!
     
     private(set) var db = DisposeBag()
-    var vm: MovieDetailViewModel!
+    let vm: MovieDetailViewModel!
 
     private var backgroundView: UIView!
     private var imageView: UIImageView!
@@ -48,7 +48,9 @@ class MovieDetailViewController: UIViewController {
     
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
     
-    init() {
+    init(vm: MovieDetailViewModel) {
+        self.vm = vm
+        
         super.init(nibName: nil, bundle: nil)
         
         if #available(iOS 14, *) {
@@ -325,12 +327,11 @@ extension MovieDetailViewController: UICollectionViewDelegate {
         let imageUrl = baseUrl
             .appendingPathComponent(size)
             .appendingPathComponent(posterPath)
+        let vm = MovieDetailViewModel(imageConfiguration: vm.imageConfiguration,
+                                     movieId: movie.id,
+                                     backdrop: imageUrl)
+        let vc = MovieDetailViewController(vm: vm)
         
-        let vc = MovieDetailViewController().then {
-            $0.vm = MovieDetailViewModel(imageConfiguration: vm.imageConfiguration,
-                                         movieId: movie.id,
-                                         backdrop: imageUrl)
-        }
         navigationController?.pushViewController(vc, animated: true)
     }
 }
