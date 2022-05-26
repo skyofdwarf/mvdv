@@ -54,7 +54,7 @@ class UpcomingViewController: UIViewController {
         } else {
             navigationItem.backButtonTitle = ""
         }
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle.fill"),
                                                             style: .plain,
                                                             target: nil,

@@ -61,6 +61,7 @@ class HomeViewController: UIViewController {
         tabBarItem = UITabBarItem(title: Strings.Common.Home.title,
                                   image: UIImage(systemName: "house"),
                                   tag: 0)
+        
         if #available(iOS 14, *) {
             navigationItem.backButtonDisplayMode = .minimal
         } else {

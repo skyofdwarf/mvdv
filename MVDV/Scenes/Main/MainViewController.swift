@@ -40,14 +40,7 @@ class MainViewController: UITabBarController {
         tabBar.barTintColor = R.color.tmdbColorPrimaryDarkBlue()
         
         UINavigationBar.appearance().tintColor = R.color.tmdbColorTertiaryLightGreen()
-//        UINavigationBar.appearance().barStyle = .black
-//        UINavigationBar.appearance().isTranslucent = true
-        
-//        viewControllers = [ HomeViewController(),
-//                            UpcomingViewController(),
-//                            SearchViewController(),
-//                            ProfileViewController() ].map { $0.navigationRooted }
-        
+
         viewControllers = []
         
         createIndicator()
