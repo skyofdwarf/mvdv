@@ -34,12 +34,12 @@ final class APIService {
     private init() {}
     
     // Raw request method
-    func request(_ target: MVDBTarget, completion: @escaping (Result<Response, MoyaError>) -> Void) {
+    func request(_ target: TargetType, completion: @escaping (Result<Response, MoyaError>) -> Void) {
         provider.request(MultiTarget(target)) { completion($0) }
     }
 
     // Mapping requests
-    func request<D: Decodable>(_ target: MVDBTarget, success: @escaping (D) -> (), failure: @escaping (Error) -> ()) {
+    func request<D: Decodable>(_ target: TargetType, success: @escaping (D) -> (), failure: @escaping (Error) -> ()) {
         request(target) { result in
             switch result {
             case .success(let response):
@@ -57,51 +57,11 @@ final class APIService {
     }
     
     // Raw request.rx method
-    func request<D: Decodable>(_ target: MVDBTarget) -> Observable<D> {
+    func request<D: Decodable>(_ target: TargetType) -> Observable<D> {
         provider.rx
             .request(MultiTarget(target))
             .filterSuccessfulStatusCodes()
             .map(D.self)
             .asObservable()
-    }
-}
-
-// MARK: Target requests
-
-extension APIService {
-    func configuration() -> Observable<ConfigurationResponse> {
-        request(ConfigurationTarget.configuration)
-    }
-
-    func genres() -> Observable<GenreResponse> {
-        request(MovieTarget.genres)
-    }
-    
-    func nowPlaying() -> Observable<NowPlayingMovieResponse> {
-        request(MovieTarget.nowPlaying)
-    }
-    
-    func popular() -> Observable<PopularMovieResponse> {
-        request(MovieTarget.popular)
-    }
-    
-    func topRated() -> Observable<TopRatedMovieResponse> {
-        request(MovieTarget.topRated)
-    }
-    
-    func upcoming() -> Observable<UpcomingMovieResponse> {
-        request(MovieTarget.upcoming)
-    }
-    
-    func trending() -> Observable<TrendingMovieResponse> {
-        request(MovieTarget.trending)
-    }
-    
-    func detail(id: Int) -> Observable<MovieDetailResponse> {
-        request(MovieTarget.detail(id))
-    }
-    
-    func similar(id: Int) -> Observable<MovieDetailResponse> {
-        request(MovieTarget.similar(id))
     }
 }
