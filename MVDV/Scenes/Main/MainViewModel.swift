@@ -56,7 +56,7 @@ final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEv
         switch action {
             case .ready:
                 // TODO: catch individual errors
-                return APIService.shared.configuration()
+                return MVDVService.shared.configuration()
                     .map {
                         .mutation(.imageConfiguration($0.images))
                     }

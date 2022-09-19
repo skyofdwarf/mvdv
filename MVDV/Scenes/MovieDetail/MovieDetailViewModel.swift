@@ -74,7 +74,7 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         switch action {
             case .ready:
                 // TODO: fetch all movies
-                return APIService.shared.detail(id: movieId)
+                return MVDVService.shared.detail(id: movieId)
                     .map { detail -> Reaction in
                         let sections = State.Sections(detail: detail,
                                                       similar: detail.similar.results)

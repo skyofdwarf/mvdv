@@ -1,5 +1,5 @@
 //
-//  APIService+MVDV.swift
+//  MVDVService+API.swift
 //  MVDV
 //
 //  Created by YEONGJUNG KIM on 2022/09/15.
@@ -10,7 +10,7 @@ import RxSwift
 
 // MARK: Target requests
 
-extension APIService {
+extension MVDVService {
     func configuration() -> Observable<ConfigurationResponse> {
         request(ConfigurationTarget.configuration)
     }

@@ -11,27 +11,25 @@ import Keys
 import RxSwift
 import RxMoya
 
-fileprivate let accessToken = MVDBKeys().apiAccessToken
-
-final class APIService {
-    static let shared = APIService()
+class APIService {
+    let provider: MoyaProvider<MultiTarget>
     
-    fileprivate lazy var provider: MoyaProvider<MultiTarget> = {
+    init(provider: MoyaProvider<MultiTarget> = MoyaProvider<MultiTarget>()) {
+        self.provider = provider
+    }
+    
+    convenience init() {
 #if DEBUG
-        let configuration = NetworkLoggerPlugin.Configuration(logOptions: .verbose)
-        
         let plugins: [PluginType] = [
-            NetworkLoggerPlugin(configuration: configuration),
-            AccessTokenPlugin(tokenClosure: { _ in accessToken })
+            NetworkLoggerPlugin(configuration: .init(logOptions: .verbose)),
         ]
-        
-        return MoyaProvider<MultiTarget>(plugins: plugins)
 #else
-        return MoyaProvider<MultiTarget>()
+        let plugins: [PluginType] = []
 #endif
-    }()
-    
-    private init() {}
+        let provider = MoyaProvider<MultiTarget>(plugins: plugins)
+        
+        self.init(provider: provider)
+    }
     
     // Raw request method
     func request(_ target: TargetType, completion: @escaping (Result<Response, MoyaError>) -> Void) {
