@@ -24,8 +24,8 @@ enum MovieDetailMutation: ViewModelMutation {
 
 struct MovieDetailState: ViewModelState {
     struct Sections {
-        var detail: MovieDetailResponse? = nil
-        var similar: [Movie] = []
+        var detail: MovieDetailResponse?
+        var similar: [Movie]?
     }
     
     @Driving var fetching: Bool = false
@@ -77,7 +77,7 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
                 return MVDVService.shared.detail(id: movieId)
                     .map { detail -> Reaction in
                         let sections = State.Sections(detail: detail,
-                                                      similar: detail.similar.results)
+                                                      similar: detail.similar?.results)
                         return .mutation(.sections(sections))
                     }
                     .catch {

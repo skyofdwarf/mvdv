@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Movie detial API can be called with `append_to_response` query parameter with a value of videos, images, similar, or credits.
+/// https://developers.themoviedb.org/3/getting-started/append-to-response
 struct MovieDetailResponse: Decodable {
     enum Status: String, Decodable {
         case Rumored, Planned, InProduction = "In Production",
@@ -39,10 +41,11 @@ struct MovieDetailResponse: Decodable {
     let vote_average: Float
     let vote_count: Int
     
-    let videos: MovieVideosResponse
-    let images: MovieImagesResponse
-    let similar: MovieResponse
-    let credits: MovieCreditsResponse
+    /// MARK: append_to_response
+    let videos: MovieVideosResponse?
+    let images: MovieImagesResponse?
+    let similar: MovieResponse?
+    let credits: MovieCreditsResponse?
 }
 
 extension MovieDetailResponse: Hashable {

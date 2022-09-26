@@ -264,12 +264,15 @@ private extension MovieDetailViewController {
     func applyDataSource(sections: MovieDetailState.Sections) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
-        snapshot.appendSections(Section.allCases)
-        
         if let detail = sections.detail {
+            snapshot.appendSections([.detail])
             snapshot.appendItems([.detail(detail)], toSection: Section.detail)
         }
-        snapshot.appendItems(sections.similar.map(Item.movie), toSection: Section.similar)
+        
+        if let similar = sections.similar {
+            snapshot.appendSections([.similar])
+            snapshot.appendItems(similar.map(Item.movie), toSection: Section.similar)
+        }
 
         dataSource.apply(snapshot, animatingDifferences: false)
     }
