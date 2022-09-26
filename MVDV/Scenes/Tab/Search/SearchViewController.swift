@@ -209,25 +209,27 @@ private extension SearchViewController {
         return UICollectionViewCompositionalLayout { section, environment in
             switch Section(rawValue: section) {
                 case .movies:
-                    return Self.createMovieBackdropSection()
+                    return Self.createMoviePosterSection()
                 default:
                     return nil
             }
         }
     }
     
-    static func createMovieBackdropSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5),
+    static func createMoviePosterSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize).then {
-                $0.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
-            }
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                               heightDimension: .fractionalWidth(1/1.78))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                                               heightDimension: .fractionalWidth(0.5*1.5))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+        group.interItemSpacing = .fixed(10)
         
-        return NSCollectionLayoutSection(group: group)
+        return NSCollectionLayoutSection(group: group).then {
+            $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
+            $0.interGroupSpacing = 10
+        }
     }
     
     func createDataSource() {
@@ -246,7 +248,7 @@ private extension SearchViewController {
             
             guard let baseUrl = URL(string: self.vm.imageConfiguration.secure_base_url),
                   sizes.count > sizeIndex,
-                  let posterPath = movie.backdrop_path
+                  let posterPath = movie.poster_path
             else { return }
             
             let imageUrl = baseUrl
