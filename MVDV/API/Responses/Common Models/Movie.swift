@@ -23,3 +23,37 @@ struct Movie: Decodable, Hashable {
     let video: Bool
     let vote_average: Float
 }
+
+extension Movie {
+    func backdrop(with imageConfiguration: ImageConfiguration) -> URL? {
+        guard let path = backdrop_path else { return nil }
+        
+        let backdrop_sizes = imageConfiguration.backdrop_sizes
+        
+        let size = [ "w780", "w1280", "w300", "original" ].first {
+            backdrop_sizes.contains($0)
+        } ?? backdrop_sizes.last
+            
+        guard let size else { return nil }
+        
+        return URL(string: imageConfiguration.secure_base_url)?
+            .appendingPathComponent(size)
+            .appendingPathComponent(path)
+    }
+    
+    func poster(with imageConfiguration: ImageConfiguration) -> URL? {
+        guard let path = poster_path else { return nil }
+       
+        let poster_sizes = imageConfiguration.poster_sizes
+        
+        let size = [ "342", "w500", "w780", "original", "w185", "w154" ].first {
+            poster_sizes.contains($0)
+        } ?? poster_sizes.last
+        
+        guard let size else { return nil }
+        
+        return URL(string: imageConfiguration.secure_base_url)?
+            .appendingPathComponent(size)
+            .appendingPathComponent(path)
+    }
+}

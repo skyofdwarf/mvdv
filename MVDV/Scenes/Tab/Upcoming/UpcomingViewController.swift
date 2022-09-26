@@ -200,24 +200,10 @@ private extension UpcomingViewController {
             [weak self] (cell, indexPath, movie) in
             guard let self = self else { return }
             
+            let backdropUrl = movie.backdrop(with: self.vm.imageConfiguration)
+            
             cell.label.text = movie.title
-            
-            let sizes: [String] = self.vm.imageConfiguration.backdrop_sizes
-            let sizeIndex: Int = (sizes.firstIndex(of: "w780") ??
-                                  sizes.firstIndex(of: "w1280") ??
-                                  sizes.firstIndex(of: "w300") ??
-                                  sizes.firstIndex(of: "original") ??
-                                  max(0, sizes.count - 1))
-            
-            guard let baseUrl = URL(string: self.vm.imageConfiguration.secure_base_url),
-                  sizes.count > sizeIndex,
-                  let posterPath = movie.backdrop_path
-            else { return }
-            
-            let imageUrl = baseUrl
-                .appendingPathComponent(sizes[sizeIndex])
-                .appendingPathComponent(posterPath)
-            cell.imageView.kf.setImage(with: imageUrl)
+            cell.imageView.kf.setImage(with: backdropUrl)
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
