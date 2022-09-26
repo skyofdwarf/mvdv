@@ -49,15 +49,15 @@ class LastestMovieResponseTests: XCTestCase {
     }
     
     func testResponseParsing_popularMovie() throws {
-        let data = PopularMovieResponse.json.data(using: .utf8)
+        let data = MovieResponse.json.data(using: .utf8)
         
-        XCTAssertNoThrow(try JSONDecoder().decode(PopularMovieResponse.self, from: data!))
+        XCTAssertNoThrow(try JSONDecoder().decode(MovieResponse.self, from: data!))
     }
     
     func testResponseParsing_topRated() throws {
-        let data = TopRatedMovieResponse.json.data(using: .utf8)
+        let data = MovieResponse.json.data(using: .utf8)
         
-        XCTAssertNoThrow(try JSONDecoder().decode(TopRatedMovieResponse.self, from: data!))
+        XCTAssertNoThrow(try JSONDecoder().decode(MovieResponse.self, from: data!))
     }
     
     func testResponseParsing_upcomingMovie() throws {
@@ -73,9 +73,9 @@ class LastestMovieResponseTests: XCTestCase {
     }
     
     func testResponseParsing_similarMovies() throws {
-        let data = SimilarMovieResponse.json.data(using: .utf8)
+        let data = MovieResponse.json.data(using: .utf8)
         
-        XCTAssertNoThrow(try JSONDecoder().decode(SimilarMovieResponse.self, from: data!))
+        XCTAssertNoThrow(try JSONDecoder().decode(MovieResponse.self, from: data!))
     }
     
     func testResponseParsing_movieCredits() throws {

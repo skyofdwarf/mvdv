@@ -41,7 +41,7 @@ struct MovieDetailResponse: Decodable {
     
     let videos: MovieVideosResponse
     let images: MovieImagesResponse
-    let similar: SimilarMovieResponse
+    let similar: MovieResponse
     let credits: MovieCreditsResponse
 }
 

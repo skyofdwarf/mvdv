@@ -23,11 +23,11 @@ extension MVDVService {
         request(MovieTarget.nowPlaying)
     }
     
-    func popular() -> Observable<PopularMovieResponse> {
+    func popular() -> Observable<MovieResponse> {
         request(MovieTarget.popular)
     }
     
-    func topRated() -> Observable<TopRatedMovieResponse> {
+    func topRated() -> Observable<MovieResponse> {
         request(MovieTarget.topRated)
     }
     
@@ -35,7 +35,7 @@ extension MVDVService {
         request(MovieTarget.upcoming)
     }
     
-    func trending() -> Observable<TrendingMovieResponse> {
+    func trending() -> Observable<MovieResponse> {
         request(MovieTarget.trending)
     }
     
@@ -45,5 +45,9 @@ extension MVDVService {
     
     func similar(id: Int) -> Observable<MovieDetailResponse> {
         request(MovieTarget.similar(id))
+    }
+    
+    func search(query: String, page: Int = 1) -> Observable<MovieResponse> {
+        request(MovieTarget.search(query: query, page: page))
     }
 }

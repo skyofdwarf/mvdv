@@ -22,6 +22,7 @@ enum MovieTarget: MVDBTarget {
     case trending
     case upcoming
     case discover
+    case search(query: String, page: Int)
 }
 
 extension MovieTarget {
@@ -40,6 +41,7 @@ extension MovieTarget {
             case .trending: return "/trending/movie/day"
             case .upcoming: return "/movie/upcoming"
             case .discover: return "/discover/movie"
+            case .search: return "/search/movie"
         }
     }
     
@@ -47,6 +49,10 @@ extension MovieTarget {
         switch self {
             case .detail:
                 return .requestParameters(parameters: ["append_to_response": "videos,images,similar,credits"],
+                                          encoding: URLEncoding.queryString)
+            case .search(let query, let page):
+                return .requestParameters(parameters: ["query": query,
+                                                       "page": page],
                                           encoding: URLEncoding.queryString)
             default:
                 return .requestPlain
