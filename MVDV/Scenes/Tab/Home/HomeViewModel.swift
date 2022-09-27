@@ -86,11 +86,11 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
             case .ready:
                 // TODO: catch individual errors
                 return Observable.combineLatest(MVDVService.shared.configuration(),
-                                                MVDVService.shared.trending(),
-                                                MVDVService.shared.genres(),
-                                                MVDVService.shared.topRated(),
-                                                MVDVService.shared.popular(),
-                                                MVDVService.shared.nowPlaying())
+                                                MVDVService.shared.movie.trending(),
+                                                MVDVService.shared.movie.genres(),
+                                                MVDVService.shared.movie.topRated(),
+                                                MVDVService.shared.movie.popular(),
+                                                MVDVService.shared.movie.nowPlaying())
                     .flatMap { (configuration, trending, genres, topRated, popular, nowPlaying) -> Observable<Reaction> in
                         let section = State.Sections(nowPlaying: nowPlaying.results,
                                                      genres: genres.genres,

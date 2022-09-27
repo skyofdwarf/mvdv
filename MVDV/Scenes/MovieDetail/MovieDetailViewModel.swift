@@ -72,21 +72,21 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
     
     override func react(action: Action, state: State) -> Observable<Reaction> {
         switch action {
-            case .ready:
-                // TODO: fetch all movies
-                return MVDVService.shared.detail(id: movieId)
-                    .map { detail -> Reaction in
-                        let sections = State.Sections(detail: detail,
-                                                      similar: detail.similar?.results)
-                        return .mutation(.sections(sections))
-                    }
-                    .catch {
-                        .from([.mutation(.fetching(false)),
-                               .event(.alert($0.localizedDescription))])
-                    }
-                    .startWith(Reaction.mutation(.fetching(true)))
-                    .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
-                    
+        case .ready:
+            // TODO: fetch all movies
+            return MVDVService.shared.movie.detail(id: movieId)
+                .map { detail -> Reaction in
+                    let sections = State.Sections(detail: detail,
+                                                  similar: detail.similar?.results)
+                    return .mutation(.sections(sections))
+                }
+                .catch {
+                    .from([.mutation(.fetching(false)),
+                           .event(.alert($0.localizedDescription))])
+                }
+                .startWith(Reaction.mutation(.fetching(true)))
+                .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+            
         }
     }
     

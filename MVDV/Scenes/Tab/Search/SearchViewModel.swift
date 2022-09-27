@@ -74,7 +74,7 @@ final class SearchViewModel: ViewModel<SearchAction, SearchMutation, SearchState
                            .mutation(.sections(sections)))
             }
             
-            return MVDVService.shared.search(query: query)
+            return MVDVService.shared.movie.search(query: query)
                 .map { response -> Reaction in
                     let sections = State.Sections(movies: response.results)
                     return .mutation(.sections(sections))

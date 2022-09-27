@@ -66,7 +66,7 @@ final class UpcomingViewModel: ViewModel<UpcomingAction, UpcomingMutation, Upcom
         switch action {
             case .ready:
                 // TODO: fetch all movies
-                return MVDVService.shared.upcoming()
+            return MVDVService.shared.movie.upcoming()
                     .map { upcoming -> Reaction in
                         let sections = State.Sections(movies: upcoming.results)
                         return .mutation(.sections(sections))

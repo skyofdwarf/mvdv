@@ -7,14 +7,57 @@
 
 import Foundation
 import RxSwift
+import Moya
 
-// MARK: Target requests
+// MARK: Common APIs
 
 extension MVDVService {
     func configuration() -> Observable<ConfigurationResponse> {
         request(ConfigurationTarget.configuration)
     }
+}
 
+// MARK: API groups
+
+extension MVDVService {
+    struct Authentication: ServiceRedirect {
+        let base: MVDVService
+    }
+    
+    struct Movie: ServiceRedirect {
+        let base: MVDVService
+    }
+    
+    var authentication: Authentication { Authentication(base: self) }
+    var movie: Movie { Movie(base: self) }
+}
+
+/// Proxy protocol to short calling of request method
+protocol ServiceRedirect {
+    var base: MVDVService { get }
+}
+
+extension ServiceRedirect {
+    func request<D: Decodable>(_ target: TargetType) -> Observable<D> {
+        base.request(target)
+    }
+}
+
+// MARK: Authentication APIs
+
+extension MVDVService.Authentication {
+    func requestToken() -> Observable<AuthenticationTokenResponse> {
+        request(AuthenticationTarget.authenticationToken)
+    }
+    
+    func newSession(requestToken: String) -> Observable<NewSessionResponse> {
+        request(AuthenticationTarget.newSession(requestToken: requestToken))
+    }
+}
+
+// MARK: Movie APIs
+
+extension MVDVService.Movie {
     func genres() -> Observable<GenreResponse> {
         request(MovieTarget.genres)
     }
@@ -49,13 +92,5 @@ extension MVDVService {
     
     func search(query: String, page: Int = 1) -> Observable<MovieResponse> {
         request(MovieTarget.search(query: query, page: page))
-    }
-    
-    func authenticationToken() -> Observable<AuthenticationTokenResponse> {
-        request(AuthenticationTarget.authenticationToken)
-    }
-    
-    func newSession(requestToken: String) -> Observable<NewSessionResponse> {
-        request(AuthenticationTarget.newSession(requestToken: requestToken))
     }
 }
