@@ -50,4 +50,12 @@ extension MVDVService {
     func search(query: String, page: Int = 1) -> Observable<MovieResponse> {
         request(MovieTarget.search(query: query, page: page))
     }
+    
+    func authenticationToken() -> Observable<AuthenticationTokenResponse> {
+        request(AuthenticationTarget.authenticationToken)
+    }
+    
+    func newSession(requestToken: String) -> Observable<NewSessionResponse> {
+        request(AuthenticationTarget.newSession(requestToken: requestToken))
+    }
 }
