@@ -186,6 +186,7 @@ private extension SearchViewController {
         searchBar.barTintColor = R.color.tmdbColorTertiaryLightGreen()
         searchBar.tintColor = R.color.tmdbColorTertiaryLightGreen()
         searchBar.searchTextField.textColor = .white
+        searchBar.placeholder = "Search your movie"
         searchBar.delegate = self
         
         navigationItem.titleView = searchBar
