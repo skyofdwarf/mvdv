@@ -21,6 +21,10 @@ internal enum Strings {
       /// MVDV
       internal static let title = Strings.tr("Common", "alert.title")
     }
+    internal enum Favorites {
+      /// Favorites
+      internal static let title = Strings.tr("Common", "favorites.title")
+    }
     internal enum Home {
       /// Home
       internal static let title = Strings.tr("Common", "home.title")

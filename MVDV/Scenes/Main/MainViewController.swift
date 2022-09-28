@@ -91,7 +91,7 @@ private extension MainViewController {
         viewControllers = [ HomeViewController(vm: HomeViewModel(imageConfiguration: imageConfiguration)),
                             UpcomingViewController(vm: UpcomingViewModel(imageConfiguration: imageConfiguration)),
                             SearchViewController(vm: SearchViewModel(imageConfiguration: imageConfiguration)),
-                            ProfileViewController() ].map { $0.navigationRooted }
+                            FavoritesViewController() ].map { $0.navigationRooted }
     }
     
     func showEvent(_ event: MainEvent) {
