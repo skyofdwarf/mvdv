@@ -29,8 +29,13 @@ extension MVDVService {
         let base: MVDVService
     }
     
+    struct Account: ServiceRedirect {
+        let base: MVDVService
+    }
+    
     var authentication: Authentication { Authentication(base: self) }
     var movie: Movie { Movie(base: self) }
+    var account: Account { Account(base: self) }
 }
 
 /// Proxy protocol to short calling of request method
@@ -147,5 +152,25 @@ extension MVDVService.Movie {
     
     func search(query: String, page: Int = 1) -> Observable<MovieResponse> {
         request(MovieTarget.search(query: query, page: page))
+    }
+}
+
+// MARK: Account APIs
+
+extension MVDVService.Account {
+    enum Error: Swift.Error {
+        case unbound
+    }
+    
+    func markFavorite(_ favorited: Bool, mediaId: Int) -> Observable<MovieResponse> {
+        guard let sessionId = base.dataStorage.sessionId,
+              let accountId = base.dataStorage.accountId
+        else {
+            return .error(Error.unbound)
+        }
+        return request(AccountTarget.markFavorite(accountId: accountId,
+                                                  sessionId: sessionId,
+                                                  mediaId: mediaId,
+                                                  favorited: favorited))
     }
 }
