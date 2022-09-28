@@ -88,10 +88,12 @@ private extension MainViewController {
     }
     
     func showTabs(imageConfiguration: ImageConfiguration) {
-        viewControllers = [ HomeViewController(vm: HomeViewModel(imageConfiguration: imageConfiguration)),
-                            UpcomingViewController(vm: UpcomingViewModel(imageConfiguration: imageConfiguration)),
-                            SearchViewController(vm: SearchViewModel(imageConfiguration: imageConfiguration)),
-                            FavoritesViewController() ].map { $0.navigationRooted }
+        viewControllers = [
+            HomeViewController(vm: HomeViewModel(imageConfiguration: imageConfiguration)),
+            UpcomingViewController(vm: UpcomingViewModel(imageConfiguration: imageConfiguration)),
+            SearchViewController(vm: SearchViewModel(imageConfiguration: imageConfiguration)),
+            FavoritesViewController(vm: FavoritesViewModel(imageConfiguration: imageConfiguration))
+        ].map { $0.navigationRooted }
     }
     
     func showEvent(_ event: MainEvent) {

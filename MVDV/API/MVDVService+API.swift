@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import Moya
+import AuthenticationServices
 
 // MARK: Common APIs
 
@@ -46,12 +47,66 @@ extension ServiceRedirect {
 // MARK: Authentication APIs
 
 extension MVDVService.Authentication {
-    func requestToken() -> Observable<AuthenticationTokenResponse> {
-        request(AuthenticationTarget.authenticationToken)
+    static let redirectScheme = "mvdv"
+    static func authenticationUrl(requestToken: String) -> URL? {
+        URL(string: "https://www.themoviedb.org/authenticate/\(requestToken)?redirect_to=\(redirectScheme)://approved")
     }
     
-    func newSession(requestToken: String) -> Observable<NewSessionResponse> {
+    enum Error: Swift.Error {
+        case unknown
+        case invalidAuthenticationURL
+        case sessionFailed
+    }
+   
+    func authenticate(providing: ASWebAuthenticationPresentationContextProviding?) -> Observable<NewSessionResponse> {
+        requestToken()
+            .flatMap { response -> Observable<NewSessionResponse> in
+                let requestToken = response.request_token
+                
+                return askPermission(requestToken: requestToken, providing: providing)
+                    .flatMap { approved -> Observable<NewSessionResponse> in
+                        if approved {
+                            return newSession(requestToken: requestToken)
+                        } else {
+                            return .error(Error.sessionFailed)
+                        }
+                    }
+            }
+    }
+    
+    private func requestToken() -> Observable<AuthenticationTokenResponse> {
+        request(AuthenticationTarget.requestToken)
+    }
+    
+    private func newSession(requestToken: String) -> Observable<NewSessionResponse> {
         request(AuthenticationTarget.newSession(requestToken: requestToken))
+    }
+    
+    private func askPermission(requestToken: String, providing: ASWebAuthenticationPresentationContextProviding?) -> Observable<Bool> {
+        guard let url = Self.authenticationUrl(requestToken: requestToken) else {
+            return .error(Error.invalidAuthenticationURL)
+        }
+        
+        return Single<Bool>.create { observer in
+            let session = ASWebAuthenticationSession(url: url, callbackURLScheme: Self.redirectScheme) { url, error in
+                guard let url else {
+                    observer(.failure(error ?? Error.unknown))
+                    return
+                }
+                
+                let denied = url.query?.contains("denied") ?? false
+                
+                observer(.success(!denied))
+            }
+            
+            session.presentationContextProvider = providing
+            session.start()
+            
+            return Disposables.create {
+                session.cancel()
+            }
+        }
+        .asObservable()
     }
 }
 
