@@ -22,9 +22,9 @@ class MovieDetailViewController: UIViewController {
         
         var title: String {
             switch self {
-                case .detail: return "Details"
+            case .detail: return "Details"
                 //case .video: return "Videos"
-                case .similar: return "Similar movies"
+            case .similar: return "Similar movies"
             }
         }
     }
@@ -171,37 +171,37 @@ private extension MovieDetailViewController {
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
             switch Section(rawValue: section) {
-                case .detail:
-                    let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                                      heightDimension: .estimated(200))
+            case .detail:
+                let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                                  heightDimension: .estimated(200))
+                
+                let item = NSCollectionLayoutItem(layoutSize: size)
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitems: [item])
+                return NSCollectionLayoutSection(group: group).then {
+                    $0.contentInsets = NSDirectionalEdgeInsets(top: 18, leading: 18, bottom: 18, trailing: 18)
+                }
+            case .similar:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                                      heightDimension: .fractionalHeight(1))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
+                                                       heightDimension: .fractionalWidth(0.4*1.5))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                
+                return NSCollectionLayoutSection(group: group).then {
+                    $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
+                    $0.interGroupSpacing = 10
+                    $0.orthogonalScrollingBehavior = .continuous
                     
-                    let item = NSCollectionLayoutItem(layoutSize: size)
-                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitems: [item])
-                    return NSCollectionLayoutSection(group: group).then {
-                        $0.contentInsets = NSDirectionalEdgeInsets(top: 18, leading: 18, bottom: 18, trailing: 18)
-                    }
-                case .similar:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                                          heightDimension: .fractionalHeight(1))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    
-                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
-                                                           heightDimension: .fractionalWidth(0.4*1.5))
-                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                    
-                    return NSCollectionLayoutSection(group: group).then {
-                        $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
-                        $0.interGroupSpacing = 10
-                        $0.orthogonalScrollingBehavior = .continuous
-                        
-                        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                                heightDimension: .estimated(50))
-                        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                                        elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                        $0.boundarySupplementaryItems = [sectionHeader]
-                    }
-                default:
-                    return nil
+                    let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                            heightDimension: .estimated(50))
+                    let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                                    elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                    $0.boundarySupplementaryItems = [sectionHeader]
+                }
+            default:
+                return nil
             }
         }
     }
@@ -226,10 +226,10 @@ private extension MovieDetailViewController {
             (collectionView, indexPath, identifier) in
             
             switch identifier {
-                case .detail(let detail):
-                    return collectionView.dequeueConfiguredReusableCell(using: detailCellRegistration, for: indexPath, item: detail)
-                case .movie(let movie):
-                    return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
+            case .detail(let detail):
+                return collectionView.dequeueConfiguredReusableCell(using: detailCellRegistration, for: indexPath, item: detail)
+            case .movie(let movie):
+                return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
             }
         }.then {
             let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {
@@ -339,8 +339,8 @@ extension Reactive where Base: MovieDetailViewController {
     var event: Binder<MovieDetailEvent> {
         Binder(base) {
             switch $1 {
-                case .alert(let msg):
-                    print("event: \(msg)")
+            case .alert(let msg):
+                print("event: \(msg)")
             }
         }
     }

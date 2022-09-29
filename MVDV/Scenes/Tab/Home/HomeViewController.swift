@@ -24,11 +24,11 @@ class HomeViewController: UIViewController {
         
         var title: String {
             switch self {
-                case .nowPlaying: return "Now Playing"
-                case .genres: return "Genres"
-                case .trending: return "Trending"
-                case .popuplar: return "Popular"
-                case .topRated: return "Top Rated"
+            case .nowPlaying: return "Now Playing"
+            case .genres: return "Genres"
+            case .trending: return "Trending"
+            case .popuplar: return "Popular"
+            case .topRated: return "Top Rated"
             }
         }
     }
@@ -186,14 +186,14 @@ private extension HomeViewController {
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
             switch Section(rawValue: section) {
-                case .genres:
-                    return Self.createGenreSection()
-                    
-                case .nowPlaying:
-                    return Self.createMovieBackdropSection()
-                    
-                default:
-                    return Self.createMoviePosterSection()
+            case .genres:
+                return Self.createGenreSection()
+                
+            case .nowPlaying:
+                return Self.createMovieBackdropSection()
+                
+            default:
+                return Self.createMoviePosterSection()
             }
         }
     }
@@ -296,17 +296,17 @@ private extension HomeViewController {
             (collectionView, indexPath, identifier) in
             
             guard let section = Section(rawValue: indexPath.section) else { return nil }
-                        
+            
             switch identifier {
-                case .genre(let genre):
-                    return collectionView.dequeueConfiguredReusableCell(using: genreCellRegistration, for: indexPath, item: genre)
-                case .movie(let movie):
-                    switch section {
-                        case .nowPlaying:
-                            return collectionView.dequeueConfiguredReusableCell(using: movieBackdropCellRegistration, for: indexPath, item: movie)
-                        default:
-                            return collectionView.dequeueConfiguredReusableCell(using: moviePosterCellRegistration, for: indexPath, item: movie)
-                    }
+            case .genre(let genre):
+                return collectionView.dequeueConfiguredReusableCell(using: genreCellRegistration, for: indexPath, item: genre)
+            case .movie(let movie):
+                switch section {
+                case .nowPlaying:
+                    return collectionView.dequeueConfiguredReusableCell(using: movieBackdropCellRegistration, for: indexPath, item: movie)
+                default:
+                    return collectionView.dequeueConfiguredReusableCell(using: moviePosterCellRegistration, for: indexPath, item: movie)
+                }
             }
         }.then {
             let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {
@@ -338,8 +338,8 @@ private extension HomeViewController {
     
     func showEvent(_ event: HomeEvent) {
         switch event {
-            case .alert(let msg):
-                alert(message: msg)
+        case .alert(let msg):
+            alert(message: msg)
         }
     }
 }

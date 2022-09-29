@@ -83,41 +83,41 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
     
     override func react(action: Action, state: State) -> Observable<Reaction> {
         switch action {
-            case .ready:
-                // TODO: catch individual errors
-                return Observable.combineLatest(MVDVService.shared.configuration(),
-                                                MVDVService.shared.movie.trending(),
-                                                MVDVService.shared.movie.genres(),
-                                                MVDVService.shared.movie.topRated(),
-                                                MVDVService.shared.movie.popular(),
-                                                MVDVService.shared.movie.nowPlaying())
-                    .flatMap { (configuration, trending, genres, topRated, popular, nowPlaying) -> Observable<Reaction> in
-                        let section = State.Sections(nowPlaying: nowPlaying.results,
-                                                     genres: genres.genres,
-                                                     trending: trending.results,
-                                                     popuplar: popular.results,
-                                                     topRated: topRated.results)
-                        return .just(.mutation(.sections(section)))
-                    }
-                    .catch { _ in
-                        .just(.event(.alert("Network error")))
-                    }
-                    .startWith(Reaction.mutation(.fetching(true)))
-                    .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
-            case .movie:
-                // TODO: transition to movie detail
-                print("TODOP: Show movie detail")
-                return .empty()
+        case .ready:
+            // TODO: catch individual errors
+            return Observable.combineLatest(MVDVService.shared.configuration(),
+                                            MVDVService.shared.movie.trending(),
+                                            MVDVService.shared.movie.genres(),
+                                            MVDVService.shared.movie.topRated(),
+                                            MVDVService.shared.movie.popular(),
+                                            MVDVService.shared.movie.nowPlaying())
+                .flatMap { (configuration, trending, genres, topRated, popular, nowPlaying) -> Observable<Reaction> in
+                    let section = State.Sections(nowPlaying: nowPlaying.results,
+                                                 genres: genres.genres,
+                                                 trending: trending.results,
+                                                 popuplar: popular.results,
+                                                 topRated: topRated.results)
+                    return .just(.mutation(.sections(section)))
+                }
+                .catch { _ in
+                    .just(.event(.alert("Network error")))
+                }
+                .startWith(Reaction.mutation(.fetching(true)))
+                .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+        case .movie:
+            // TODO: transition to movie detail
+            print("TODOP: Show movie detail")
+            return .empty()
         }
     }
     
     override func reduce(mutation: Mutation, state: State) -> State {
         var state = state
         switch mutation {
-            case .fetching(let fetching):
-                state.fetching = fetching
-            case .sections(let sections):
-                state.sections = sections
+        case .fetching(let fetching):
+            state.fetching = fetching
+        case .sections(let sections):
+            state.sections = sections
         }
         return state
     }

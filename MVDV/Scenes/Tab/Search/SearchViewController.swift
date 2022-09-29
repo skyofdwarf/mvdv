@@ -209,10 +209,10 @@ private extension SearchViewController {
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
             switch Section(rawValue: section) {
-                case .movies:
-                    return Self.createMoviePosterSection()
-                default:
-                    return nil
+            case .movies:
+                return Self.createMoviePosterSection()
+            default:
+                return nil
             }
         }
     }
@@ -248,8 +248,8 @@ private extension SearchViewController {
             (collectionView, indexPath, identifier) in
             
             switch identifier {
-                case .movie(let movie):
-                    return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
+            case .movie(let movie):
+                return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
             }
         }
     }
@@ -265,8 +265,8 @@ private extension SearchViewController {
     
     func showEvent(_ event: SearchEvent) {
         switch event {
-            case .alert(let msg):
-                alert(message: msg)
+        case .alert(let msg):
+            alert(message: msg)
         }
     }
 }

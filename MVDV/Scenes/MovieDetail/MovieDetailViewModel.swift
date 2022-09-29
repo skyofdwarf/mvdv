@@ -93,10 +93,10 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
     override func reduce(mutation: Mutation, state: State) -> State {
         var state = state
         switch mutation {
-            case .fetching(let fetching):
-                state.fetching = fetching
-            case .sections(let sections):
-                state.sections = sections
+        case .fetching(let fetching):
+            state.fetching = fetching
+        case .sections(let sections):
+            state.sections = sections
         }
         return state
     }

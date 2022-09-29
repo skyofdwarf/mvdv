@@ -20,7 +20,7 @@ class UpcomingViewController: UIViewController {
         
         var title: String {
             switch self {
-                case .upcoming: return "Upcoming"
+            case .upcoming: return "Upcoming"
             }
         }
     }
@@ -173,10 +173,10 @@ private extension UpcomingViewController {
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
             switch Section(rawValue: section) {
-                case .upcoming:
-                    return Self.createMovieBackdropSection()
-                default:
-                    return nil
+            case .upcoming:
+                return Self.createMovieBackdropSection()
+            default:
+                return nil
             }
         }
     }
@@ -210,8 +210,8 @@ private extension UpcomingViewController {
             (collectionView, indexPath, identifier) in
             
             switch identifier {
-                case .movie(let movie):
-                    return collectionView.dequeueConfiguredReusableCell(using: upcomingMovieCellRegistration, for: indexPath, item: movie)
+            case .movie(let movie):
+                return collectionView.dequeueConfiguredReusableCell(using: upcomingMovieCellRegistration, for: indexPath, item: movie)
             }
         }
     }
@@ -227,8 +227,8 @@ private extension UpcomingViewController {
     
     func showEvent(_ event: UpcomingEvent) {
         switch event {
-            case .alert(let msg):
-                alert(message: msg)
+        case .alert(let msg):
+            alert(message: msg)
         }
     }
 }

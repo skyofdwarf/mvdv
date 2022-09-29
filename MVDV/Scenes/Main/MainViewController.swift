@@ -98,8 +98,8 @@ private extension MainViewController {
     
     func showEvent(_ event: MainEvent) {
         switch event {
-            case .alert(let msg):
-                alert(message: msg)
+        case .alert(let msg):
+            alert(message: msg)
         }
     }
 }

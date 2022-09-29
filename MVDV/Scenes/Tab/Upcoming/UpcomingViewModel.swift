@@ -64,28 +64,28 @@ final class UpcomingViewModel: ViewModel<UpcomingAction, UpcomingMutation, Upcom
     
     override func react(action: Action, state: State) -> Observable<Reaction> {
         switch action {
-            case .ready:
-                // TODO: fetch all movies
+        case .ready:
+            // TODO: fetch all movies
             return MVDVService.shared.movie.upcoming()
-                    .map { upcoming -> Reaction in
-                        let sections = State.Sections(movies: upcoming.results)
-                        return .mutation(.sections(sections))
-                    }
-                    .catch {
-                        .just(.event(.alert($0.localizedDescription)))
-                    }
-                    .startWith(Reaction.mutation(.fetching(true)))
-                    .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+                .map { upcoming -> Reaction in
+                    let sections = State.Sections(movies: upcoming.results)
+                    return .mutation(.sections(sections))
+                }
+                .catch {
+                    .just(.event(.alert($0.localizedDescription)))
+                }
+                .startWith(Reaction.mutation(.fetching(true)))
+                .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
         }
     }
     
     override func reduce(mutation: Mutation, state: State) -> State {
         var state = state
         switch mutation {
-            case .fetching(let fetching):
-                state.fetching = fetching
-            case .sections(let sections):
-                state.sections = sections
+        case .fetching(let fetching):
+            state.fetching = fetching
+        case .sections(let sections):
+            state.sections = sections
         }
         return state
     }

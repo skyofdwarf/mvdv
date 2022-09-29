@@ -54,27 +54,27 @@ final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEv
     
     override func react(action: Action, state: State) -> Observable<Reaction> {
         switch action {
-            case .ready:
-                // TODO: catch individual errors
-                return MVDVService.shared.configuration()
-                    .map {
-                        .mutation(.imageConfiguration($0.images))
-                    }
-                    .catch { _ in
-                        .just(.event(.alert("Configuration unavailable")))
-                    }
-                    .startWith(Reaction.mutation(.fetching(true)))
-                    .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+        case .ready:
+            // TODO: catch individual errors
+            return MVDVService.shared.configuration()
+                .map {
+                    .mutation(.imageConfiguration($0.images))
+                }
+                .catch { _ in
+                    .just(.event(.alert("Configuration unavailable")))
+                }
+                .startWith(Reaction.mutation(.fetching(true)))
+                .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
         }
     }
     
     override func reduce(mutation: Mutation, state: State) -> State {
         var state = state
         switch mutation {
-            case .fetching(let fetching):
-                state.fetching = fetching
-            case .imageConfiguration(let imageConfiguration):
-                state.imageConfiguration = imageConfiguration
+        case .fetching(let fetching):
+            state.fetching = fetching
+        case .imageConfiguration(let imageConfiguration):
+            state.imageConfiguration = imageConfiguration
         }
         return state
     }
