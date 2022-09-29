@@ -63,14 +63,21 @@ extension MVDVService.Authentication {
         case sessionFailed
     }
    
+    /// Authenticates a user
+    /// 1. request token
+    /// 2. confirm user permission
+    /// 3. create a new session id
     func authenticate(providing: ASWebAuthenticationPresentationContextProviding?) -> Observable<NewSessionResponse> {
+        // 1. request token
         requestToken()
             .flatMap { response -> Observable<NewSessionResponse> in
                 let requestToken = response.request_token
                 
+                // 2. confirm user permission
                 return askPermission(requestToken: requestToken, providing: providing)
                     .flatMap { approved -> Observable<NewSessionResponse> in
                         if approved {
+                            // 3. create a new session id
                             return newSession(requestToken: requestToken)
                         } else {
                             return .error(Error.sessionFailed)
@@ -160,6 +167,10 @@ extension MVDVService.Movie {
 extension MVDVService.Account {
     enum Error: Swift.Error {
         case unbound
+    }
+    
+    func account(sessionId: String) -> Observable<AccountResponse> {
+        return request(AccountTarget.account(sessionId: sessionId))
     }
     
     func markFavorite(_ favorited: Bool, mediaId: Int) -> Observable<MovieResponse> {

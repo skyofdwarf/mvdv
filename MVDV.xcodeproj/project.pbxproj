@@ -75,6 +75,7 @@
 		5659097B28E4A3DA00BCBA47 /* DataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5659097A28E4A3DA00BCBA47 /* DataStorage.swift */; };
 		5659097D28E4A91300BCBA47 /* AccountTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5659097C28E4A91300BCBA47 /* AccountTarget.swift */; };
 		5659097F28E5A62B00BCBA47 /* DataStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5659097E28E5A62B00BCBA47 /* DataStorageTests.swift */; };
+		5659098128E6005300BCBA47 /* AccountResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5659098028E6005300BCBA47 /* AccountResponse.swift */; };
 		56B43F3D277BEDDE00EA1E88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */; };
 		56B43F3F277BEDDE00EA1E88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */; };
 		56B43F44277BEDDE00EA1E88 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56B43F42277BEDDE00EA1E88 /* Main.storyboard */; };
@@ -159,6 +160,7 @@
 		5659097A28E4A3DA00BCBA47 /* DataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorage.swift; sourceTree = "<group>"; };
 		5659097C28E4A91300BCBA47 /* AccountTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTarget.swift; sourceTree = "<group>"; };
 		5659097E28E5A62B00BCBA47 /* DataStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorageTests.swift; sourceTree = "<group>"; };
+		5659098028E6005300BCBA47 /* AccountResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountResponse.swift; sourceTree = "<group>"; };
 		56B43F39277BEDDE00EA1E88 /* MVDV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MVDV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56B43F3C277BEDDE00EA1E88 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56B43F3E277BEDDE00EA1E88 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				4283FBF62795BB9900F3D753 /* ConfigurationResponse.swift */,
 				5642822528E34359002A5F58 /* AuthenticationTokenResponse.swift */,
 				5642822728E379DB002A5F58 /* NewSessionResponse.swift */,
+				5659098028E6005300BCBA47 /* AccountResponse.swift */,
 				5642822128E1A18F002A5F58 /* MovieResponse.swift */,
 				4283FC0B2797107E00F3D753 /* GenreResponse.swift */,
 				4283FC0D279711DE00F3D753 /* LastestMovieResponse.swift */,
@@ -697,6 +700,7 @@
 				4283FC122797138200F3D753 /* Country.swift in Sources */,
 				4283FBF42795B40600F3D753 /* APIService.swift in Sources */,
 				4283FC2127971A4A00F3D753 /* UpcomingMovieResponse.swift in Sources */,
+				5659098128E6005300BCBA47 /* AccountResponse.swift in Sources */,
 				42B3913227AC1172004CAF2E /* MovieDetailResponse.swift in Sources */,
 				42FD231027A12A2600C698E7 /* MoviePosterCell.swift in Sources */,
 				5659097D28E4A91300BCBA47 /* AccountTarget.swift in Sources */,

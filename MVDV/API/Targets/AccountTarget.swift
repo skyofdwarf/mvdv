@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 enum AccountTarget: MVDBTarget {
-    case details(sessionId: String)
+    case account(sessionId: String)
     case markFavorite(accountId: String, sessionId: String, mediaId: Int, favorited: Bool)
     case favoriteMovies(accountId: String, sessionId: String/*, page: Int*/)
 }
@@ -17,7 +17,7 @@ enum AccountTarget: MVDBTarget {
 extension AccountTarget {
     var path: String {
         switch self {
-        case .details: return "/account"
+        case .account: return "/account"
         case .markFavorite(let accountId, _, _, _): return "/account/\(accountId)/favorite"
         case .favoriteMovies(let accountId, _): return "/account/\(accountId)/favorite/movies"
         }
@@ -25,7 +25,7 @@ extension AccountTarget {
     
     var task: Task {
         switch self {
-        case .details(let sessionId):
+        case .account(let sessionId):
             return .requestParameters(parameters: ["session_id": sessionId],
                                       encoding: URLEncoding.queryString)
             

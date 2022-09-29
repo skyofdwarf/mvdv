@@ -69,26 +69,45 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
     override func react(action: Action, state: State) -> Observable<Reaction> {
         switch action {
         case .authenticate(let providing):
-            return MVDVService.shared.authentication.authenticate(providing: providing)
-                .map { Reaction.event(.alert($0.session_id)) }
-                .catch {
-                    .just(Reaction.event(.alert($0.localizedDescription)))
-                }
-                .startWith(Reaction.mutation(.fetching(true)))
-                .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+            return authenticate(providing: providing)
         }
     }
     
     override func reduce(mutation: Mutation, state: State) -> State {
-//        var state = state
-//        switch mutation {
-//        case .fetching(let fetching):
-//            state.fetching = fetching
-//        case .query(let query):
-//            state.query = query
-//        case .sections(let sections):
-//            state.sections = sections
-//        }
+        var state = state
+        switch mutation {
+        case .fetching(let fetching):
+            state.fetching = fetching
+        case .authenticated(let authenticated):
+            state.authenticated = authenticated
+        case .sections(let sections):
+            state.sections = sections
+        }
         return state
+    }
+}
+
+extension FavoritesViewModel {
+    func authenticate(providing: ASWebAuthenticationPresentationContextProviding?) -> Observable<Reaction> {
+        // authenticate user
+        return MVDVService.shared.authentication.authenticate(providing: providing)
+            .flatMap {
+                // get account detail
+                let sessionId: String = $0.session_id
+                return MVDVService.shared.account.account(sessionId: sessionId)
+                    .withUnretained(DataStorage.shared)
+                    .do(onNext: { storage, account in
+                        // save account and session data
+                        try storage.saveAccount(accountId: account.username, sessionId: sessionId, gravatarHash: account.avatar?.gravatar?.hash)
+                    })
+                    .map { _ in
+                        Reaction.mutation(.authenticated(true))
+                    }
+            }
+            .catch {
+                .just(Reaction.event(.alert($0.localizedDescription)))
+            }
+            .startWith(Reaction.mutation(.fetching(true)))
+            .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
     }
 }
