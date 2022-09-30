@@ -59,7 +59,11 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         self.imageConfiguration = imageConfiguration
         self.dataStorage = dataStorage
         
-        super.init(state: State(),
+        let state = State(fetching: false,
+                          authenticated: dataStorage.authenticated,
+                          sections: .init())
+        
+        super.init(state: state,
                    actionMiddlewares: actionMiddlewares,
                    /*mutationMiddlewares: mutationMiddlewares,*/
                    eventMiddlewares: eventMiddlewares/*,

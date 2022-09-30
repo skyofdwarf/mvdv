@@ -24,6 +24,8 @@ final class DataStorage {
     var sessionId: String?
     var gravatarHash: String?
     
+    var authenticated: Bool { accountId != nil && sessionId != nil }
+    
     private init() {
         try? readAccount()
         print("DataStorage: \(self)")
