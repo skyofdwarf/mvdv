@@ -179,4 +179,8 @@ extension MVDVService.Account {
                                                   mediaId: mediaId,
                                                   favorited: favorited))
     }
+    
+    func favoritesMovies(sessionId: String, accountId: String) -> Observable<MovieResponse> {
+        return request(AccountTarget.favoriteMovies(accountId: accountId, sessionId: sessionId))
+    }
 }
