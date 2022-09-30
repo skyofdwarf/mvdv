@@ -86,6 +86,8 @@ class FavoritesViewController: UIViewController {
         snapshot.appendItems(sections.movies.map(Item.movie), toSection: .favorites)
         
         dataSource.apply(snapshot, animatingDifferences: false)
+        
+        // TODO: show empty list
     }
 }
 

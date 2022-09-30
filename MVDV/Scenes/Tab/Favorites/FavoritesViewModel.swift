@@ -12,7 +12,7 @@ import AuthenticationServices
 
 enum FavoritesAction: ViewModelAction {
     case authenticate(ASWebAuthenticationPresentationContextProviding?)
-//    case fetch
+    case fetch
 }
 
 enum FavoritesEvent: ViewModelEvent {
@@ -76,6 +76,8 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         switch action {
         case .authenticate(let providing):
             return authenticate(providing: providing)
+        case .fetch:
+            return getFavorites(dataStorage: dataStorage)
         }
     }
     
@@ -107,12 +109,33 @@ extension FavoritesViewModel {
                         // save account and session data
                         try storage.saveAccount(accountId: account.username, sessionId: sessionId, gravatarHash: account.avatar?.gravatar?.hash)
                     })
-                    .map { _ in
-                        Reaction.mutation(.authenticated(true))
+                    // TODO: The reaction should be able to return another action not only a mutation or an event.
+                    // .map {
+                    //     Reaction.action(.fetch)
+                    // }
+                    .flatMap { [weak self] storage, _ in
+                        return self?.getFavorites(dataStorage: storage)
+                            .startWith(Reaction.mutation(.authenticated(true)))
+                        ?? .empty()
                     }
             }
             .catch {
                 .just(Reaction.event(.alert($0.localizedDescription)))
+            }
+            .startWith(Reaction.mutation(.fetching(true)))
+            .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+    }
+    
+    func getFavorites(dataStorage: DataStorage) -> Observable<Reaction> {
+        guard let sessionId = dataStorage.sessionId,
+              let accountId = dataStorage.accountId
+        else {
+            return .just(.event(.alert("Not authenticated yet")))
+        }
+        
+        return MVDVService.shared.account.favoritesMovies(sessionId: sessionId, accountId: accountId)
+            .map {
+                Reaction.mutation(.sections(.init(movies: $0.results)))
             }
             .startWith(Reaction.mutation(.fetching(true)))
             .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
