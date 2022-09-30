@@ -16,9 +16,7 @@ fileprivate let accessToken = MVDBKeys().apiAccessToken
 final class MVDVService: APIService {
     static let shared = MVDVService()
     
-    let dataStorage: DataStorage
-    
-    init(dataStorage: DataStorage = DataStorage.shared) {
+    init() {
 #if DEBUG
         let plugins: [PluginType] = [
             NetworkLoggerPlugin(configuration: .init(logOptions: .verbose)),
@@ -30,9 +28,6 @@ final class MVDVService: APIService {
             AccessTokenPlugin(tokenClosure: { _ in accessToken })
         ]
 #endif
-        
-        self.dataStorage = dataStorage
-        
         let provider = MoyaProvider<MultiTarget>(plugins: plugins)
         
         super.init(provider: provider)

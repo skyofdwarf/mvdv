@@ -39,8 +39,9 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration
+    let dataStorage: DataStorage
     
-    init(imageConfiguration: ImageConfiguration) {
+    init(imageConfiguration: ImageConfiguration, dataStorage: DataStorage = DataStorage.shared) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -56,6 +57,7 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         ]
 
         self.imageConfiguration = imageConfiguration
+        self.dataStorage = dataStorage
         
         super.init(state: State(),
                    actionMiddlewares: actionMiddlewares,
@@ -91,11 +93,12 @@ extension FavoritesViewModel {
     func authenticate(providing: ASWebAuthenticationPresentationContextProviding?) -> Observable<Reaction> {
         // authenticate user
         return MVDVService.shared.authentication.authenticate(providing: providing)
-            .flatMap {
+            .withUnretained(dataStorage)
+            .flatMap { dataStorage, newSessionResponse in
                 // get account detail
-                let sessionId: String = $0.session_id
+                let sessionId: String = newSessionResponse.session_id
                 return MVDVService.shared.account.account(sessionId: sessionId)
-                    .withUnretained(DataStorage.shared)
+                    .withUnretained(dataStorage)
                     .do(onNext: { storage, account in
                         // save account and session data
                         try storage.saveAccount(accountId: account.username, sessionId: sessionId, gravatarHash: account.avatar?.gravatar?.hash)

@@ -173,12 +173,7 @@ extension MVDVService.Account {
         return request(AccountTarget.account(sessionId: sessionId))
     }
     
-    func markFavorite(_ favorited: Bool, mediaId: Int) -> Observable<MovieResponse> {
-        guard let sessionId = base.dataStorage.sessionId,
-              let accountId = base.dataStorage.accountId
-        else {
-            return .error(Error.unbound)
-        }
+    func markFavorite(_ favorited: Bool, mediaId: Int, sessionId: String, accountId: String) -> Observable<MovieResponse> {
         return request(AccountTarget.markFavorite(accountId: accountId,
                                                   sessionId: sessionId,
                                                   mediaId: mediaId,
