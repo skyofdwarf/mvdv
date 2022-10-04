@@ -57,11 +57,11 @@
 		42BB6D5827BBC1B300E78E81 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BB6D5727BBC1B300E78E81 /* UIViewController+Extension.swift */; };
 		42BB6D5A27BBDFE500E78E81 /* UpcomingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BB6D5927BBDFE500E78E81 /* UpcomingViewModel.swift */; };
 		42BB6D5C27BE7FE400E78E81 /* UpcomingMovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BB6D5B27BE7FE400E78E81 /* UpcomingMovieCell.swift */; };
-		42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */ = {isa = PBXBuildFile; productRef = 42E5A3CC27957C8600BA84AA /* Reduxift */; };
 		42FD231027A12A2600C698E7 /* MoviePosterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FD230F27A12A2600C698E7 /* MoviePosterCell.swift */; };
 		42FD231227A1352200C698E7 /* MovieHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FD231127A1352200C698E7 /* MovieHeaderView.swift */; };
 		42FD231527A13D3B00C698E7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 42FD231427A13D3B00C698E7 /* Kingfisher */; };
 		42FD231927A140A800C698E7 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FD231827A140A800C698E7 /* HomeViewModel.swift */; };
+		5628A62F28ECDDE800E32C14 /* RDXVM in Frameworks */ = {isa = PBXBuildFile; productRef = 5628A62E28ECDDE800E32C14 /* RDXVM */; };
 		5642821928D37042002A5F58 /* MVDVService+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5642821828D37042002A5F58 /* MVDVService+API.swift */; };
 		5642821D28D8653D002A5F58 /* MVDVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5642821C28D8653D002A5F58 /* MVDVService.swift */; };
 		5642821F28D86A56002A5F58 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5642821E28D86A56002A5F58 /* SearchViewModel.swift */; };
@@ -184,12 +184,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4283FBFA2795C44D00F3D753 /* BetterCodable in Frameworks */,
-				42E5A3CD27957C8600BA84AA /* Reduxift in Frameworks */,
 				4232CAC2278C7A8800168DE5 /* RxMoya in Frameworks */,
 				4283FC4A27998E3000F3D753 /* Then in Frameworks */,
 				42FD231527A13D3B00C698E7 /* Kingfisher in Frameworks */,
 				4283FC3D27995B3C00F3D753 /* SnapKit in Frameworks */,
 				4232CAC0278C7A8800168DE5 /* Moya in Frameworks */,
+				5628A62F28ECDDE800E32C14 /* RDXVM in Frameworks */,
 				F19469850A59FC8267396EC7 /* Pods_MVDV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -494,11 +494,11 @@
 			packageProductDependencies = (
 				4232CABF278C7A8800168DE5 /* Moya */,
 				4232CAC1278C7A8800168DE5 /* RxMoya */,
-				42E5A3CC27957C8600BA84AA /* Reduxift */,
 				4283FBF92795C44D00F3D753 /* BetterCodable */,
 				4283FC3C27995B3C00F3D753 /* SnapKit */,
 				4283FC4927998E3000F3D753 /* Then */,
 				42FD231427A13D3B00C698E7 /* Kingfisher */,
+				5628A62E28ECDDE800E32C14 /* RDXVM */,
 			);
 			productName = MVDV;
 			productReference = 56B43F39277BEDDE00EA1E88 /* MVDV.app */;
@@ -534,11 +534,11 @@
 			mainGroup = 56B43F30277BEDDE00EA1E88;
 			packageReferences = (
 				4232CABE278C7A8800168DE5 /* XCRemoteSwiftPackageReference "Moya" */,
-				42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */,
 				4283FBF82795C44D00F3D753 /* XCRemoteSwiftPackageReference "BetterCodable" */,
 				4283FC3B27995B3C00F3D753 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				4283FC4827998E3000F3D753 /* XCRemoteSwiftPackageReference "Then" */,
 				42FD231327A13D3B00C698E7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				5628A62D28ECDDE800E32C14 /* XCRemoteSwiftPackageReference "rdxvm" */,
 			);
 			productRefGroup = 56B43F3A277BEDDE00EA1E88 /* Products */;
 			projectDirPath = "";
@@ -1038,20 +1038,20 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/skyofdwarf/Reduxift";
-			requirement = {
-				branch = rdxvm;
-				kind = branch;
-			};
-		};
 		42FD231327A13D3B00C698E7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher/";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 7.0.0;
+			};
+		};
+		5628A62D28ECDDE800E32C14 /* XCRemoteSwiftPackageReference "rdxvm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/skyofdwarf/rdxvm";
+			requirement = {
+				branch = develop;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1082,15 +1082,15 @@
 			package = 4283FC4827998E3000F3D753 /* XCRemoteSwiftPackageReference "Then" */;
 			productName = Then;
 		};
-		42E5A3CC27957C8600BA84AA /* Reduxift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 42E5A3CB27957C8600BA84AA /* XCRemoteSwiftPackageReference "Reduxift" */;
-			productName = Reduxift;
-		};
 		42FD231427A13D3B00C698E7 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 42FD231327A13D3B00C698E7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		5628A62E28ECDDE800E32C14 /* RDXVM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5628A62D28ECDDE800E32C14 /* XCRemoteSwiftPackageReference "rdxvm" */;
+			productName = RDXVM;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

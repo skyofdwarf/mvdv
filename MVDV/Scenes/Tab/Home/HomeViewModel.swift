@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Reduxift
+import RDXVM
 import RxSwift
 
 enum HomeAction: ViewModelAction {
@@ -64,7 +64,7 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
         ]
         
         let stateMiddlewares = [
-            Self.middleware.state { state, next in
+            Self.postware.state { state, next in
                 print("[STATE] \(state)")
                 return next(state)
             }

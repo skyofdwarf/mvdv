@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Reduxift
+import RDXVM
 import RxSwift
 import AuthenticationServices
 
@@ -98,6 +98,10 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
 extension FavoritesViewModel {
     func authenticate(providing: ASWebAuthenticationPresentationContextProviding?) -> Observable<Reaction> {
         // authenticate user
+        guard !state.authenticated else {
+            return .just(.event(.alert("Authenticated already")))
+        }
+        
         return MVDVService.shared.authentication.authenticate(providing: providing)
             .withUnretained(dataStorage)
             .flatMap { dataStorage, newSessionResponse in
@@ -109,21 +113,17 @@ extension FavoritesViewModel {
                         // save account and session data
                         try storage.saveAccount(accountId: account.username, sessionId: sessionId, gravatarHash: account.avatar?.gravatar?.hash)
                     })
-                    // TODO: The reaction should be able to return another action not only a mutation or an event.
-                    // .map {
-                    //     Reaction.action(.fetch)
-                    // }
-                    .flatMap { [weak self] storage, _ in
-                        return self?.getFavorites(dataStorage: storage)
-                            .startWith(Reaction.mutation(.authenticated(true)))
-                        ?? .empty()
+                    .flatMap { _ -> Observable<Reaction> in
+                        .of(.mutation(.authenticated(true)),
+                            .action(.fetch))
                     }
+                
             }
             .catch {
-                .just(Reaction.event(.alert($0.localizedDescription)))
+                Observable<Reaction>.of(.event(.alert($0.localizedDescription)),
+                                        .mutation(.fetching(false)))
             }
             .startWith(Reaction.mutation(.fetching(true)))
-            .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
     }
     
     func getFavorites(dataStorage: DataStorage) -> Observable<Reaction> {
@@ -137,6 +137,7 @@ extension FavoritesViewModel {
             .map {
                 Reaction.mutation(.sections(.init(movies: $0.results)))
             }
+            .catch { .just(.event(.alert($0.localizedDescription))) }
             .startWith(Reaction.mutation(.fetching(true)))
             .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
     }

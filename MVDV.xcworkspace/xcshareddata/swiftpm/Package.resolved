@@ -37,21 +37,21 @@
       }
     },
     {
+      "identity" : "rdxvm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/skyofdwarf/rdxvm",
+      "state" : {
+        "branch" : "develop",
+        "revision" : "b991a18db399a965c23f235329250f9b4bf181a4"
+      }
+    },
+    {
       "identity" : "reactiveswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ReactiveCocoa/ReactiveSwift.git",
       "state" : {
         "revision" : "c43bae3dac73fdd3cb906bd5a1914686ca71ed3c",
         "version" : "6.7.0"
-      }
-    },
-    {
-      "identity" : "reduxift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/skyofdwarf/Reduxift",
-      "state" : {
-        "branch" : "rdxvm",
-        "revision" : "21192c6422869a531df2cd16590e882da17cb989"
       }
     },
     {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Reduxift
+import RDXVM
 import RxSwift
 
 enum MovieDetailAction: ViewModelAction {
