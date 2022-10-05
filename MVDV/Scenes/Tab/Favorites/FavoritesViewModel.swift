@@ -116,8 +116,7 @@ extension FavoritesViewModel {
                     .flatMap { _ -> Observable<Reaction> in
                         .of(.mutation(.authenticated(true)),
                             .action(.fetch))
-                    }
-                
+                    }                
             }
             .catch {
                 Observable<Reaction>.of(.event(.alert($0.localizedDescription)),

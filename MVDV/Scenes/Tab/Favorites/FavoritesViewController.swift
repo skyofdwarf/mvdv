@@ -38,6 +38,8 @@ class FavoritesViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
+    private let fetchRelay = PublishRelay<Void>()
+    
     private(set) var db = DisposeBag()
     let vm: FavoritesViewModel
     
@@ -75,7 +77,7 @@ class FavoritesViewController: UIViewController {
         }
     }
     
-    func showAuthenticatinGuide(_ authenticated: Bool) {
+    func changeLayout(authenticated: Bool) {
         authenticationGuideView.isHidden = authenticated
     }
     
@@ -96,19 +98,24 @@ class FavoritesViewController: UIViewController {
 private extension FavoritesViewController {
     func bindViewModel() {
         // inputs
-        authenticationButton.rx.tap
+        
+        let authenticate = authenticationButton.rx.tap
             .map { [weak self] in FavoritesAction.authenticate(self) }
+        
+        let fetch = fetchRelay
+            .map { FavoritesViewModel.Action.fetch }
+        
+        Observable<FavoritesAction>.merge([authenticate, fetch])
             .bind(to: vm.action)
             .disposed(by: db)
         
         // outputs
+        
         vm.state.$fetching
             .drive(indicator.rx.isAnimating)
             .disposed(by: db)
         
-        // outputs
         vm.state.$authenticated
-            .debug(">> authenticated")
             .drive(rx.authenticated)
             .disposed(by: db)
         
@@ -143,6 +150,11 @@ private extension FavoritesViewController {
         // authentication button
         authenticationButton = UIButton(type: .custom).then {
             $0.setTitle("Authenticate", for: .normal)
+            $0.layer.borderWidth = 1
+            $0.layer.borderColor = R.color.tmdbColorTertiaryLightGreen()?.cgColor
+            $0.layer.cornerRadius = 10
+            $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+            
         }
         
         // container view
@@ -275,7 +287,7 @@ extension Reactive where Base: FavoritesViewController {
     
     var authenticated: Binder<Bool> {
         Binder(base) {
-            $0.showAuthenticatinGuide($1)
+            $0.changeLayout(authenticated: $1)
         }
     }
 }
