@@ -57,10 +57,20 @@ extension MVDVService.Authentication {
         URL(string: "https://www.themoviedb.org/authenticate/\(requestToken)?redirect_to=\(redirectScheme)://approved")
     }
     
-    enum Error: Swift.Error {
+    enum Error: Swift.Error, LocalizedError {
         case unknown
         case invalidAuthenticationURL
-        case sessionFailed
+        case permissionDenied
+        case cancelled
+        
+        var errorDescription: String? {
+            switch self {
+            case .unknown: return "Unknwon error"
+            case .invalidAuthenticationURL: return "Invalid authentication URL"
+            case .permissionDenied: return "Permission denied"
+            case .cancelled: return "Cancelled"
+            }
+        }
     }
    
     /// Authenticates a user
@@ -80,7 +90,7 @@ extension MVDVService.Authentication {
                             // 3. create a new session id
                             return newSession(requestToken: requestToken)
                         } else {
-                            return .error(Error.sessionFailed)
+                            return .error(Error.permissionDenied)
                         }
                     }
             }
@@ -102,7 +112,11 @@ extension MVDVService.Authentication {
         return Single<Bool>.create { observer in
             let session = ASWebAuthenticationSession(url: url, callbackURLScheme: Self.redirectScheme) { url, error in
                 guard let url else {
-                    observer(.failure(error ?? Error.unknown))
+                    if let error = error as? ASWebAuthenticationSessionError {
+                        observer(.failure(error.code == ASWebAuthenticationSessionError.canceledLogin ?
+                                          Error.cancelled :
+                                            Error.unknown))
+                    }
                     return
                 }
                 
