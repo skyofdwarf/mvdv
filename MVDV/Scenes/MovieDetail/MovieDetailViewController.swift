@@ -34,31 +34,26 @@ class MovieDetailViewController: UIViewController {
         case movie(Movie)
     }
 
-
+    private var favoriteBarButton: UIBarButtonItem!
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var indicator: UIActivityIndicatorView!
     
-    private(set) var db = DisposeBag()
-    let vm: MovieDetailViewModel!
-
     private var backgroundView: UIView!
     private var imageView: UIImageView!
     private var imageDefaultHeight: CGFloat = 0
     
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
     
+    private(set) var db = DisposeBag()
+    let vm: MovieDetailViewModel!
+    
+    let actionRelay = PublishRelay<MovieDetailAction>()
+
     init(vm: MovieDetailViewModel) {
         self.vm = vm
         
         super.init(nibName: nil, bundle: nil)
-        
-        navigationItem.standardAppearance = .init().then {
-            $0.configureWithTransparentBackground()
-        }
-        navigationItem.scrollEdgeAppearance = .init().then {
-            $0.configureWithTransparentBackground()
-        }
     }
     
     required init?(coder: NSCoder) {
@@ -71,15 +66,15 @@ class MovieDetailViewController: UIViewController {
         view.clipsToBounds = true
         view.backgroundColor = .black
         
+        setupNavigationBar()
+        
         createCollectionView()
         createDataSource()
         createIndicator()
         
         bindViewModel()
 
-        Observable.just(MovieDetailAction.ready)
-            .bind(to: vm.action)
-            .disposed(by: db)
+        fetchDetail()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -95,14 +90,34 @@ class MovieDetailViewController: UIViewController {
         
         updateBackdrop()
     }
+    
+    // MARK: - action triggers
+    
+    func fetchDetail() {
+        actionRelay.accept(.ready)
+    }
+    
+    func toggleFavorite() {
+        actionRelay.accept(.toggleFavorite)
+    }
 }
 
 // MARK: ViewModel
 
 private extension MovieDetailViewController {
     func bindViewModel() {
+        // inputs
+        actionRelay
+            .bind(to: vm.action)
+            .disposed(by: db)
+        
+        // outputs
         vm.state.$fetching
             .drive(indicator.rx.isAnimating)
+            .disposed(by: db)
+        
+        vm.state.$favorited
+            .drive(rx.favorited)
             .disposed(by: db)
         
         vm.state.$backdrop
@@ -116,9 +131,11 @@ private extension MovieDetailViewController {
             .drive(rx.dataSource)
             .disposed(by: db)
         
+        // errors
         vm.error.emit(to: rx.error)
             .disposed(by: db)
         
+        // events
         vm.event.emit(to: rx.event)
             .disposed(by: db)
     }
@@ -127,6 +144,30 @@ private extension MovieDetailViewController {
 // MARK: UI
 
 private extension MovieDetailViewController {
+    func setupNavigationBar() {
+        navigationItem.standardAppearance = .init().then {
+            $0.configureWithTransparentBackground()
+        }
+        navigationItem.scrollEdgeAppearance = .init().then {
+            $0.configureWithTransparentBackground()
+        }
+        
+        navigationItem.rightBarButtonItem = createFavoriteToggleButton()
+    }
+    
+    func createFavoriteToggleButton() -> UIBarButtonItem {
+        let action = UIAction { [weak self] _ in
+            self?.toggleFavorite()
+        }
+        
+        favoriteBarButton = UIBarButtonItem(title: nil,
+                                            image: UIImage(systemName: "star"),
+                                            primaryAction: action,
+                                            menu: nil)
+       
+        return favoriteBarButton
+    }
+    
     func createIndicator() {
         indicator = UIActivityIndicatorView(style: .large).then {
             view.addSubview($0)
@@ -286,6 +327,10 @@ private extension MovieDetailViewController {
             }
         }
     }
+    
+    func updateFavorited(_ favorited: Bool) {
+        favoriteBarButton.image = UIImage(systemName: favorited ? "star.fill": "star")
+    }
 }
 
 // MARK: UICollectionViewDelegate
@@ -319,6 +364,12 @@ extension MovieDetailViewController: UICollectionViewDelegate {
 }
 
 extension Reactive where Base: MovieDetailViewController {
+    var favorited: Binder<Bool> {
+        Binder(base) {
+            $0.updateFavorited($1)
+        }
+    }
+    
     var dataSource: Binder<MovieDetailState.Sections> {
         Binder(base) {
             $0.applyDataSource(sections: $1)
@@ -341,8 +392,9 @@ extension Reactive where Base: MovieDetailViewController {
             switch $1 {
             case .alert(let msg):
                 print("event: \(msg)")
+            @unknown default:
+                print("received a event")
             }
         }
     }
 }
-

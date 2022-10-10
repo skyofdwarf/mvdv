@@ -23,6 +23,13 @@ extension AccountTarget {
         }
     }
     
+    var method: Moya.Method {
+        switch self {
+        case .markFavorite: return .post
+        default: return .get
+        }
+    }
+    
     var task: Task {
         switch self {
         case .account(let sessionId):
@@ -36,7 +43,7 @@ extension AccountTarget {
                                         "favorite": favorited ]
             
             return .requestCompositeParameters(bodyParameters: body,
-                                               bodyEncoding: URLEncoding.queryString,
+                                               bodyEncoding: URLEncoding.httpBody,
                                                urlParameters: params)
         case .favoriteMovies(_, let sessionId)/*(, let page)*/:
             return .requestParameters(parameters: ["session_id": sessionId],

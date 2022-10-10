@@ -11,14 +11,17 @@ import RxSwift
 
 enum MovieDetailAction: ViewModelAction {
     case ready
+    case toggleFavorite
 }
 
 enum MovieDetailEvent: ViewModelEvent {
     case alert(String)
+    case notAuthenticated
 }
 
 enum MovieDetailMutation: ViewModelMutation {
     case fetching(Bool)
+    case favorited(Bool)
     case sections(MovieDetailState.Sections)
 }
 
@@ -29,6 +32,7 @@ struct MovieDetailState: ViewModelState {
     }
     
     @Driving var fetching: Bool = false
+    @Driving var favorited: Bool = false
     @Driving var backdrop: URL?
     @Driving var sections: Sections = .init()
 }
@@ -38,9 +42,10 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
     
     let imageConfiguration: ImageConfiguration
     let movieId: Int
-    let backdrop: URL    
+    let backdrop: URL
+    let dataStorage: DataStorage
     
-    init(imageConfiguration: ImageConfiguration, movieId: Int, backdrop: URL) {
+    init(imageConfiguration: ImageConfiguration, movieId: Int, backdrop: URL, dataStorage: DataStorage = DataStorage.shared) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -58,6 +63,7 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         self.imageConfiguration = imageConfiguration
         self.movieId = movieId
         self.backdrop = backdrop
+        self.dataStorage = dataStorage
         
         let state = State(backdrop: backdrop)
         
@@ -81,12 +87,30 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
                     return .mutation(.sections(sections))
                 }
                 .catch {
-                    .from([.mutation(.fetching(false)),
-                           .event(.alert($0.localizedDescription))])
+                    .just(.event(.alert($0.localizedDescription)))
                 }
                 .startWith(Reaction.mutation(.fetching(true)))
                 .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+        case .toggleFavorite:
+            guard let sessionId = dataStorage.sessionId,
+                  let accountId = dataStorage.accountId
+            else {
+                return .just(Reaction.event(.notAuthenticated))
+            }
             
+            let favorited = !state.favorited
+            return MVDVService.shared.account.markFavorite(favorited,
+                                                           mediaId: movieId,
+                                                           sessionId: sessionId,
+                                                           accountId: accountId)
+            .map { _ in
+                Reaction.mutation(.favorited(favorited))
+            }
+            .catch {
+                .just(.event(.alert($0.localizedDescription)))
+            }
+            .startWith(Reaction.mutation(.fetching(true)))
+            .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
         }
     }
     
@@ -95,6 +119,8 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         switch mutation {
         case .fetching(let fetching):
             state.fetching = fetching
+        case .favorited(let favorited):
+            state.favorited = favorited
         case .sections(let sections):
             state.sections = sections
         }
