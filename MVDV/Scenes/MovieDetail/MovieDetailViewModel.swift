@@ -14,9 +14,16 @@ enum MovieDetailAction: ViewModelAction {
     case toggleFavorite
 }
 
-enum MovieDetailEvent: ViewModelEvent {
+enum MovieDetailEvent: ViewModelEvent, CustomStringConvertible {
     case alert(String)
     case notAuthenticated
+    
+    var description: String {
+        switch self {
+        case .alert(let msg): return msg
+        case .notAuthenticated: return "Not authenticated yet"
+        }
+    }
 }
 
 enum MovieDetailMutation: ViewModelMutation {
@@ -80,11 +87,14 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         switch action {
         case .ready:
             // TODO: fetch all movies
-            return MVDVService.shared.movie.detail(id: movieId)
-                .map { detail -> Reaction in
+            return MVDVService.shared.movie.detail(id: movieId,
+                                                   includeStates: dataStorage.authenticated)
+                .flatMap { detail -> Observable<Reaction> in
                     let sections = State.Sections(detail: detail,
                                                   similar: detail.similar?.results)
-                    return .mutation(.sections(sections))
+                    let favorited = detail.account_states?.favorite ?? false
+                    return .of(.mutation(.sections(sections)),
+                               .mutation(.favorited(favorited)))
                 }
                 .catch {
                     .just(.event(.alert($0.localizedDescription)))

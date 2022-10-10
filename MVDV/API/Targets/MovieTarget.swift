@@ -10,7 +10,7 @@ import Moya
 
 enum MovieTarget: MVDBTarget {
     case genres
-    case detail(Int)
+    case detail(Int, stated: Bool)
     case similar(Int)
     //case images(Int)
     //case videos(Int)
@@ -29,7 +29,7 @@ extension MovieTarget {
     var path: String {
         switch self {
         case .genres: return "genre/movie/list"
-        case .detail(let id): return "/movie/\(id)"
+        case .detail(let id, _): return "/movie/\(id)"
         case .similar(let id): return "/movie/\(id)/similar"
             //case .images(let id): return "/movie/\(id)/images"
             //case .videos(let id): return "/movie/\(id)/videos"
@@ -47,8 +47,12 @@ extension MovieTarget {
     
     var task: Task {
         switch self {
-        case .detail:
-            return .requestParameters(parameters: ["append_to_response": "videos,images,similar,credits"],
+        case .detail(_, let stated):
+            let appendings = (["videos", "images", "similar", "credits"] +
+                              (stated ? ["account_states"] : []))
+                .joined(separator: ",")
+            
+            return .requestParameters(parameters: ["append_to_response": appendings],
                                       encoding: URLEncoding.queryString)
         case .search(let query, let page):
             return .requestParameters(parameters: ["query": query,

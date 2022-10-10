@@ -46,6 +46,7 @@ struct MovieDetailResponse: Decodable {
     let images: MovieImagesResponse?
     let similar: MovieResponse?
     let credits: MovieCreditsResponse?
+    let account_states: MovieAccountStates?
 }
 
 extension MovieDetailResponse: Hashable {

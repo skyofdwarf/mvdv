@@ -163,8 +163,8 @@ extension MVDVService.Movie {
         request(MovieTarget.trending)
     }
     
-    func detail(id: Int) -> Observable<MovieDetailResponse> {
-        request(MovieTarget.detail(id))
+    func detail(id: Int, includeStates stated: Bool) -> Observable<MovieDetailResponse> {
+        request(MovieTarget.detail(id, stated: stated))
     }
     
     func similar(id: Int) -> Observable<MovieDetailResponse> {
@@ -187,7 +187,7 @@ extension MVDVService.Account {
         return request(AccountTarget.account(sessionId: sessionId))
     }
     
-    func markFavorite(_ favorited: Bool, mediaId: Int, sessionId: String, accountId: String) -> Observable<MovieResponse> {
+    func markFavorite(_ favorited: Bool, mediaId: Int, sessionId: String, accountId: String) -> Observable<MarkFavoriteResponse> {
         return request(AccountTarget.markFavorite(accountId: accountId,
                                                   sessionId: sessionId,
                                                   mediaId: mediaId,

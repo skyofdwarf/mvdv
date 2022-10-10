@@ -389,12 +389,7 @@ extension Reactive where Base: MovieDetailViewController {
     
     var event: Binder<MovieDetailEvent> {
         Binder(base) {
-            switch $1 {
-            case .alert(let msg):
-                print("event: \(msg)")
-            @unknown default:
-                print("received a event")
-            }
+            base.alert(message: $1.description)
         }
     }
 }
