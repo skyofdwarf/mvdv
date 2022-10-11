@@ -43,7 +43,7 @@ extension AccountTarget {
                                         "favorite": favorited ]
             
             return .requestCompositeParameters(bodyParameters: body,
-                                               bodyEncoding: URLEncoding.httpBody,
+                                               bodyEncoding: JSONEncoding.default,
                                                urlParameters: params)
         case .favoriteMovies(_, let sessionId)/*(, let page)*/:
             return .requestParameters(parameters: ["session_id": sessionId],
