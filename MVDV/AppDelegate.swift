@@ -19,12 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Override point for customization after application launch.
         
-//        APIService.shared.request(ConfigurationTarget.configuration) { (model: ConfigurationResponse) in
-//            print("response model: \(model)")
-//        } failure: {
-//            print("error: \($0)")
-//        }
-        
         return true
     }
 
