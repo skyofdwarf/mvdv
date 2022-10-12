@@ -38,7 +38,7 @@ class FavoritesViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
-    private let fetchRelay = PublishRelay<Void>()
+    private let actionRelay = PublishRelay<FavoritesAction>()
     
     private(set) var db = DisposeBag()
     let vm: FavoritesViewModel
@@ -68,6 +68,14 @@ class FavoritesViewController: UIViewController {
         createAuthenticationGuide()
         
         bindViewModel()
+        
+        fetchFavoritesIfNeeded()
+    }
+    
+    func fetchFavoritesIfNeeded() {
+        if vm.state.authenticated {
+            actionRelay.accept(.fetch)
+        }
     }
     
     func showEvent(_ event: FavoritesEvent) {
@@ -99,13 +107,12 @@ private extension FavoritesViewController {
     func bindViewModel() {
         // inputs
         
-        let authenticate = authenticationButton.rx.tap
+        authenticationButton.rx.tap
             .map { [weak self] in FavoritesAction.authenticate(self) }
+            .bind(to: actionRelay)
+            .disposed(by: db)
         
-        let fetch = fetchRelay
-            .map { FavoritesViewModel.Action.fetch }
-        
-        Observable<FavoritesAction>.merge([authenticate, fetch])
+        actionRelay
             .bind(to: vm.action)
             .disposed(by: db)
         
