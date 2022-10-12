@@ -11,7 +11,7 @@ import RxSwift
 import AuthenticationServices
 
 enum FavoritesAction: ViewModelAction {
-    case authenticate(ASWebAuthenticationPresentationContextProviding?)
+    case authenticate(ASWebAuthenticationPresentationContextProviding)
     case fetch
 }
 
@@ -75,9 +75,9 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
     override func react(action: Action, state: State) -> Observable<Reaction> {
         switch action {
         case .authenticate(let providing):
-            return authenticate(providing: providing)
+            return authenticate(providing)
         case .fetch:
-            return getFavorites(dataStorage: dataStorage)
+            return fetch()
         }
     }
     
@@ -93,41 +93,57 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         }
         return state
     }
+    
+    override func transform(action: Observable<Action>) -> Observable<Action> {
+        // relays events of AppModel to action
+        let authenticated = AppModel.shared.event
+            .asObservable()
+            .flatMap { event -> Observable<Action> in
+                switch event {
+                case .authenticated:
+                    return .just(Action.fetch)
+                default:
+                    return .empty()
+                }
+            }
+            .observe(on: MainScheduler.asyncInstance) ///< Avoid conflicting with 'fetching' state of AppModel
+        
+        return .merge(action,
+                      authenticated)
+    }
+    
+    override func transform(mutation: Observable<Mutation>) -> Observable<Mutation> {
+        // relays some state of AppModel to mutation
+        
+        let fetching = AppModel.shared.state.$fetching
+            .distinctUntilChanged()
+            .map { Mutation.fetching($0) }
+            .asObservable()
+        
+        let authenticated = AppModel.shared.state.$authentication
+            .map { Mutation.authenticated($0 != nil) }
+            .asObservable()
+        
+        return .merge(mutation,
+                      fetching,
+                      authenticated)
+    }
+    
+    
+    override func transform(error: Observable<Error>) -> Observable<Error> {
+        .merge(error, AppModel.shared.error.asObservable())
+    }
 }
 
 extension FavoritesViewModel {
-    func authenticate(providing: ASWebAuthenticationPresentationContextProviding?) -> Observable<Reaction> {
-        // authenticate user
-        guard !state.authenticated else {
-            return .just(.event(.alert("Authenticated already")))
-        }
-        
-        return MVDVService.shared.authentication.authenticate(providing: providing)
-            .withUnretained(dataStorage)
-            .flatMap { dataStorage, newSessionResponse in
-                // get account detail
-                let sessionId: String = newSessionResponse.session_id
-                return MVDVService.shared.account.account(sessionId: sessionId)
-                    .withUnretained(dataStorage)
-                    .do(onNext: { storage, account in
-                        // save account and session data
-                        try storage.saveAccount(accountId: account.username, sessionId: sessionId, gravatarHash: account.avatar?.gravatar?.hash)
-                    })
-                    .flatMap { _ -> Observable<Reaction> in
-                        .of(.mutation(.authenticated(true)),
-                            .action(.fetch))
-                    }                
-            }
-            .catch {
-                Observable<Reaction>.of(.event(.alert($0.localizedDescription)),
-                                        .mutation(.fetching(false)))
-            }
-            .startWith(Reaction.mutation(.fetching(true)))
+    func authenticate(_ providing: ASWebAuthenticationPresentationContextProviding) -> Observable<Reaction> {
+        AppModel.shared.send(action: .authenticate(providing))
+        return .empty()
     }
     
-    func getFavorites(dataStorage: DataStorage) -> Observable<Reaction> {
-        guard let sessionId = dataStorage.sessionId,
-              let accountId = dataStorage.accountId
+    func fetch() -> Observable<Reaction> {
+        guard let sessionId = dataStorage.authentication?.sessionId,
+              let accountId = dataStorage.authentication?.accountId
         else {
             return .just(.event(.alert("Not authenticated yet")))
         }

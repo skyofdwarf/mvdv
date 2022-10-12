@@ -45,10 +45,6 @@ class MainViewController: UITabBarController {
         
         createIndicator()
         bindViewModel()
-
-        Observable.just(MainAction.ready)
-            .bind(to: vm.action)
-            .disposed(by: db)
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -8,9 +8,9 @@
 import Foundation
 import RDXVM
 import RxSwift
+import RxRelay
 
 enum MainAction: ViewModelAction {
-    case ready
 }
 
 enum MainEvent: ViewModelEvent {
@@ -19,7 +19,7 @@ enum MainEvent: ViewModelEvent {
 
 enum MainMutation: ViewModelMutation {
     case fetching(Bool)
-    case imageConfiguration(ImageConfiguration)
+    case imageConfiguration(ImageConfiguration?)
 }
 
 struct MainState: ViewModelState {
@@ -30,42 +30,16 @@ struct MainState: ViewModelState {
 final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEvent> {
     private(set) var db = DisposeBag()
     
+    let actionRelay = PublishRelay<AppModel.Action>()
+    
     init(state initialState: State = State()) {
-        let actionMiddlewares = [
-            Self.middleware.action { state, next, action in
-                print("[ACTION] \(action)")
-                return next(action)
-            }
-        ]
-        
-        let eventMiddlewares = [
-            Self.middleware.event { state, next, event in
-                print("[EVENT] \(event)")
-                return next(event)
-            }
-        ]
-        
-        super.init(state: initialState,
-                   actionMiddlewares: actionMiddlewares,
-                   eventMiddlewares: eventMiddlewares)
+        super.init(state: initialState)
     }
     
     // MARK: - Interfaces
     
     override func react(action: Action, state: State) -> Observable<Reaction> {
-        switch action {
-        case .ready:
-            // TODO: catch individual errors
-            return MVDVService.shared.configuration()
-                .map {
-                    .mutation(.imageConfiguration($0.images))
-                }
-                .catch { _ in
-                    .just(.event(.alert("Configuration unavailable")))
-                }
-                .startWith(Reaction.mutation(.fetching(true)))
-                .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
-        }
+        .empty()
     }
     
     override func reduce(mutation: Mutation, state: State) -> State {
@@ -77,5 +51,21 @@ final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEv
             state.imageConfiguration = imageConfiguration
         }
         return state
+    }
+    
+    override func transform(mutation: Observable<Mutation>) -> Observable<Mutation> {
+        // relays some state of AppModel
+        
+        let imageConfiguration = AppModel.shared.state.$imageConfiguration
+            .map { Mutation.imageConfiguration($0) }
+            .asObservable()
+        
+        let fetching = AppModel.shared.state.$fetching
+            .map { Mutation.fetching($0) }
+            .asObservable()
+        
+        return .merge(mutation,
+                      imageConfiguration,
+                      fetching)
     }
 }

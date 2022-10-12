@@ -7,6 +7,16 @@
 
 import Foundation
 
+struct Authentication: CustomStringConvertible {
+    var sessionId: String
+    var accountId: String
+    var avatarHash: String?
+    
+    var description: String {
+        "accountId: \(accountId), gravatarHash: \(String(describing: avatarHash)), sessionId: \(sessionId)"
+    }
+}
+
 /// Simple data storage
 ///
 /// Save and load a pair of account and session on the keychain.
@@ -16,37 +26,36 @@ final class DataStorage {
         case invalidData
         case keychain(OSStatus)
     }
+    
     static let shared = DataStorage()
     
     private static let keychainLabel = "mvdv.account"
     
-    var accountId: String?
-    var sessionId: String?
-    var gravatarHash: String?
-    
-    var authenticated: Bool { accountId != nil && sessionId != nil }
+    private(set) var authentication: Authentication?
+
+    var authenticated: Bool { authentication != nil }
     
     private init() {
         try? readAccount()
         print("DataStorage: \(self)")
     }
     
-    func saveAccount(accountId: String, sessionId: String, gravatarHash: String? = nil) throws {
-        guard let data = sessionId.data(using: .utf8) else {
+    func saveAccount(authentication: Authentication) throws {
+        guard let data = authentication.sessionId.data(using: .utf8) else {
             throw Error.invalidData
         }
 
-        let gravatarData = gravatarHash?.data(using: .utf8)
+        let avatarData = authentication.avatarHash?.data(using: .utf8)
         
         // delete old accounts
         try deleteAllAccounts()
         
         let query = [kSecClass: kSecClassGenericPassword,
-               kSecAttrAccount: accountId,
+               kSecAttrAccount: authentication.accountId,
             kSecAttrAccessible: kSecAttrAccessibleWhenUnlocked,
  kSecUseDataProtectionKeychain: true,
                  kSecAttrLabel: Self.keychainLabel,
-               kSecAttrGeneric: gravatarData ?? Data(),
+               kSecAttrGeneric: avatarData ?? Data(),
                  kSecValueData: data
         ] as [String: Any]
         
@@ -55,9 +64,7 @@ final class DataStorage {
             throw Error.keychain(status)
         }
         
-        self.accountId = accountId
-        self.sessionId = sessionId
-        self.gravatarHash = gravatarHash
+        self.authentication = authentication
     }
     
     func readAccount() throws {
@@ -85,12 +92,15 @@ final class DataStorage {
                 throw Error.invalidData
             }
             
+            var gravatarHash: String?
+            
             if let gravatarData = attrs[kSecAttrGeneric] as? Data {
-                self.gravatarHash = String(data: gravatarData, encoding: .utf8)
+                gravatarHash = String(data: gravatarData, encoding: .utf8)
             }
             
-            self.accountId = accountId
-            self.sessionId = sessionId
+            authentication = Authentication(sessionId: sessionId,
+                                            accountId: accountId,
+                                            avatarHash: gravatarHash)
         default:
             throw Error.keychain(status)
         }
@@ -103,9 +113,7 @@ final class DataStorage {
         
         let status = SecItemDelete(query as CFDictionary)
         
-        self.sessionId = nil
-        self.accountId = nil
-        self.gravatarHash = nil
+        authentication = nil
         
         switch status {
         case errSecSuccess, errSecItemNotFound:
@@ -118,10 +126,8 @@ final class DataStorage {
 
 extension DataStorage: CustomStringConvertible {
     var description: String {
-        """
-    accountId: \(String(describing: accountId))
-    sessionId: \(String(describing: sessionId))
-    gravatarHash: \(String(describing: gravatarHash))
+       """
+    authentication: \(String(describing: authentication))
     """
     }
 }

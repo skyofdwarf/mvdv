@@ -77,7 +77,7 @@ extension MVDVService.Authentication {
     /// 1. request token
     /// 2. confirm user permission
     /// 3. create a new session id
-    func authenticate(providing: ASWebAuthenticationPresentationContextProviding?) -> Observable<NewSessionResponse> {
+    func authenticate(providing: ASWebAuthenticationPresentationContextProviding) -> Observable<NewSessionResponse> {
         // 1. request token
         requestToken()
             .flatMap { response -> Observable<NewSessionResponse> in
@@ -104,7 +104,7 @@ extension MVDVService.Authentication {
         request(AuthenticationTarget.newSession(requestToken: requestToken))
     }
     
-    private func askPermission(requestToken: String, providing: ASWebAuthenticationPresentationContextProviding?) -> Observable<Bool> {
+    private func askPermission(requestToken: String, providing: ASWebAuthenticationPresentationContextProviding) -> Observable<Bool> {
         guard let url = Self.authenticationUrl(requestToken: requestToken) else {
             return .error(Error.invalidAuthenticationURL)
         }

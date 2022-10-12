@@ -62,10 +62,10 @@ class FavoritesViewController: UIViewController {
         
         view.backgroundColor = .black
         
-        createIndicator()
         createCollectionView()
         createDataSource()
         createAuthenticationGuide()
+        createIndicator()
         
         bindViewModel()
         
@@ -108,8 +108,9 @@ private extension FavoritesViewController {
         // inputs
         
         authenticationButton.rx.tap
-            .map { [weak self] in FavoritesAction.authenticate(self) }
-            .bind(to: actionRelay)
+            .bind(with: self, onNext: { (self, _) in
+                self.actionRelay.accept(.authenticate(self))
+            })
             .disposed(by: db)
         
         actionRelay

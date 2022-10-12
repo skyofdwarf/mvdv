@@ -102,8 +102,8 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
                 .startWith(Reaction.mutation(.fetching(true)))
                 .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
         case .toggleFavorite:
-            guard let sessionId = dataStorage.sessionId,
-                  let accountId = dataStorage.accountId
+            guard let sessionId = dataStorage.authentication?.sessionId,
+                  let accountId = dataStorage.authentication?.accountId
             else {
                 return .just(Reaction.event(.notAuthenticated))
             }
