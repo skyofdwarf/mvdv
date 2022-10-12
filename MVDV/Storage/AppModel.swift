@@ -43,6 +43,7 @@ struct AppState: ViewModelState {
     @Driving var fetching: Bool = false
     @Driving var imageConfiguration: ImageConfiguration?
     @Driving var authentication: Authentication?
+    @Driving var authenticated: Bool = false
 }
 
 final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
@@ -69,7 +70,8 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
         
         let state = State(fetching: false,
                           imageConfiguration: nil,
-                          authentication: dataStorage.authentication)
+                          authentication: dataStorage.authentication,
+                          authenticated: dataStorage.authenticated)
         
         self.dataStorage = dataStorage
 
@@ -108,6 +110,7 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
             state.imageConfiguration = imageConfiguration
         case .authentication(let authentication):
             state.authentication = authentication
+            state.authenticated = authentication != nil
         }
         return state
     }
@@ -157,6 +160,9 @@ private extension AppModel {
             .flatMap {
                 Observable<Reaction>.of(.mutation(.authentication($0)),
                                         .event(.authenticated($0)))
+            }
+            .catch { _ in
+                Observable<Reaction>.just(.mutation(.fetching(false)))
             }
             .startWith(Reaction.mutation(.fetching(true)))
             .concat(Observable<Reaction>.just(.mutation(.fetching(false))))

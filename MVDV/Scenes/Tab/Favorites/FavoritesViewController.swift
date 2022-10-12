@@ -34,6 +34,7 @@ class FavoritesViewController: UIViewController {
     
     private var authenticationGuideView: UIView!
     private var authenticationButton: UIButton!
+    private var authenticateButton: UIBarButtonItem!
     
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
@@ -51,6 +52,10 @@ class FavoritesViewController: UIViewController {
         self.tabBarItem = UITabBarItem(title: Strings.Common.Favorites.title,
                                        image: UIImage(systemName: "star"),
                                        tag: 0)
+        
+        self.authenticateButton = UIBarButtonItem(title: "Unauthenticate", style: .done, target: nil, action: nil)
+        
+        navigationItem.rightBarButtonItem = authenticateButton
     }
     
     required init?(coder: NSCoder) {
@@ -87,6 +92,7 @@ class FavoritesViewController: UIViewController {
     
     func changeLayout(authenticated: Bool) {
         authenticationGuideView.isHidden = authenticated
+        navigationItem.rightBarButtonItem = authenticated ? authenticateButton: nil
     }
     
     func applyDataSource(sections: FavoritesState.Sections) {
@@ -107,10 +113,15 @@ private extension FavoritesViewController {
     func bindViewModel() {
         // inputs
         
+        authenticateButton.rx.tap
+            .map { _ in FavoritesAction.unauthenticate }
+            .bind(to: vm.action)
+            .disposed(by: db)
+        
         authenticationButton.rx.tap
-            .bind(with: self, onNext: { (self, _) in
-                self.actionRelay.accept(.authenticate(self))
-            })
+            .withUnretained(self)
+            .map { _ in FavoritesAction.authenticate(self) }
+            .bind(to: vm.action)
             .disposed(by: db)
         
         actionRelay

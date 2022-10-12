@@ -12,6 +12,7 @@ import AuthenticationServices
 
 enum FavoritesAction: ViewModelAction {
     case authenticate(ASWebAuthenticationPresentationContextProviding)
+    case unauthenticate
     case fetch
 }
 
@@ -76,6 +77,10 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         switch action {
         case .authenticate(let providing):
             return authenticate(providing)
+            
+        case .unauthenticate:
+            return unauthenticate()
+            
         case .fetch:
             return fetch()
         }
@@ -120,16 +125,15 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
             .map { Mutation.fetching($0) }
             .asObservable()
         
-        let authenticated = AppModel.shared.state.$authentication
-            .map { Mutation.authenticated($0 != nil) }
+        let authenticated = AppModel.shared.state.$authenticated
+            .map { Mutation.authenticated($0) }
             .asObservable()
         
         return .merge(mutation,
                       fetching,
                       authenticated)
     }
-    
-    
+        
     override func transform(error: Observable<Error>) -> Observable<Error> {
         .merge(error, AppModel.shared.error.asObservable())
     }
@@ -138,6 +142,11 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
 extension FavoritesViewModel {
     func authenticate(_ providing: ASWebAuthenticationPresentationContextProviding) -> Observable<Reaction> {
         AppModel.shared.send(action: .authenticate(providing))
+        return .empty()
+    }
+    
+    func unauthenticate() -> Observable<Reaction> {
+        AppModel.shared.send(action: .unauthenticate)
         return .empty()
     }
     
