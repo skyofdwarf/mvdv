@@ -9,22 +9,22 @@ import Foundation
 import RDXVM
 import RxSwift
 
-enum SearchAction: ViewModelAction {
+enum SearchAction {
     case search(query: String?)
     //case searchNextPage
 }
 
-enum SearchEvent: ViewModelEvent {
+enum SearchEvent {
     case alert(String)
 }
 
-enum SearchMutation: ViewModelMutation {
+enum SearchMutation {
     case fetching(Bool)
     case query(String?)
     case sections(SearchState.Sections)
 }
 
-struct SearchState: ViewModelState {
+struct SearchState {
     struct Sections {
         var movies: [Movie] = []
     }

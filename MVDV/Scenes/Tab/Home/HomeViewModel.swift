@@ -9,21 +9,21 @@ import Foundation
 import RDXVM
 import RxSwift
 
-enum HomeAction: ViewModelAction {
+enum HomeAction {
     case ready
     case movie
 }
 
-enum HomeEvent: ViewModelEvent {
+enum HomeEvent {
     case alert(String)
 }
 
-enum HomeMutation: ViewModelMutation {
+enum HomeMutation {
     case fetching(Bool)
     case sections(HomeState.Sections)
 }
 
-struct HomeState: ViewModelState {
+struct HomeState {
     struct Sections {
         var nowPlaying: [Movie] = []
         var genres: [Genre] = []

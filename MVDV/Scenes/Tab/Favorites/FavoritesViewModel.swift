@@ -10,23 +10,23 @@ import RDXVM
 import RxSwift
 import AuthenticationServices
 
-enum FavoritesAction: ViewModelAction {
+enum FavoritesAction {
     case authenticate(ASWebAuthenticationPresentationContextProviding)
     case unauthenticate
     case fetch
 }
 
-enum FavoritesEvent: ViewModelEvent {
+enum FavoritesEvent {
     case alert(String)
 }
 
-enum FavoritesMutation: ViewModelMutation {
+enum FavoritesMutation {
     case fetching(Bool)
     case authenticated(Bool)
     case sections(FavoritesState.Sections)
 }
 
-struct FavoritesState: ViewModelState {
+struct FavoritesState {
     struct Sections {
         var movies: [Movie] = []
     }

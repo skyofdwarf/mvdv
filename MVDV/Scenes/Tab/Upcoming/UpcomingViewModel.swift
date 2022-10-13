@@ -9,20 +9,20 @@ import Foundation
 import RDXVM
 import RxSwift
 
-enum UpcomingAction: ViewModelAction {
+enum UpcomingAction {
     case ready
 }
 
-enum UpcomingEvent: ViewModelEvent {
+enum UpcomingEvent {
     case alert(String)
 }
 
-enum UpcomingMutation: ViewModelMutation {
+enum UpcomingMutation {
     case fetching(Bool)
     case sections(UpcomingState.Sections)
 }
 
-struct UpcomingState: ViewModelState {
+struct UpcomingState {
     struct Sections {
         var movies: [Movie] = []
     }

@@ -10,14 +10,14 @@ import AuthenticationServices
 import RDXVM
 import RxSwift
 
-enum AppAction: ViewModelAction {
+enum AppAction {
     case ready
     case authenticate(ASWebAuthenticationPresentationContextProviding)
     case unauthenticate
     case favorited(Bool, Int)
 }
 
-enum AppEvent: ViewModelEvent, CustomStringConvertible {
+enum AppEvent: CustomStringConvertible {
     case alert(String)
     case authenticated(Authentication)
     case unauthenticated
@@ -33,13 +33,13 @@ enum AppEvent: ViewModelEvent, CustomStringConvertible {
     }
 }
 
-enum AppMutation: ViewModelMutation {
+enum AppMutation {
     case authentication(Authentication?)
     case fetching(Bool)
     case imageConfiguration(ImageConfiguration?)
 }
 
-struct AppState: ViewModelState {
+struct AppState {
     @Driving var fetching: Bool = false
     @Driving var imageConfiguration: ImageConfiguration?
     @Driving var authentication: Authentication?

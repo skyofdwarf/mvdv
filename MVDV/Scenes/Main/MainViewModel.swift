@@ -10,19 +10,19 @@ import RDXVM
 import RxSwift
 import RxRelay
 
-enum MainAction: ViewModelAction {
+enum MainAction {
 }
 
-enum MainEvent: ViewModelEvent {
+enum MainEvent {
     case alert(String)
 }
 
-enum MainMutation: ViewModelMutation {
+enum MainMutation {
     case fetching(Bool)
     case imageConfiguration(ImageConfiguration?)
 }
 
-struct MainState: ViewModelState {
+struct MainState {
     @Driving var fetching: Bool = false
     @Driving var imageConfiguration: ImageConfiguration?
 }

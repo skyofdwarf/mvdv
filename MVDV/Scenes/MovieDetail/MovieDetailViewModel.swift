@@ -9,12 +9,12 @@ import Foundation
 import RDXVM
 import RxSwift
 
-enum MovieDetailAction: ViewModelAction {
+enum MovieDetailAction {
     case ready
     case toggleFavorite
 }
 
-enum MovieDetailEvent: ViewModelEvent, CustomStringConvertible {
+enum MovieDetailEvent: CustomStringConvertible {
     case alert(String)
     case notAuthenticated
     
@@ -26,13 +26,13 @@ enum MovieDetailEvent: ViewModelEvent, CustomStringConvertible {
     }
 }
 
-enum MovieDetailMutation: ViewModelMutation {
+enum MovieDetailMutation {
     case fetching(Bool)
     case favorited(Bool)
     case sections(MovieDetailState.Sections)
 }
 
-struct MovieDetailState: ViewModelState {
+struct MovieDetailState {
     struct Sections {
         var detail: MovieDetailResponse?
         var similar: [Movie]?
