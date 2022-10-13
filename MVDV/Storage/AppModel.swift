@@ -114,6 +114,12 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
         }
         return state
     }
+    
+    override func transform(mutation: Observable<Mutation>) -> Observable<Mutation> {
+        let error = error.map { _ in Mutation.fetching(false) }.asObservable()
+
+        return .merge(mutation, error)
+    }
 }
 
 private extension AppModel {
@@ -160,9 +166,6 @@ private extension AppModel {
             .flatMap {
                 Observable<Reaction>.of(.mutation(.authentication($0)),
                                         .event(.authenticated($0)))
-            }
-            .catch { _ in
-                Observable<Reaction>.just(.mutation(.fetching(false)))
             }
             .startWith(Reaction.mutation(.fetching(true)))
             .concat(Observable<Reaction>.just(.mutation(.fetching(false))))

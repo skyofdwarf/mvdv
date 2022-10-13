@@ -90,6 +90,10 @@ class FavoritesViewController: UIViewController {
         }
     }
     
+    func processError(_ error: Error) {
+        alert(message: error.localizedDescription)
+    }
+    
     func changeLayout(authenticated: Bool) {
         authenticationGuideView.isHidden = authenticated
         navigationItem.rightBarButtonItem = authenticated ? authenticateButton: nil
@@ -144,6 +148,10 @@ private extension FavoritesViewController {
         
         vm.event
             .emit(to: rx.event)
+            .disposed(by: db)
+        
+        vm.error
+            .emit(to: rx.error)
             .disposed(by: db)
     }
 }
@@ -301,6 +309,12 @@ extension Reactive where Base: FavoritesViewController {
     var event: Binder<FavoritesEvent> {
         Binder(base) {
             $0.showEvent($1)
+        }
+    }
+    
+    var error: Binder<Error> {
+        Binder(base) {
+            $0.processError($1)
         }
     }
     
