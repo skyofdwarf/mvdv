@@ -1,5 +1,5 @@
 //
-//  ProfileViewController.swift
+//  FavoritesViewController.swift
 //  MVDV
 //
 //  Created by YEONGJUNG KIM on 2022/01/21.
@@ -15,63 +15,39 @@ import Accelerate
 import Kingfisher
 import AuthenticationServices
 
-class ProfileViewController: UIViewController {
+class FavoritesViewController: UIViewController {
     enum Section: Int, CaseIterable {
-        case profile
-        case menu
+        case favorites
         
         var title: String {
             switch self {
-            case .profile: return Strings.Profile.Section.profile
-            case .menu: return Strings.Profile.Section.menu
+            case .favorites: return Strings.Favorites.Section.favorites
             }
         }
     }
     
     enum Item: Hashable {
-        case unauthenticated
-        case authentication(Authentication)
         case movie(Movie)
-        case menu(Menu)
-    }
-    
-    enum Menu: CaseIterable {
-        case version
-        case favorites
-        
-        var title: String {
-            switch self {
-            case .version: return Strings.Profile.Menu.version
-            case .favorites: return Strings.Profile.Menu.favorites
-            }
-        }
-        
-        var image: UIImage? {
-            switch self {
-            case .version: return UIImage(systemName: "info.circle.fill")
-            case .favorites: return UIImage(systemName: "star.fill")
-            }
-        }
     }
     
     private var indicator: UIActivityIndicatorView!
     
-    private var unbindButton: UIBarButtonItem!
-    
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
-    private let actionRelay = PublishRelay<ProfileAction>()
+    private let actionRelay = PublishRelay<FavoritesAction>()
     
     private(set) var db = DisposeBag()
-    let vm: ProfileViewModel
+    let vm: FavoritesViewModel
     
-    init(vm: ProfileViewModel) {
+    init(vm: FavoritesViewModel) {
         self.vm = vm
         
         super.init(nibName: nil, bundle: nil)
         
-        self.tabBarItem = UITabBarItem(title: Strings.Common.Profile.title,
+        self.title = Strings.Common.Favorites.title
+        
+        self.tabBarItem = UITabBarItem(title: Strings.Common.Favorites.title,
                                        image: UIImage(systemName: "person.crop.circle"),
                                        tag: 0)
         
@@ -95,10 +71,6 @@ class ProfileViewController: UIViewController {
                 .font: UIFont.boldSystemFont(ofSize: 24),
             ]
         }
-        
-        self.unbindButton = UIBarButtonItem(title: Strings.Common.unbindAccount, style: .done, target: nil, action: nil)
-        
-        navigationItem.rightBarButtonItem = unbindButton
     }
     
     required init?(coder: NSCoder) {
@@ -116,16 +88,14 @@ class ProfileViewController: UIViewController {
         
         bindViewModel()
         
-        fetchProfileIfNeeded()
+        fetchFavorites()
     }
     
-    func fetchProfileIfNeeded() {
-        if vm.state.authenticated {
-            actionRelay.accept(.fetch)
-        }
+    func fetchFavorites() {
+        actionRelay.accept(.fetch)
     }
     
-    func showEvent(_ event: ProfileEvent) {
+    func showEvent(_ event: FavoritesEvent) {
         switch event {
         case .alert(let msg):
             alert(message: msg)
@@ -136,22 +106,12 @@ class ProfileViewController: UIViewController {
         alert(message: error.localizedDescription)
     }
     
-    func changeLayout(authenticated: Bool) {
-        navigationItem.rightBarButtonItem = authenticated ? unbindButton: nil
-    }
-    
-    func applyDataSource(sections: ProfileState.Sections) {
+    func applyDataSource(sections: FavoritesState.Sections) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
         snapshot.appendSections(Section.allCases)
         
-        if let authentication = sections.profile {
-            snapshot.appendItems([Item.authentication(authentication)], toSection: .profile)
-        } else {
-            snapshot.appendItems([Item.unauthenticated], toSection: .profile)
-        }
-        
-        snapshot.appendItems(Menu.allCases.map(Item.menu), toSection: .menu)
+        snapshot.appendItems(sections.favorites.map(Item.movie), toSection: .favorites)
         
         dataSource.apply(snapshot, animatingDifferences: false)
     }
@@ -159,14 +119,9 @@ class ProfileViewController: UIViewController {
 
 // MARK: ViewModel
 
-private extension ProfileViewController {
+private extension FavoritesViewController {
     func bindViewModel() {
         // inputs
-        
-        unbindButton.rx.tap
-            .map { _ in ProfileAction.unbind }
-            .bind(to: vm.action)
-            .disposed(by: db)
         
         actionRelay
             .bind(to: vm.action)
@@ -176,10 +131,6 @@ private extension ProfileViewController {
         
         vm.state.$fetching
             .drive(indicator.rx.isAnimating)
-            .disposed(by: db)
-        
-        vm.state.$authenticated
-            .drive(rx.authenticated)
             .disposed(by: db)
         
         vm.state.$sections
@@ -199,7 +150,7 @@ private extension ProfileViewController {
 
 // MARK: UI
 
-private extension ProfileViewController {
+private extension FavoritesViewController {
     func createIndicator() {
         indicator = UIActivityIndicatorView(style: .large).then {
             view.addSubview($0)
@@ -230,33 +181,36 @@ private extension ProfileViewController {
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
             switch Section(rawValue: section) {
-            case .profile:
-                return Self.createProfileSection()
-            case .menu:
-                return Self.createMenuSection(environment)
+            case .favorites:
+                return Self.createMoviePosterSection()
             default:
                 return nil
             }
         }
     }
-        
-    static func createProfileSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+    
+    static func createMoviePosterSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3),
                                               heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                               heightDimension: .absolute(200))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count:1)
+                                               heightDimension: .fractionalWidth((0.3*6/4)))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .flexible(10)
         
-        return NSCollectionLayoutSection(group: group)
-    }
-    
-    static func createMenuSection(_ environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
-        var config = UICollectionLayoutListConfiguration(appearance: .plain)
-        config.backgroundColor = .black
-        
-        return NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
+        return NSCollectionLayoutSection(group: group).then {
+            $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
+            $0.interGroupSpacing = 10
+            
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                    heightDimension: .estimated(50))
+            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                            elementKind: UICollectionView.elementKindSectionHeader,
+                                                                            alignment: .top,
+                                                                            absoluteOffset: CGPoint(x: 10, y: 0))
+            $0.boundarySupplementaryItems = [sectionHeader]
+        }
     }
     
     func createDataSource() {
@@ -270,55 +224,12 @@ private extension ProfileViewController {
             cell.imageView.kf.setImage(with: posterUrl)
         }
         
-        let emptyProfileCellRegistration = UICollectionView.CellRegistration<ProfileCell, Void> {
-            [weak self] (cell, indexPath, _) in
-            guard let self else { return }
-            
-            cell.configure(with: nil)
-            
-            cell.rx.autenticate
-                .withUnretained(self) { (self, _) in ProfileAction.authenticate(self) }
-                .bind(to: self.actionRelay)
-                .disposed(by: cell.db)
-        }
-        
-        let profileCellRegistration = UICollectionView.CellRegistration<ProfileCell, Authentication> {
-            (cell, indexPath, authentication) in
-            
-            cell.configure(with: authentication)
-        }
-        
-        let menuCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Menu> {
-            (cell, indexPath, menu) in
-            
-            var content = cell.defaultContentConfiguration()
-                        
-            content.text = menu.title
-            content.image = menu.image
-            content.imageProperties.tintColor = R.color.tmdbColorTertiaryLightGreen()
-            content.textProperties.color = R.color.tmdbColorTertiaryLightGreen() ?? content.textProperties.color
-            
-            cell.contentConfiguration = content
-            
-            var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
-            backgroundConfig.backgroundColor = .black
-            
-            cell.backgroundConfiguration = backgroundConfig
-        }
-        
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
             (collectionView, indexPath, identifier) in
             
             switch identifier {
-            case .unauthenticated:
-                return collectionView.dequeueConfiguredReusableCell(using: emptyProfileCellRegistration, for: indexPath, item: ())
-            case .authentication(let authentication):
-                return collectionView.dequeueConfiguredReusableCell(using: profileCellRegistration, for: indexPath, item: authentication)
             case .movie(let movie):
                 return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
-            case .menu(let menu):
-                return collectionView.dequeueConfiguredReusableCell(using: menuCellRegistration, for: indexPath, item: menu)
-                
             }
         }.then {
             let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {
@@ -326,6 +237,7 @@ private extension ProfileViewController {
                 
                 guard let section = Section(rawValue: indexPath.section) else { return }
                 view.label.text = section.title
+                view.label.font = UIFont.preferredFont(forTextStyle: .subheadline)
             }
             
             $0.supplementaryViewProvider = { (cv, kind, indexPath) in
@@ -335,7 +247,7 @@ private extension ProfileViewController {
     }
 }
 
-extension ProfileViewController: ASWebAuthenticationPresentationContextProviding {
+extension FavoritesViewController: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         view.window ?? UIWindow()
     }
@@ -343,30 +255,40 @@ extension ProfileViewController: ASWebAuthenticationPresentationContextProviding
  
 // MARK: UICollectionViewDelegate
 
-extension ProfileViewController: UICollectionViewDelegate {
+extension FavoritesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath),
-              case .menu(let menu) = item,
-              menu == .favorites
+              case .movie(let movie) = item,
+              let size = vm.imageConfiguration.backdrop_sizes.last
         else {
             return
         }
         
-        let vm = FavoritesViewModel(imageConfiguration: vm.imageConfiguration)
-        let vc = FavoritesViewController(vm: vm)
+        guard let baseUrl = URL(string: vm.imageConfiguration.secure_base_url),
+              let posterPath = movie.backdrop_path
+        else { return }
+        
+        let imageUrl = baseUrl
+            .appendingPathComponent(size)
+            .appendingPathComponent(posterPath)
+        
+        let vm = MovieDetailViewModel(imageConfiguration: vm.imageConfiguration,
+                                      movieId: movie.id,
+                                      backdrop: imageUrl)
+        let vc = MovieDetailViewController(vm: vm)
         
         navigationController?.pushViewController(vc, animated: true)
     }
 }
 
-extension Reactive where Base: ProfileViewController {
-    var dataSource: Binder<ProfileState.Sections> {
+extension Reactive where Base: FavoritesViewController {
+    var dataSource: Binder<FavoritesState.Sections> {
         Binder(base) {
             $0.applyDataSource(sections: $1)
         }
     }
     
-    var event: Binder<ProfileEvent> {
+    var event: Binder<FavoritesEvent> {
         Binder(base) {
             $0.showEvent($1)
         }
@@ -375,12 +297,6 @@ extension Reactive where Base: ProfileViewController {
     var error: Binder<Error> {
         Binder(base) {
             $0.processError($1)
-        }
-    }
-    
-    var authenticated: Binder<Bool> {
-        Binder(base) {
-            $0.changeLayout(authenticated: $1)
         }
     }
 }

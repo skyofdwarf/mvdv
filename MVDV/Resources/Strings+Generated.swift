@@ -60,6 +60,12 @@ internal enum Strings {
       internal static let title = Strings.tr("Common", "upcoming.title")
     }
   }
+  internal enum Favorites {
+    internal enum Section {
+      /// Favorites
+      internal static let favorites = Strings.tr("Favorites", "section.favorites")
+    }
+  }
   internal enum Home {
     internal enum Section {
       /// Genres
