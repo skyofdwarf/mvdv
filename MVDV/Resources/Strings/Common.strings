@@ -17,3 +17,13 @@
 "search.title" = "Search";
 "profile.title" = "Profile";
 "favorites.title" = "Favorites";
+
+"Authenticate" = "Authenticate";
+"Unauthenticated" = "Unauthenticated";
+"Unbind" = "Unbind";
+"Favorited" = "Favorited";
+"Unfavorited" = "Unfavorited";
+
+"No configurations" = "Configuration unavailable";
+"Authenticated already" = "Authenticated already";
+"Not authenticated yet" = "Not authenticated yet";

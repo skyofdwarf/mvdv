@@ -18,8 +18,7 @@
 #       output: Strings+Generated.swift
 strings:
   - inputs:
-      - ./Strings/Home.strings
-      - ./Strings/Common.strings
+      - ./Strings/
     outputs:
     - templateName: structured-swift5
       output:

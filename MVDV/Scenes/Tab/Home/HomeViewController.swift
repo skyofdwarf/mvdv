@@ -24,11 +24,11 @@ class HomeViewController: UIViewController {
         
         var title: String {
             switch self {
-            case .nowPlaying: return "Now Playing"
-            case .genres: return "Genres"
-            case .trending: return "Trending"
-            case .popuplar: return "Popular"
-            case .topRated: return "Top Rated"
+            case .nowPlaying: return Strings.Home.Section.nowPlaying
+            case .genres: return Strings.Home.Section.genres
+            case .trending: return Strings.Home.Section.trending
+            case .popuplar: return Strings.Home.Section.popular
+            case .topRated: return Strings.Home.Section.topReated
             }
         }
     }

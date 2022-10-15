@@ -6,9 +6,10 @@
   
 */
 
-"section.title.lastest" = "Lastest";
-"section.title.now-playing" = "Now Playing";
-"section.title.popular" = "Popular";
-"section.title.top-reated" = "Top Rated";
-"section.title.genres" = "Genres";
-"section.title.keywords" = "Keywords";
+"section.lastest" = "Lastest";
+"section.now-playing" = "Now Playing";
+"section.popular" = "Popular";
+"section.top-reated" = "Top Rated";
+"section.genres" = "Genres";
+"section.keywords" = "Keywords";
+"section.trending" = "Trending";

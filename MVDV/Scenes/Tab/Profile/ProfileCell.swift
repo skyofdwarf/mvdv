@@ -55,7 +55,7 @@ class ProfileCell: UICollectionViewCell {
         accountLabel.textColor = R.color.tmdbColorTertiaryLightGreen()
         accountLabel.textAlignment = .center
         accountLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        accountLabel.text = "Unauthenticated"
+        accountLabel.text = nil
         
         accountLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()

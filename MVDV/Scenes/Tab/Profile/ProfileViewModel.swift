@@ -158,7 +158,7 @@ extension ProfileViewModel {
         guard let sessionId = dataStorage.authentication?.sessionId,
               let accountId = dataStorage.authentication?.accountId
         else {
-            return .just(.event(.alert("Not authenticated yet")))
+            return .just(.event(.alert(Strings.Common.notAuthenticatedYet)))
         }
         
         return MVDVService.shared.account.favoritesMovies(sessionId: sessionId, accountId: accountId)

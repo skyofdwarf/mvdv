@@ -22,8 +22,9 @@ class ProfileViewController: UIViewController {
         
         var title: String {
             switch self {
-            case .profile: return "Profile"
-            case .favorites: return "Favorites"
+            case .profile: return Strings.Profile.Section.profile
+            case .favorites: return Strings.Profile.Section.favorites
+                
             }
         }
     }
@@ -76,7 +77,7 @@ class ProfileViewController: UIViewController {
             ]
         }
         
-        self.unbindButton = UIBarButtonItem(title: "Unbind", style: .done, target: nil, action: nil)
+        self.unbindButton = UIBarButtonItem(title: Strings.Common.unbind, style: .done, target: nil, action: nil)
         
         navigationItem.rightBarButtonItem = unbindButton
     }

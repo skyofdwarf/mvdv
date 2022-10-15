@@ -26,9 +26,11 @@ enum AppEvent: CustomStringConvertible {
     var description: String {
         switch self {
         case .alert(let msg): return msg
-        case .authenticated: return "Authenticated"
-        case .unauthenticated: return "Unauthenticated"
-        case .favorited(let favorited, _): return favorited ? "Favorited": "Unfavorited"
+        case .authenticated: return Strings.Common.authenticate
+        case .unauthenticated: return Strings.Common.unauthenticated
+        case .favorited(let favorited, _): return favorited ?
+            Strings.Common.favorited:
+            Strings.Common.unfavorited
         }
     }
 }
@@ -129,7 +131,7 @@ private extension AppModel {
                 .mutation(.imageConfiguration($0.images))
             }
             .catch { _ in
-                    .just(.event(.alert("Configuration unavailable")))
+                    .just(.event(.alert(Strings.Common.noConfigurations)))
             }
             .startWith(Reaction.mutation(.fetching(true)))
             .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
@@ -147,7 +149,7 @@ private extension AppModel {
     
     func authenticate(dataStorage: DataStorage, providing: ASWebAuthenticationPresentationContextProviding) -> Observable<Reaction> {
         guard state.authentication == nil else {
-            return .just(.event(.alert("Authenticated already")))
+            return .just(.event(.alert(Strings.Common.authenticatedAlready)))
         }
         
         return MVDVService.shared.authentication.authenticate(providing: providing)
