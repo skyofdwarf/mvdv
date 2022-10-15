@@ -13,7 +13,7 @@ import RxSwift
 enum AppAction {
     case ready
     case authenticate(ASWebAuthenticationPresentationContextProviding)
-    case unauthenticate
+    case unbind
     case favorited(Bool, Int)
 }
 
@@ -90,8 +90,8 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
         case .ready:
             return ready()
             
-        case .unauthenticate:
-            return unauthenticate()
+        case .unbind:
+            return unbind()
             
         case .authenticate(let providing):
             return authenticate(dataStorage: dataStorage, providing: providing)
@@ -135,7 +135,7 @@ private extension AppModel {
             .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
     }
     
-    func unauthenticate() -> Observable<Reaction> {
+    func unbind() -> Observable<Reaction> {
         do {
             try dataStorage.deleteAllAccounts()
             return .of(.mutation(.authentication(nil)),
@@ -157,7 +157,7 @@ private extension AppModel {
                 return MVDVService.shared.account.account(sessionId: sessionId)
                     .map { Authentication(sessionId: sessionId,
                                           accountId: $0.username,
-                                          avatarHash: $0.avatar?.gravatar?.hash) }
+                                          gravatarHash: $0.avatar?.gravatar?.hash) }
                     .do(onNext: {
                         // save account and session data
                         try dataStorage.saveAccount(authentication: $0)

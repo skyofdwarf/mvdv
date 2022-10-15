@@ -1,5 +1,5 @@
 //
-//  FavoritesViewModel.swift
+//  ProfileViewModel.swift
 //  MVDV
 //
 //  Created by YEONGJUNG KIM on 2022/09/28.
@@ -10,25 +10,26 @@ import RDXVM
 import RxSwift
 import AuthenticationServices
 
-enum FavoritesAction {
+enum ProfileAction {
     case authenticate(ASWebAuthenticationPresentationContextProviding)
-    case unauthenticate
+    case unbind
     case fetch
 }
 
-enum FavoritesEvent {
+enum ProfileEvent {
     case alert(String)
 }
 
-enum FavoritesMutation {
+enum ProfileMutation {
     case fetching(Bool)
-    case authenticated(Bool)
-    case sections(FavoritesState.Sections)
+    case authentication(Authentication?)
+    case favorites([Movie])
 }
 
-struct FavoritesState {
+struct ProfileState {
     struct Sections {
-        var movies: [Movie] = []
+        var profile: Authentication?
+        var favorites: [Movie] = []
     }
     
     @Driving var fetching = false
@@ -36,7 +37,7 @@ struct FavoritesState {
     @Driving var sections = Sections()
 }
 
-final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, FavoritesState, FavoritesEvent> {
+final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileState, ProfileEvent> {
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration
@@ -62,7 +63,8 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         
         let state = State(fetching: false,
                           authenticated: dataStorage.authenticated,
-                          sections: .init())
+                          sections: .init(profile: dataStorage.authentication,
+                                          favorites: []))
         
         super.init(state: state,
                    actionMiddlewares: actionMiddlewares,
@@ -78,8 +80,8 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         case .authenticate(let providing):
             return authenticate(providing)
             
-        case .unauthenticate:
-            return unauthenticate()
+        case .unbind:
+            return unbind()
             
         case .fetch:
             return fetch()
@@ -91,10 +93,12 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         switch mutation {
         case .fetching(let fetching):
             state.fetching = fetching
-        case .authenticated(let authenticated):
-            state.authenticated = authenticated
-        case .sections(let sections):
-            state.sections = sections
+        case .authentication(let authentication):
+            state.sections.profile = authentication
+            state.authenticated = authentication != nil
+            state.sections.favorites = []
+        case .favorites(let movies):
+            state.sections.favorites = movies
         }
         return state
     }
@@ -125,13 +129,13 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
             .map { Mutation.fetching($0) }
             .asObservable()
         
-        let authenticated = AppModel.shared.state.$authenticated
-            .map { Mutation.authenticated($0) }
+        let authentication = AppModel.shared.state.$authentication
+            .map { Mutation.authentication($0) }
             .asObservable()
         
         return .merge(mutation,
                       fetching,
-                      authenticated)
+                      authentication)
     }
         
     override func transform(error: Observable<Error>) -> Observable<Error> {
@@ -139,14 +143,14 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
     }
 }
 
-extension FavoritesViewModel {
+extension ProfileViewModel {
     func authenticate(_ providing: ASWebAuthenticationPresentationContextProviding) -> Observable<Reaction> {
         AppModel.shared.send(action: .authenticate(providing))
         return .empty()
     }
     
-    func unauthenticate() -> Observable<Reaction> {
-        AppModel.shared.send(action: .unauthenticate)
+    func unbind() -> Observable<Reaction> {
+        AppModel.shared.send(action: .unbind)
         return .empty()
     }
     
@@ -159,7 +163,7 @@ extension FavoritesViewModel {
         
         return MVDVService.shared.account.favoritesMovies(sessionId: sessionId, accountId: accountId)
             .map {
-                Reaction.mutation(.sections(.init(movies: $0.results)))
+                Reaction.mutation(.favorites($0.results))
             }
             .catch { .just(.event(.alert($0.localizedDescription))) }
             .startWith(Reaction.mutation(.fetching(true)))

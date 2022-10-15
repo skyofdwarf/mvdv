@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct Authentication: CustomStringConvertible {
+struct Authentication: CustomStringConvertible, Hashable {
     var sessionId: String
     var accountId: String
-    var avatarHash: String?
+    var gravatarHash: String?
     
     var description: String {
-        "accountId: \(accountId), gravatarHash: \(String(describing: avatarHash)), sessionId: \(sessionId)"
+        "accountId: \(accountId), gravatarHash: \(String(describing: gravatarHash)), sessionId: \(sessionId)"
     }
 }
 
@@ -45,7 +45,7 @@ final class DataStorage {
             throw Error.invalidData
         }
 
-        let avatarData = authentication.avatarHash?.data(using: .utf8)
+        let avatarData = authentication.gravatarHash?.data(using: .utf8)
         
         // delete old accounts
         try deleteAllAccounts()
@@ -100,7 +100,7 @@ final class DataStorage {
             
             authentication = Authentication(sessionId: sessionId,
                                             accountId: accountId,
-                                            avatarHash: gravatarHash)
+                                            gravatarHash: gravatarHash)
         default:
             throw Error.keychain(status)
         }

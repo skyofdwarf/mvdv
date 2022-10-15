@@ -1,5 +1,5 @@
 //
-//  FavoritesViewController.swift
+//  ProfileViewController.swift
 //  MVDV
 //
 //  Created by YEONGJUNG KIM on 2022/01/21.
@@ -15,47 +15,70 @@ import Accelerate
 import Kingfisher
 import AuthenticationServices
 
-class FavoritesViewController: UIViewController {
+class ProfileViewController: UIViewController {
     enum Section: Int, CaseIterable {
+        case profile
         case favorites
         
         var title: String {
             switch self {
+            case .profile: return "Profile"
             case .favorites: return "Favorites"
             }
         }
     }
     
     enum Item: Hashable {
+        case unauthenticated
+        case authentication(Authentication)
         case movie(Movie)
     }
     
     private var indicator: UIActivityIndicatorView!
     
-    private var authenticationGuideView: UIView!
-    private var authenticationButton: UIButton!
-    private var authenticateButton: UIBarButtonItem!
+    private var unbindButton: UIBarButtonItem!
     
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
-    private let actionRelay = PublishRelay<FavoritesAction>()
+    private let actionRelay = PublishRelay<ProfileAction>()
     
     private(set) var db = DisposeBag()
-    let vm: FavoritesViewModel
+    let vm: ProfileViewModel
     
-    init(vm: FavoritesViewModel) {
+    init(vm: ProfileViewModel) {
         self.vm = vm
         
         super.init(nibName: nil, bundle: nil)
         
-        self.tabBarItem = UITabBarItem(title: Strings.Common.Favorites.title,
-                                       image: UIImage(systemName: "star"),
+        self.tabBarItem = UITabBarItem(title: Strings.Common.Profile.title,
+                                       image: UIImage(systemName: "person.crop.circle"),
                                        tag: 0)
         
-        self.authenticateButton = UIBarButtonItem(title: "Unauthenticate", style: .done, target: nil, action: nil)
+        if #available(iOS 14, *) {
+            navigationItem.backButtonDisplayMode = .minimal
+        } else {
+            navigationItem.backButtonTitle = ""
+        }
         
-        navigationItem.rightBarButtonItem = authenticateButton
+        navigationItem.standardAppearance = UINavigationBarAppearance().then {
+            $0.backgroundColor = R.color.tmdbColorPrimaryDarkBlue()
+            $0.titleTextAttributes = [
+                .foregroundColor: R.color.tmdbColorTertiaryLightGreen()!,
+                .font: UIFont.boldSystemFont(ofSize: 24),
+            ]
+        }
+        navigationItem.scrollEdgeAppearance = UINavigationBarAppearance().then {
+            $0.configureWithTransparentBackground()
+            $0.titleTextAttributes = [
+                .foregroundColor: R.color.tmdbColorTertiaryLightGreen()!,
+                .font: UIFont.boldSystemFont(ofSize: 24),
+            ]
+        }
+        
+        self.unbindButton = UIBarButtonItem(title: "Unbind", style: .done, target: nil, action: nil)
+        
+        navigationItem.rightBarButtonItem = unbindButton
     }
     
     required init?(coder: NSCoder) {
@@ -69,21 +92,20 @@ class FavoritesViewController: UIViewController {
         
         createCollectionView()
         createDataSource()
-        createAuthenticationGuide()
         createIndicator()
         
         bindViewModel()
         
-        fetchFavoritesIfNeeded()
+        fetchProfileIfNeeded()
     }
     
-    func fetchFavoritesIfNeeded() {
+    func fetchProfileIfNeeded() {
         if vm.state.authenticated {
             actionRelay.accept(.fetch)
         }
     }
     
-    func showEvent(_ event: FavoritesEvent) {
+    func showEvent(_ event: ProfileEvent) {
         switch event {
         case .alert(let msg):
             alert(message: msg)
@@ -95,15 +117,21 @@ class FavoritesViewController: UIViewController {
     }
     
     func changeLayout(authenticated: Bool) {
-        authenticationGuideView.isHidden = authenticated
-        navigationItem.rightBarButtonItem = authenticated ? authenticateButton: nil
+        navigationItem.rightBarButtonItem = authenticated ? unbindButton: nil
     }
     
-    func applyDataSource(sections: FavoritesState.Sections) {
+    func applyDataSource(sections: ProfileState.Sections) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
         snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(sections.movies.map(Item.movie), toSection: .favorites)
+        
+        if let authentication = sections.profile {
+            snapshot.appendItems([Item.authentication(authentication)], toSection: .profile)
+        } else {
+            snapshot.appendItems([Item.unauthenticated], toSection: .profile)
+        }
+        
+        snapshot.appendItems(sections.favorites.map(Item.movie), toSection: .favorites)
         
         dataSource.apply(snapshot, animatingDifferences: false)
         
@@ -113,18 +141,12 @@ class FavoritesViewController: UIViewController {
 
 // MARK: ViewModel
 
-private extension FavoritesViewController {
+private extension ProfileViewController {
     func bindViewModel() {
         // inputs
         
-        authenticateButton.rx.tap
-            .map { _ in FavoritesAction.unauthenticate }
-            .bind(to: vm.action)
-            .disposed(by: db)
-        
-        authenticationButton.rx.tap
-            .withUnretained(self)
-            .map { _ in FavoritesAction.authenticate(self) }
+        unbindButton.rx.tap
+            .map { _ in ProfileAction.unbind }
             .bind(to: vm.action)
             .disposed(by: db)
         
@@ -159,7 +181,7 @@ private extension FavoritesViewController {
 
 // MARK: UI
 
-private extension FavoritesViewController {
+private extension ProfileViewController {
     func createIndicator() {
         indicator = UIActivityIndicatorView(style: .large).then {
             view.addSubview($0)
@@ -170,35 +192,6 @@ private extension FavoritesViewController {
             
             $0.color = R.color.tmdbColorTertiaryLightGreen()
             $0.hidesWhenStopped = true
-        }
-    }
-    
-    func createAuthenticationGuide() {
-        // authentication button
-        authenticationButton = UIButton(type: .custom).then {
-            $0.setTitle("Authenticate", for: .normal)
-            $0.layer.borderWidth = 1
-            $0.layer.borderColor = R.color.tmdbColorTertiaryLightGreen()?.cgColor
-            $0.layer.cornerRadius = 10
-            $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-            
-        }
-        
-        // container view
-        authenticationGuideView = UIView().then {
-            $0.backgroundColor = .black
-        }
-        
-        // layout
-        authenticationGuideView.addSubview(authenticationButton)
-        self.view.addSubview(authenticationGuideView)
-        
-        authenticationButton.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
-        
-        authenticationGuideView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
         }
     }
     
@@ -219,6 +212,8 @@ private extension FavoritesViewController {
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, environment in
             switch Section(rawValue: section) {
+            case .profile:
+                return Self.createProfileSection()
             case .favorites:
                 return Self.createMoviePosterSection()
             default:
@@ -228,19 +223,39 @@ private extension FavoritesViewController {
     }
     
     static func createMoviePosterSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3),
+                                              heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                               heightDimension: .fractionalWidth((0.3*6/4)))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .flexible(10)
+        
+        return NSCollectionLayoutSection(group: group).then {
+            $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
+            $0.interGroupSpacing = 10
+            
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                    heightDimension: .estimated(50))
+            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                            elementKind: UICollectionView.elementKindSectionHeader,
+                                                                            alignment: .top,
+                                                                            absoluteOffset: CGPoint(x: 10, y: 0))
+            $0.boundarySupplementaryItems = [sectionHeader]
+        }
+    }
+    
+    static func createProfileSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                               heightDimension: .fractionalWidth(0.5*1.5))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
-        group.interItemSpacing = .fixed(10)
+                                               heightDimension: .absolute(200))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count:1)
         
-        return NSCollectionLayoutSection(group: group).then {
-            $0.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
-            $0.interGroupSpacing = 10
-        }
+        return NSCollectionLayoutSection(group: group)
     }
     
     func createDataSource() {
@@ -254,18 +269,51 @@ private extension FavoritesViewController {
             cell.imageView.kf.setImage(with: posterUrl)
         }
         
+        let emptyProfileCellRegistration = UICollectionView.CellRegistration<ProfileCell, Void> {
+            [weak self] (cell, indexPath, _) in
+            guard let self else { return }
+            
+            cell.configure(with: nil)
+            
+            cell.rx.autenticate
+                .withUnretained(self) { (self, _) in ProfileAction.authenticate(self) }
+                .bind(to: self.actionRelay)
+                .disposed(by: cell.db)
+        }
+        
+        let profileCellRegistration = UICollectionView.CellRegistration<ProfileCell, Authentication> {
+            (cell, indexPath, authentication) in
+            
+            cell.configure(with: authentication)
+        }
+        
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
             (collectionView, indexPath, identifier) in
             
             switch identifier {
+            case .unauthenticated:
+                return collectionView.dequeueConfiguredReusableCell(using: emptyProfileCellRegistration, for: indexPath, item: ())
+            case .authentication(let authentication):
+                return collectionView.dequeueConfiguredReusableCell(using: profileCellRegistration, for: indexPath, item: authentication)
             case .movie(let movie):
                 return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
+            }
+        }.then {
+            let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {
+                (view, kind, indexPath) in
+                
+                guard let section = Section(rawValue: indexPath.section) else { return }
+                view.label.text = section.title
+            }
+            
+            $0.supplementaryViewProvider = { (cv, kind, indexPath) in
+                return cv.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
             }
         }
     }
 }
 
-extension FavoritesViewController: ASWebAuthenticationPresentationContextProviding {
+extension ProfileViewController: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         view.window ?? UIWindow()
     }
@@ -273,7 +321,7 @@ extension FavoritesViewController: ASWebAuthenticationPresentationContextProvidi
  
 // MARK: UICollectionViewDelegate
 
-extension FavoritesViewController: UICollectionViewDelegate {
+extension ProfileViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath),
               case .movie(let movie) = item,
@@ -299,14 +347,14 @@ extension FavoritesViewController: UICollectionViewDelegate {
     }
 }
 
-extension Reactive where Base: FavoritesViewController {
-    var dataSource: Binder<FavoritesState.Sections> {
+extension Reactive where Base: ProfileViewController {
+    var dataSource: Binder<ProfileState.Sections> {
         Binder(base) {
             $0.applyDataSource(sections: $1)
         }
     }
     
-    var event: Binder<FavoritesEvent> {
+    var event: Binder<ProfileEvent> {
         Binder(base) {
             $0.showEvent($1)
         }

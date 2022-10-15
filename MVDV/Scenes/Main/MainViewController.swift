@@ -88,7 +88,7 @@ private extension MainViewController {
             HomeViewController(vm: HomeViewModel(imageConfiguration: imageConfiguration)),
             UpcomingViewController(vm: UpcomingViewModel(imageConfiguration: imageConfiguration)),
             SearchViewController(vm: SearchViewModel(imageConfiguration: imageConfiguration)),
-            FavoritesViewController(vm: FavoritesViewModel(imageConfiguration: imageConfiguration))
+            ProfileViewController(vm: ProfileViewModel(imageConfiguration: imageConfiguration))
         ].map { $0.navigationRooted }
     }
     
