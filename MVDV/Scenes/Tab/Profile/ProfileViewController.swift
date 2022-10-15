@@ -18,13 +18,14 @@ import AuthenticationServices
 class ProfileViewController: UIViewController {
     enum Section: Int, CaseIterable {
         case profile
+        case menu
         case favorites
         
         var title: String {
             switch self {
             case .profile: return Strings.Profile.Section.profile
+            case .menu: return Strings.Profile.Section.menu
             case .favorites: return Strings.Profile.Section.favorites
-                
             }
         }
     }
@@ -33,6 +34,26 @@ class ProfileViewController: UIViewController {
         case unauthenticated
         case authentication(Authentication)
         case movie(Movie)
+        case menu(Menu)
+    }
+    
+    enum Menu: CaseIterable {
+        case version
+        case favorites
+        
+        var title: String {
+            switch self {
+            case .version: return Strings.Profile.Menu.version
+            case .favorites: return Strings.Profile.Menu.favorites
+            }
+        }
+        
+        var image: UIImage? {
+            switch self {
+            case .version: return UIImage(systemName: "info.circle.fill")
+            case .favorites: return UIImage(systemName: "star.fill")
+            }
+        }
     }
     
     private var indicator: UIActivityIndicatorView!
@@ -77,7 +98,7 @@ class ProfileViewController: UIViewController {
             ]
         }
         
-        self.unbindButton = UIBarButtonItem(title: Strings.Common.unbind, style: .done, target: nil, action: nil)
+        self.unbindButton = UIBarButtonItem(title: Strings.Common.unbindAccount, style: .done, target: nil, action: nil)
         
         navigationItem.rightBarButtonItem = unbindButton
     }
@@ -132,11 +153,10 @@ class ProfileViewController: UIViewController {
             snapshot.appendItems([Item.unauthenticated], toSection: .profile)
         }
         
+        snapshot.appendItems(Menu.allCases.map(Item.menu), toSection: .menu)
         snapshot.appendItems(sections.favorites.map(Item.movie), toSection: .favorites)
         
         dataSource.apply(snapshot, animatingDifferences: false)
-        
-        // TODO: show empty list
     }
 }
 
@@ -217,6 +237,8 @@ private extension ProfileViewController {
                 return Self.createProfileSection()
             case .favorites:
                 return Self.createMoviePosterSection()
+            case .menu:
+                return Self.createMenuSection(environment)
             default:
                 return nil
             }
@@ -259,6 +281,13 @@ private extension ProfileViewController {
         return NSCollectionLayoutSection(group: group)
     }
     
+    static func createMenuSection(_ environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
+        var config = UICollectionLayoutListConfiguration(appearance: .plain)
+        config.backgroundColor = .black
+        
+        return NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
+    }
+    
     func createDataSource() {
         let movieCellRegistration = UICollectionView.CellRegistration<MoviePosterCell, Movie> {
             [weak self] (cell, indexPath, movie) in
@@ -288,6 +317,24 @@ private extension ProfileViewController {
             cell.configure(with: authentication)
         }
         
+        let menuCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Menu> {
+            (cell, indexPath, menu) in
+            
+            var content = cell.defaultContentConfiguration()
+                        
+            content.text = menu.title
+            content.image = menu.image
+            content.imageProperties.tintColor = R.color.tmdbColorTertiaryLightGreen()
+            content.textProperties.color = R.color.tmdbColorTertiaryLightGreen() ?? content.textProperties.color
+            
+            cell.contentConfiguration = content
+            
+            var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
+            backgroundConfig.backgroundColor = .black
+            
+            cell.backgroundConfiguration = backgroundConfig
+        }
+        
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
             (collectionView, indexPath, identifier) in
             
@@ -298,6 +345,9 @@ private extension ProfileViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: profileCellRegistration, for: indexPath, item: authentication)
             case .movie(let movie):
                 return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
+            case .menu(let menu):
+                return collectionView.dequeueConfiguredReusableCell(using: menuCellRegistration, for: indexPath, item: menu)
+                
             }
         }.then {
             let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {

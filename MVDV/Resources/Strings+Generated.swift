@@ -13,10 +13,12 @@ internal enum Strings {
   internal enum Common {
     /// ㅁㅂㄷㅂ
     internal static let appName = Strings.tr("Common", "app-name")
-    /// Authenticate
-    internal static let authenticate = Strings.tr("Common", "Authenticate")
+    /// Authenticated
+    internal static let authenticated = Strings.tr("Common", "authenticated")
     /// Authenticated already
     internal static let authenticatedAlready = Strings.tr("Common", "Authenticated already")
+    /// Log in to the Movie Database (TMDB)
+    internal static let bindAccount = Strings.tr("Common", "Bind Account")
     /// Favorited
     internal static let favorited = Strings.tr("Common", "Favorited")
     /// Configuration unavailable
@@ -24,9 +26,9 @@ internal enum Strings {
     /// Not authenticated yet
     internal static let notAuthenticatedYet = Strings.tr("Common", "Not authenticated yet")
     /// Unauthenticated
-    internal static let unauthenticated = Strings.tr("Common", "Unauthenticated")
-    /// Unbind
-    internal static let unbind = Strings.tr("Common", "Unbind")
+    internal static let unauthenticated = Strings.tr("Common", "unauthenticated")
+    /// Unbind account
+    internal static let unbindAccount = Strings.tr("Common", "Unbind Account")
     /// Unfavorited
     internal static let unfavorited = Strings.tr("Common", "Unfavorited")
     internal enum Alert {
@@ -79,9 +81,17 @@ internal enum Strings {
   internal enum Main {
   }
   internal enum Profile {
+    internal enum Menu {
+      /// Favorites
+      internal static let favorites = Strings.tr("Profile", "menu.favorites")
+      /// Version
+      internal static let version = Strings.tr("Profile", "menu.version")
+    }
     internal enum Section {
       /// Favorites
       internal static let favorites = Strings.tr("Profile", "section.favorites")
+      /// Menu
+      internal static let menu = Strings.tr("Profile", "section.menu")
       /// Profile
       internal static let profile = Strings.tr("Profile", "section.profile")
     }

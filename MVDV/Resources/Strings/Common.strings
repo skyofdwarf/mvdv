@@ -18,11 +18,14 @@
 "profile.title" = "Profile";
 "favorites.title" = "Favorites";
 
-"Authenticate" = "Authenticate";
-"Unauthenticated" = "Unauthenticated";
-"Unbind" = "Unbind";
+"Bind Account" = "Log in to the Movie Database (TMDB)";
+"Unbind Account" = "Unbind account";
+
 "Favorited" = "Favorited";
 "Unfavorited" = "Unfavorited";
+
+"authenticated" = "Authenticated";
+"unauthenticated" = "Unauthenticated";
 
 "No configurations" = "Configuration unavailable";
 "Authenticated already" = "Authenticated already";

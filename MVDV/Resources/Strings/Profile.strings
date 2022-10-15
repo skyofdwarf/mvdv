@@ -8,3 +8,7 @@
 
 "section.profile" = "Profile";
 "section.favorites" = "Favorites";
+"section.menu" = "Menu";
+
+"menu.favorites" = "Favorites";
+"menu.version" = "Version";

@@ -26,7 +26,7 @@ enum AppEvent: CustomStringConvertible {
     var description: String {
         switch self {
         case .alert(let msg): return msg
-        case .authenticated: return Strings.Common.authenticate
+        case .authenticated: return Strings.Common.authenticated
         case .unauthenticated: return Strings.Common.unauthenticated
         case .favorited(let favorited, _): return favorited ?
             Strings.Common.favorited:

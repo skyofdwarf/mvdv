@@ -63,7 +63,7 @@ class ProfileCell: UICollectionViewCell {
             $0.bottom.equalTo(containerView.snp.bottom)
         }
         
-        autenticateButton.setTitle("Bind Account", for: .normal)
+        autenticateButton.setTitle(Strings.Common.bindAccount, for: .normal)
         autenticateButton.setTitleColor(R.color.tmdbColorTertiaryLightGreen(), for: .normal)
         autenticateButton.isHidden = true
         
@@ -75,6 +75,18 @@ class ProfileCell: UICollectionViewCell {
         
         containerView.snp.makeConstraints {
             $0.center.equalToSuperview()
+        }
+        
+        let bottomHairlineView = UIView()
+        bottomHairlineView.backgroundColor = R.color.tmdbColorTertiaryLightGreen()
+        
+        contentView.addSubview(bottomHairlineView)
+        
+        bottomHairlineView.snp.makeConstraints {
+            $0.bottom.equalToSuperview()
+            $0.height.equalTo(1)
+            $0.left.equalToSuperview().inset(16)
+            $0.right.equalToSuperview().inset(16)
         }
     }
     
