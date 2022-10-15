@@ -22,9 +22,9 @@ class MovieDetailViewController: UIViewController {
         
         var title: String {
             switch self {
-            case .detail: return "Details"
+            case .detail: return Strings.MovieDetails.Section.detail
                 //case .video: return "Videos"
-            case .similar: return "Similar movies"
+            case .similar: return Strings.MovieDetails.Section.similar
             }
         }
     }

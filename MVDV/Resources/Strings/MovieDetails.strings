@@ -1,0 +1,10 @@
+/* 
+  MovieDetails.strings
+  MVDV
+
+  Created by YEONGJUNG KIM on 2022/10/16.
+  
+*/
+
+"section.detail" = "Details";
+"section.similar" = "Similar movies";

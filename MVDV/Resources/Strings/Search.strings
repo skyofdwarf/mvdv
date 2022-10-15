@@ -5,3 +5,7 @@
   Created by YEONGJUNG KIM on 2022/01/21.
   
 */
+
+"section.movies" = "Movies";
+
+"placeholder" = "Search your movie";

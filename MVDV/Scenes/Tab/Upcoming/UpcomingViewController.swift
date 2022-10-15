@@ -20,7 +20,7 @@ class UpcomingViewController: UIViewController {
         
         var title: String {
             switch self {
-            case .upcoming: return "Upcoming"
+            case .upcoming: return Strings.Upcoming.Section.upcoming
             }
         }
     }

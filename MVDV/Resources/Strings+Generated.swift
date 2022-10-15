@@ -86,6 +86,14 @@ internal enum Strings {
   }
   internal enum Main {
   }
+  internal enum MovieDetails {
+    internal enum Section {
+      /// Details
+      internal static let detail = Strings.tr("MovieDetails", "section.detail")
+      /// Similar movies
+      internal static let similar = Strings.tr("MovieDetails", "section.similar")
+    }
+  }
   internal enum Profile {
     internal enum Menu {
       /// Favorites
@@ -103,8 +111,18 @@ internal enum Strings {
     }
   }
   internal enum Search {
+    /// Search your movie
+    internal static let placeholder = Strings.tr("Search", "placeholder")
+    internal enum Section {
+      /// Movies
+      internal static let movies = Strings.tr("Search", "section.movies")
+    }
   }
   internal enum Upcoming {
+    internal enum Section {
+      /// Upcoming
+      internal static let upcoming = Strings.tr("Upcoming", "section.upcoming")
+    }
   }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

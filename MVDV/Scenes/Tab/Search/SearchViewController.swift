@@ -20,7 +20,7 @@ class SearchViewController: UIViewController {
         
         var title: String {
             switch self {
-            case .movies: return "Movies"
+            case .movies: return Strings.Search.Section.movies
             }
         }
     }
@@ -186,7 +186,7 @@ private extension SearchViewController {
         searchBar.barTintColor = R.color.tmdbColorTertiaryLightGreen()
         searchBar.tintColor = R.color.tmdbColorTertiaryLightGreen()
         searchBar.searchTextField.textColor = .white
-        searchBar.placeholder = "Search your movie"
+        searchBar.placeholder = Strings.Search.placeholder
         searchBar.delegate = self
         
         navigationItem.titleView = searchBar
