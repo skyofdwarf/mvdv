@@ -90,7 +90,7 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
     override func react(action: Action, state: State) -> Observable<Reaction> {
         switch action {
         case .ready:
-            return ready()
+            return ready(dataStorage: dataStorage)
             
         case .unbind:
             return unbind()
@@ -125,13 +125,13 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
 }
 
 private extension AppModel {
-    func ready()  -> Observable<Reaction> {
-        return MVDVService.shared.configuration()
+    func ready(dataStorage: DataStorage)  -> Observable<Reaction> {
+        return dataStorage.fetchImageConfiguration()
             .map {
-                .mutation(.imageConfiguration($0.images))
+                .mutation(.imageConfiguration($0))
             }
             .catch { _ in
-                    .just(.event(.alert(Strings.Common.noConfigurations)))
+                .just(.event(.alert(Strings.Common.noConfigurations)))
             }
             .startWith(Reaction.mutation(.fetching(true)))
             .concat(Observable<Reaction>.just(.mutation(.fetching(false))))

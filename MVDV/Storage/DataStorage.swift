@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RxSwift
 
 struct Authentication: CustomStringConvertible, Hashable {
     var sessionId: String
@@ -34,6 +35,8 @@ final class DataStorage {
     private(set) var authentication: Authentication?
 
     var authenticated: Bool { authentication != nil }
+    
+    private(set) var imageConfiguration: ImageConfiguration?
     
     private init() {
         try? readAccount()
@@ -121,6 +124,14 @@ final class DataStorage {
         default:
             throw Error.keychain(status)
         }
+    }
+    
+    func fetchImageConfiguration()  -> Observable<ImageConfiguration> {
+        return MVDVService.shared.configuration()
+            .map { $0.images }
+            .do(onNext: { [weak self] im in
+                self?.imageConfiguration = im
+            })
     }
 }
 
