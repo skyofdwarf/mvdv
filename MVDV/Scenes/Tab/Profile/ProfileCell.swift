@@ -45,6 +45,7 @@ class ProfileCell: UICollectionViewCell {
         profileImageView.layer.borderColor = UIColor.white.cgColor
         profileImageView.layer.borderWidth = 2
         profileImageView.clipsToBounds = true
+        profileImageView.tintColor = R.color.tmdbColorTertiaryLightGreen()
         
         profileImageView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
@@ -95,6 +96,7 @@ class ProfileCell: UICollectionViewCell {
         accountLabel.isHidden = authentication == nil
         
         profileImageView.image = UIImage(systemName: "person.crop.circle")
+        profileImageView.layer.borderWidth = 0
         
         if let authentication {
             accountLabel.text = authentication.accountId
@@ -102,6 +104,7 @@ class ProfileCell: UICollectionViewCell {
             if let gravatarHash = authentication.gravatarHash,
                let url = URL(string: "https://www.gravatar.com/avatar/\(gravatarHash)?s=256") {
                 profileImageView.kf.setImage(with: url)
+                profileImageView.layer.borderWidth = 2
             }
         }
     }
