@@ -45,6 +45,8 @@ class MainViewController: UITabBarController {
         
         createIndicator()
         bindViewModel()
+        
+        vm.send(action: .ready)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,11 +60,6 @@ private extension MainViewController {
     func bindViewModel() {
         vm.state.$fetching
             .drive(indicator.rx.isAnimating)
-            .disposed(by: db)
-        
-        vm.state.$imageConfiguration
-            .compactMap { $0 }
-            .drive(rx.imageConfiguration)
             .disposed(by: db)
         
         vm.event
@@ -94,6 +91,8 @@ private extension MainViewController {
     
     func showEvent(_ event: MainEvent) {
         switch event {
+        case .ready(let imageConfiguration):
+            showTabs(imageConfiguration: imageConfiguration)
         case .alert(let msg):
             alert(message: msg)
         }

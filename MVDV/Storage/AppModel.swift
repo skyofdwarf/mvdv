@@ -18,6 +18,7 @@ enum AppAction {
 }
 
 enum AppEvent: CustomStringConvertible {
+    case ready(ImageConfiguration)
     case alert(String)
     case authenticated(Authentication)
     case unauthenticated
@@ -25,6 +26,7 @@ enum AppEvent: CustomStringConvertible {
     
     var description: String {
         switch self {
+        case .ready: return "Ready"
         case .alert(let msg): return msg
         case .authenticated: return Strings.Common.authenticated
         case .unauthenticated: return Strings.Common.unauthenticated
@@ -80,9 +82,6 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
         super.init(state: state,
                    actionMiddlewares: actionMiddlewares,
                    eventMiddlewares: eventMiddlewares)
-        
-        // ready
-        send(action: .ready)
     }
     
     // MARK: - Interfaces
@@ -127,14 +126,16 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
 private extension AppModel {
     func ready(dataStorage: DataStorage)  -> Observable<Reaction> {
         return dataStorage.fetchImageConfiguration()
-            .map {
-                .mutation(.imageConfiguration($0))
+            .flatMap {
+                Observable<Reaction>.of(.mutation(.imageConfiguration($0)),
+                                        .event(.ready($0)))
             }
             .catch { _ in
                 .just(.event(.alert(Strings.Common.noConfigurations)))
             }
             .startWith(Reaction.mutation(.fetching(true)))
-            .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+            .concat(Observable<Reaction>.of(.mutation(.fetching(false))))
+                                            
     }
     
     func unbind() -> Observable<Reaction> {

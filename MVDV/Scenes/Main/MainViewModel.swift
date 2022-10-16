@@ -11,10 +11,17 @@ import RxSwift
 import RxRelay
 
 enum MainAction {
+    case ready
 }
 
 enum MainEvent {
     case alert(String)
+    case ready(ImageConfiguration)
+    
+    init?(from appEvent: AppEvent) {
+        guard case .ready(let imageConfiguration) = appEvent else { return nil }
+        self = .ready(imageConfiguration)
+    }
 }
 
 enum MainMutation {
@@ -30,16 +37,23 @@ struct MainState {
 final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEvent> {
     private(set) var db = DisposeBag()
     
-    let actionRelay = PublishRelay<AppModel.Action>()
+    let dataStorage: DataStorage
     
-    init(state initialState: State = State()) {
+    init(dataStorage: DataStorage = DataStorage.shared, state initialState: State = State()) {
+        self.dataStorage = dataStorage
+        
         super.init(state: initialState)
     }
     
     // MARK: - Interfaces
     
     override func react(action: Action, state: State) -> Observable<Reaction> {
-        .empty()
+        switch action {
+        case .ready:
+            AppModel.shared.send(action: .ready)
+        }
+        
+        return .empty()
     }
     
     override func reduce(mutation: Mutation, state: State) -> State {
@@ -67,5 +81,13 @@ final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEv
         return .merge(mutation,
                       imageConfiguration,
                       fetching)
+    }
+    
+    override func transform(event: Observable<Event>) -> Observable<Event> {
+        let ready = AppModel.shared.event
+            .compactMap { MainEvent(from: $0) }
+            .asObservable()
+        
+        return .merge(event, ready)
     }
 }
