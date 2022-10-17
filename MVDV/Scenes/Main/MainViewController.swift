@@ -23,12 +23,22 @@ class CustomNavigationController: UINavigationController {
 
 class MainViewController: UITabBarController {
     private(set) var db = DisposeBag()
-    let vm = MainViewModel()
+    let vm: MainViewModel
     
     private var indicator: UIActivityIndicatorView!
     
     override var childForStatusBarStyle: UIViewController? {
         selectedViewController
+    }
+    
+    init(vm: MainViewModel) {
+        self.vm = vm
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -89,7 +99,7 @@ private extension MainViewController {
         ].map { $0.navigationRooted }
     }
     
-    func showEvent(_ event: MainEvent) {
+    func processEvent(_ event: MainEvent) {
         switch event {
         case .ready(let imageConfiguration):
             showTabs(imageConfiguration: imageConfiguration)
@@ -100,15 +110,9 @@ private extension MainViewController {
 }
 
 extension Reactive where Base: MainViewController {
-    var imageConfiguration: Binder<ImageConfiguration> {
-        Binder(base) {
-            $0.showTabs(imageConfiguration: $1)
-        }
-    }
-    
     var event: Binder<MainEvent> {
         Binder(base) {
-            $0.showEvent($1)
+            $0.processEvent($1)
         }
     }
 }

@@ -11,6 +11,7 @@ import Kingfisher
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+//    let coordinator: AppCoordinator!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if DEBUG
@@ -18,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         
         // Override point for customization after application launch.
+        
+//        coordinator = AppCoordinator(for: window)
         
         return true
     }

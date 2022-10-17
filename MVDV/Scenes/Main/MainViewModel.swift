@@ -39,10 +39,10 @@ final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEv
     
     let dataStorage: DataStorage
     
-    init(dataStorage: DataStorage = DataStorage.shared, state initialState: State = State()) {
+    init(dataStorage: DataStorage = DataStorage.shared) {
         self.dataStorage = dataStorage
         
-        super.init(state: initialState)
+        super.init(state: State())
     }
     
     // MARK: - Interfaces
