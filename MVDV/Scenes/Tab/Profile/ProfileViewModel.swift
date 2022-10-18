@@ -177,6 +177,10 @@ extension ProfileViewModel {
     }
     
     func showFavorites() -> Observable<Reaction> {
+        guard state.authenticated else {
+            return .just(.event(.alert(Strings.Common.notAuthenticatedYet)))
+            
+        }
         coordinator.showFavorites(imageConfiguration: imageConfiguration)
         return .empty()
     }

@@ -22,7 +22,7 @@ enum MovieDetailEvent: CustomStringConvertible {
     var description: String {
         switch self {
         case .alert(let msg): return msg
-        case .notAuthenticated: return "Not authenticated yet"
+        case .notAuthenticated: return Strings.Common.notAuthenticatedYet
         }
     }
 }

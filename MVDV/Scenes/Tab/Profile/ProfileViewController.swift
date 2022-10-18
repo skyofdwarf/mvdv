@@ -137,6 +137,8 @@ class ProfileViewController: UIViewController {
     
     func changeLayout(authenticated: Bool) {
         navigationItem.rightBarButtonItem = authenticated ? unbindButton: nil
+        
+        collectionView.reloadData()
     }
     
     func applyDataSource(sections: ProfileState.Sections) {
@@ -297,11 +299,10 @@ private extension ProfileViewController {
             content.imageProperties.tintColor = R.color.tmdbColorTertiaryLightGreen()
             content.textProperties.color = R.color.tmdbColorTertiaryLightGreen() ?? content.textProperties.color
             
-            cell.contentConfiguration = content
-            
             var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
             backgroundConfig.backgroundColor = .black
             
+            cell.contentConfiguration = content
             cell.backgroundConfiguration = backgroundConfig
         }
         
@@ -352,7 +353,7 @@ extension ProfileViewController: UICollectionViewDelegate {
         
         switch menu {
         case .favorites:
-            vm.send(action: .showFavorites)            
+            vm.send(action: .showFavorites)
         default:
             break
         }
