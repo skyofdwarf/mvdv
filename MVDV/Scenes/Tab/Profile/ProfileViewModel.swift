@@ -29,6 +29,7 @@ enum ProfileMutation {
 
 struct ProfileState {
     struct Sections {
+        var version: String?
         var profile: Authentication?
         var favorites: [Movie] = []
     }
@@ -64,9 +65,15 @@ final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileS
         self.coordinator = coordinator
         self.dataStorage = dataStorage
         
+        var version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        if let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            version.append("(\(build))")
+        }
+        
         let state = State(fetching: false,
                           authenticated: dataStorage.authenticated,
-                          sections: .init(profile: dataStorage.authentication,
+                          sections: .init(version: version,
+                                          profile: dataStorage.authentication,
                                           favorites: []))
         
         super.init(state: state,

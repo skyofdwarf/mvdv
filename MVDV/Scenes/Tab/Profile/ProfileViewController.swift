@@ -35,8 +35,8 @@ class ProfileViewController: UIViewController {
         case menu(Menu)
     }
     
-    enum Menu: CaseIterable {
-        case version
+    enum Menu: Hashable {
+        case version(String?)
         case favorites
         
         var title: String {
@@ -152,7 +152,8 @@ class ProfileViewController: UIViewController {
             snapshot.appendItems([Item.unauthenticated], toSection: .profile)
         }
         
-        snapshot.appendItems(Menu.allCases.map(Item.menu), toSection: .menu)
+        snapshot.appendItems([.menu(.version(sections.version))], toSection: .menu)
+        snapshot.appendItems([.menu(.favorites)], toSection: .menu)
         
         dataSource.apply(snapshot, animatingDifferences: false)
     }
@@ -292,12 +293,19 @@ private extension ProfileViewController {
         let menuCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Menu> {
             (cell, indexPath, menu) in
             
-            var content = cell.defaultContentConfiguration()
+            var content = UIListContentConfiguration.valueCell()
                         
             content.text = menu.title
             content.image = menu.image
             content.imageProperties.tintColor = R.color.tmdbColorTertiaryLightGreen()
             content.textProperties.color = R.color.tmdbColorTertiaryLightGreen() ?? content.textProperties.color
+            
+            switch menu {
+            case .version(let version):
+                content.secondaryText = version
+            case .favorites:
+                break
+            }
             
             var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
             backgroundConfig.backgroundColor = .black
