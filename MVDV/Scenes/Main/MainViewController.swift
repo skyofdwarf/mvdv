@@ -21,19 +21,24 @@ class CustomNavigationController: UINavigationController {
     }
 }
 
-class MainViewController: UITabBarController {
+class MainViewController: UIViewController {
     private(set) var db = DisposeBag()
-    let vm: MainViewModel
+    
+    var vm: MainViewModel!
+    
+    private(set) lazy var mainTabBarController = MainTabViewController()
     
     private var indicator: UIActivityIndicatorView!
     
     override var childForStatusBarStyle: UIViewController? {
-        selectedViewController
+        mainTabBarController.childForStatusBarStyle
     }
     
-    init(vm: MainViewModel) {
-        self.vm = vm
-        
+    override var tabBarController: UITabBarController? {
+        mainTabBarController
+    }
+    
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -46,13 +51,10 @@ class MainViewController: UITabBarController {
         
         view.backgroundColor = .black
         
-        tabBar.tintColor = R.color.tmdbColorSecondaryLightBlue()
-        tabBar.barTintColor = R.color.tmdbColorPrimaryDarkBlue()
-        
         UINavigationBar.appearance().tintColor = R.color.tmdbColorTertiaryLightGreen()
-
-        viewControllers = []
         
+        addTabBarController()
+
         createIndicator()
         bindViewModel()
         
@@ -61,6 +63,14 @@ class MainViewController: UITabBarController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    func addTabBarController() {
+        view.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        view.addSubview(mainTabBarController.view)
+        
+        addChild(mainTabBarController)
+        mainTabBarController.didMove(toParent: self)
     }
 }
 
@@ -90,19 +100,8 @@ private extension MainViewController {
         }
     }
     
-    func showTabs(imageConfiguration: ImageConfiguration) {
-        viewControllers = [
-            HomeViewController(vm: HomeViewModel(imageConfiguration: imageConfiguration)),
-            UpcomingViewController(vm: UpcomingViewModel(imageConfiguration: imageConfiguration)),
-            SearchViewController(vm: SearchViewModel(imageConfiguration: imageConfiguration)),
-            ProfileViewController(vm: ProfileViewModel(imageConfiguration: imageConfiguration))
-        ].map { $0.navigationRooted }
-    }
-    
     func processEvent(_ event: MainEvent) {
         switch event {
-        case .ready(let imageConfiguration):
-            showTabs(imageConfiguration: imageConfiguration)
         case .alert(let msg):
             alert(message: msg)
         }

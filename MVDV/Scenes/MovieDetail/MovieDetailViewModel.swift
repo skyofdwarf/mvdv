@@ -12,6 +12,7 @@ import RxSwift
 enum MovieDetailAction {
     case ready
     case toggleFavorite
+    case showDetail(Movie)
 }
 
 enum MovieDetailEvent: CustomStringConvertible {
@@ -49,10 +50,10 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
     
     let imageConfiguration: ImageConfiguration
     let movieId: Int
-    let backdrop: URL
+    let coordinator: MovieDetailCoordinator
     let dataStorage: DataStorage
     
-    init(imageConfiguration: ImageConfiguration, movieId: Int, backdrop: URL, dataStorage: DataStorage = DataStorage.shared) {
+    init(movie: Movie, imageConfiguration: ImageConfiguration, coordinator: MovieDetailCoordinator, dataStorage: DataStorage = DataStorage.shared) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -68,11 +69,20 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         ]
         
         self.imageConfiguration = imageConfiguration
-        self.movieId = movieId
-        self.backdrop = backdrop
+        self.movieId = movie.id
+        self.coordinator = coordinator
         self.dataStorage = dataStorage
         
-        let state = State(backdrop: backdrop)
+        var state = State()
+        
+        if let size = imageConfiguration.backdrop_sizes.last,
+           let baseUrl = URL(string: imageConfiguration.secure_base_url),
+           let posterPath = movie.backdrop_path
+        {
+            state.backdrop = baseUrl
+                .appendingPathComponent(size)
+                .appendingPathComponent(posterPath)
+        }
         
         super.init(state: state,
                    actionMiddlewares: actionMiddlewares,
@@ -121,6 +131,10 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
             }
             .startWith(Reaction.mutation(.fetching(true)))
             .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+            
+        case .showDetail(let movie):
+            coordinator.showDetail(movie: movie, imageConfiguration: imageConfiguration)
+            return .empty()
         }
     }
     

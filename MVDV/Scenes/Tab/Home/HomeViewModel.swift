@@ -11,7 +11,7 @@ import RxSwift
 
 enum HomeAction {
     case ready
-    case movie
+    case showMovieDetail(Movie)
 }
 
 enum HomeEvent {
@@ -40,8 +40,9 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration
+    let coordinator: HomeCoordinator
     
-    init(imageConfiguration: ImageConfiguration, state initialState: HomeState = HomeState()) {
+    init(imageConfiguration: ImageConfiguration, coordinator: HomeCoordinator) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -71,8 +72,9 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
         ]
         
         self.imageConfiguration = imageConfiguration
+        self.coordinator = coordinator
         
-        super.init(state: initialState,
+        super.init(state: State(),
                    actionMiddlewares: actionMiddlewares,
                    /*mutationMiddlewares: mutationMiddlewares,*/
                    eventMiddlewares: eventMiddlewares/*,
@@ -103,9 +105,8 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEv
                 }
                 .startWith(Reaction.mutation(.fetching(true)))
                 .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
-        case .movie:
-            // TODO: transition to movie detail
-            print("TODOP: Show movie detail")
+        case .showMovieDetail(let movie):
+            coordinator.showDetail(movie: movie, imageConfiguration: imageConfiguration)
             return .empty()
         }
     }

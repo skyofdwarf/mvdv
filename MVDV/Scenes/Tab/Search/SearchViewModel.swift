@@ -11,7 +11,7 @@ import RxSwift
 
 enum SearchAction {
     case search(query: String?)
-    //case searchNextPage
+    case showMovieDetail(Movie)
 }
 
 enum SearchEvent {
@@ -38,8 +38,9 @@ final class SearchViewModel: ViewModel<SearchAction, SearchMutation, SearchState
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration
+    let coordinator: SearchCoordinator
     
-    init(imageConfiguration: ImageConfiguration) {
+    init(imageConfiguration: ImageConfiguration, coordinator: SearchCoordinator) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -55,6 +56,7 @@ final class SearchViewModel: ViewModel<SearchAction, SearchMutation, SearchState
         ]
 
         self.imageConfiguration = imageConfiguration
+        self.coordinator = coordinator
         
         super.init(state: State(),
                    actionMiddlewares: actionMiddlewares,
@@ -85,6 +87,9 @@ final class SearchViewModel: ViewModel<SearchAction, SearchMutation, SearchState
                 .startWith(Reaction.mutation(.fetching(true)))
                 .startWith(Reaction.mutation(.query(query)))
                 .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+        case .showMovieDetail(let movie):
+            coordinator.showDetail(movie: movie, imageConfiguration: imageConfiguration)
+            return .empty()
         }
     }
     

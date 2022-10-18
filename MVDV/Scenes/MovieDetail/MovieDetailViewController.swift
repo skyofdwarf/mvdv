@@ -46,13 +46,11 @@ class MovieDetailViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
     
     private(set) var db = DisposeBag()
-    let vm: MovieDetailViewModel!
+    var vm: MovieDetailViewModel!
     
     let actionRelay = PublishRelay<MovieDetailAction>()
 
-    init(vm: MovieDetailViewModel) {
-        self.vm = vm
-        
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -341,25 +339,11 @@ extension MovieDetailViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard case .movie(let movie) = dataSource.itemIdentifier(for: indexPath),
-              let size = vm.imageConfiguration.backdrop_sizes.last
-        else {
+        guard case .movie(let movie) = dataSource.itemIdentifier(for: indexPath) else {
             return
         }
         
-        guard let baseUrl = URL(string: vm.imageConfiguration.secure_base_url),
-              let posterPath = movie.backdrop_path
-        else { return }
-        
-        let imageUrl = baseUrl
-            .appendingPathComponent(size)
-            .appendingPathComponent(posterPath)
-        let vm = MovieDetailViewModel(imageConfiguration: vm.imageConfiguration,
-                                     movieId: movie.id,
-                                     backdrop: imageUrl)
-        let vc = MovieDetailViewController(vm: vm)
-        
-        navigationController?.pushViewController(vc, animated: true)
+        vm.send(action: .showDetail(movie))
     }
 }
 

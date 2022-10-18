@@ -64,11 +64,10 @@ class ProfileViewController: UIViewController {
     private let actionRelay = PublishRelay<ProfileAction>()
     
     private(set) var db = DisposeBag()
-    let vm: ProfileViewModel
     
-    init(vm: ProfileViewModel) {
-        self.vm = vm
-        
+    var vm: ProfileViewModel!
+    
+    init() {
         super.init(nibName: nil, bundle: nil)
         
         self.tabBarItem = UITabBarItem(title: Strings.Common.Profile.title,
@@ -346,16 +345,17 @@ extension ProfileViewController: ASWebAuthenticationPresentationContextProviding
 extension ProfileViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath),
-              case .menu(let menu) = item,
-              menu == .favorites
+              case .menu(let menu) = item
         else {
             return
         }
         
-        let vm = FavoritesViewModel(imageConfiguration: vm.imageConfiguration)
-        let vc = FavoritesViewController(vm: vm)
-        
-        navigationController?.pushViewController(vc, animated: true)
+        switch menu {
+        case .favorites:
+            vm.send(action: .showFavorites)            
+        default:
+            break
+        }
     }
 }
 

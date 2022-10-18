@@ -14,6 +14,7 @@ enum ProfileAction {
     case authenticate(ASWebAuthenticationPresentationContextProviding)
     case unbind
     case fetch
+    case showFavorites
 }
 
 enum ProfileEvent {
@@ -41,9 +42,10 @@ final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileS
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration
+    let coordinator: ProfileCoordinator
     let dataStorage: DataStorage
     
-    init(imageConfiguration: ImageConfiguration, dataStorage: DataStorage = DataStorage.shared) {
+    init(imageConfiguration: ImageConfiguration, coordinator: ProfileCoordinator, dataStorage: DataStorage = DataStorage.shared) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -59,6 +61,7 @@ final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileS
         ]
 
         self.imageConfiguration = imageConfiguration
+        self.coordinator = coordinator
         self.dataStorage = dataStorage
         
         let state = State(fetching: false,
@@ -85,6 +88,9 @@ final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileS
             
         case .fetch:
             return fetch()
+            
+        case .showFavorites:
+            return showFavorites()
         }
     }
     
@@ -168,5 +174,10 @@ extension ProfileViewModel {
             .catch { .just(.event(.alert($0.localizedDescription))) }
             .startWith(Reaction.mutation(.fetching(true)))
             .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+    }
+    
+    func showFavorites() -> Observable<Reaction> {
+        coordinator.showFavorites(imageConfiguration: imageConfiguration)
+        return .empty()
     }
 }

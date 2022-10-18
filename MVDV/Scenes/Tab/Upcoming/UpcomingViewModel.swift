@@ -11,6 +11,7 @@ import RxSwift
 
 enum UpcomingAction {
     case ready
+    case showMovieDetail(Movie)
 }
 
 enum UpcomingEvent {
@@ -35,8 +36,9 @@ final class UpcomingViewModel: ViewModel<UpcomingAction, UpcomingMutation, Upcom
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration
+    let coordinator: UpcomingCoordinator
     
-    init(imageConfiguration: ImageConfiguration) {
+    init(imageConfiguration: ImageConfiguration, coordinator: UpcomingCoordinator) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -52,6 +54,7 @@ final class UpcomingViewModel: ViewModel<UpcomingAction, UpcomingMutation, Upcom
         ]
 
         self.imageConfiguration = imageConfiguration
+        self.coordinator = coordinator
         
         super.init(state: State(),
                    actionMiddlewares: actionMiddlewares,
@@ -76,6 +79,9 @@ final class UpcomingViewModel: ViewModel<UpcomingAction, UpcomingMutation, Upcom
                 }
                 .startWith(Reaction.mutation(.fetching(true)))
                 .concat(Observable<Reaction>.just(.mutation(.fetching(false))))
+        case .showMovieDetail(let movie):
+            coordinator.showDetail(movie: movie, imageConfiguration: imageConfiguration)
+            return .empty()
         }
     }
     

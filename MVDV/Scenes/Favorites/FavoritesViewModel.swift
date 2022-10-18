@@ -12,6 +12,7 @@ import AuthenticationServices
 
 enum FavoritesAction {
     case fetch
+    case showMovieDetail(Movie)
 }
 
 enum FavoritesEvent {
@@ -37,9 +38,10 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration
+    let coordinator: FavoritesCoordinator
     let dataStorage: DataStorage
     
-    init(imageConfiguration: ImageConfiguration, dataStorage: DataStorage = DataStorage.shared) {
+    init(imageConfiguration: ImageConfiguration, coordinator: FavoritesCoordinator, dataStorage: DataStorage = DataStorage.shared) {
         let actionMiddlewares = [
             Self.middleware.action { state, next, action in
                 print("[ACTION] \(action)")
@@ -55,6 +57,7 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         ]
 
         self.imageConfiguration = imageConfiguration
+        self.coordinator = coordinator
         self.dataStorage = dataStorage
         
         let state = State(fetching: false,
@@ -72,6 +75,9 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         switch action {
         case .fetch:
             return fetch()
+        case .showMovieDetail(let movie):
+            coordinator.showDetail(movie: movie, imageConfiguration: imageConfiguration)
+            return .empty()
         }
     }
     

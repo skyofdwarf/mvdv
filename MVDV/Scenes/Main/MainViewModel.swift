@@ -10,18 +10,26 @@ import RDXVM
 import RxSwift
 import RxRelay
 
+extension AppEvent {
+    var coordinate: MainAction.Coordinate? {
+        switch self {
+        case .ready(let ic): return MainAction.Coordinate.tabs(ic)
+        default: return nil
+        }
+    }
+}
+
 enum MainAction {
     case ready
+    case coordinate(Coordinate)
+    
+    enum Coordinate {
+        case tabs(ImageConfiguration)
+    }
 }
 
 enum MainEvent {
     case alert(String)
-    case ready(ImageConfiguration)
-    
-    init?(from appEvent: AppEvent) {
-        guard case .ready(let imageConfiguration) = appEvent else { return nil }
-        self = .ready(imageConfiguration)
-    }
 }
 
 enum MainMutation {
@@ -38,9 +46,11 @@ final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEv
     private(set) var db = DisposeBag()
     
     let dataStorage: DataStorage
+    let coordinator: MainCoordinator
     
-    init(dataStorage: DataStorage = DataStorage.shared) {
+    init(dataStorage: DataStorage = DataStorage.shared, coordinator: MainCoordinator) {
         self.dataStorage = dataStorage
+        self.coordinator = coordinator
         
         super.init(state: State())
     }
@@ -51,6 +61,9 @@ final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEv
         switch action {
         case .ready:
             AppModel.shared.send(action: .ready)
+            
+        case .coordinate(let coord):
+            return coordinate(coord)
         }
         
         return .empty()
@@ -83,11 +96,21 @@ final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEv
                       fetching)
     }
     
-    override func transform(event: Observable<Event>) -> Observable<Event> {
-        let ready = AppModel.shared.event
-            .compactMap { MainEvent(from: $0) }
+    override func transform(action: Observable<Action>) -> Observable<Action> {
+        let coordinate = AppModel.shared.event
+            .compactMap { $0.coordinate }
+            .map { Action.coordinate($0) }
             .asObservable()
         
-        return .merge(event, ready)
+        return .merge(action, coordinate)
+    }
+    
+    func coordinate(_ coordinate: MainAction.Coordinate) -> Observable<Reaction> {
+        switch coordinate {
+        case .tabs(let ic):
+            coordinator.showTabs(imageConfiguration: ic)
+        }
+        
+        return .empty()
     }
 }

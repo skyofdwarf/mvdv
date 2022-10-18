@@ -34,13 +34,12 @@ class UpcomingViewController: UIViewController {
     private var indicator: UIActivityIndicatorView!
     
     private(set) var db = DisposeBag()
-    let vm: UpcomingViewModel
+    
+    var vm: UpcomingViewModel!
     
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
     
-    init(vm: UpcomingViewModel) {
-        self.vm = vm
-        
+    init() {
         super.init(nibName: nil, bundle: nil)
         
         title = Strings.Common.Upcoming.title
@@ -117,26 +116,12 @@ private extension UpcomingViewController {
 extension UpcomingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath),
-              case .movie(let movie) = item,
-              let size = vm.imageConfiguration.backdrop_sizes.last
+              case .movie(let movie) = item
         else {
             return
         }
         
-        guard let baseUrl = URL(string: vm.imageConfiguration.secure_base_url),
-              let posterPath = movie.backdrop_path
-        else { return }
-        
-        let imageUrl = baseUrl
-            .appendingPathComponent(size)
-            .appendingPathComponent(posterPath)
-        
-        let vm = MovieDetailViewModel(imageConfiguration: vm.imageConfiguration,
-                                     movieId: movie.id,
-                                     backdrop: imageUrl)
-        let vc = MovieDetailViewController(vm: vm)
-        
-        navigationController?.pushViewController(vc, animated: true)
+        vm.send(action: .showMovieDetail(movie))
     }
 }
 

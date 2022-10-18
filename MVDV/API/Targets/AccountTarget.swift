@@ -48,7 +48,7 @@ extension AccountTarget {
         case .favoriteMovies(_, let sessionId)/*(, let page)*/:
             return .requestParameters(parameters: ["session_id": sessionId],
                                       encoding: URLEncoding.queryString)
-        @unknown default:
+        default:
             return .requestPlain
         }
     }
