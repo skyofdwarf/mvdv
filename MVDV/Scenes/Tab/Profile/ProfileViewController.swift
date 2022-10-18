@@ -48,8 +48,8 @@ class ProfileViewController: UIViewController {
         
         var image: UIImage? {
             switch self {
-            case .version: return UIImage(systemName: "info.circle.fill")
-            case .favorites: return UIImage(systemName: "star.fill")
+            case .version: return UIImage(systemName: "info.circle")
+            case .favorites: return UIImage(systemName: "star")
             }
         }
     }

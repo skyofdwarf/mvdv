@@ -95,7 +95,7 @@ class ProfileCell: UICollectionViewCell {
         autenticateButton.isHidden = authentication != nil
         accountLabel.isHidden = authentication == nil
         
-        profileImageView.image = UIImage(systemName: "person.crop.circle")
+        profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
         profileImageView.layer.borderWidth = 0
         
         if let authentication {
