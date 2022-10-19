@@ -40,97 +40,72 @@ final class DataStorageTests: XCTestCase {
     func testReadEmptyAccount() throws {
         try DataStorage.shared.readAccount()
         
-        XCTAssertNil(DataStorage.shared.accountId)
-        XCTAssertNil(DataStorage.shared.sessionId)
-        XCTAssertNil(DataStorage.shared.gravatarHash)
+        XCTAssertNil(DataStorage.shared.authentication)
     }
     
     func testSaveAccount() throws {
-        let accountId = "account id"
-        let sessionId = "session id"
-        let gravatarHash = "gravatar hash"
+        let authentication = Authentication(sessionId: "session id",
+                                            accountId: "account id",
+                                            gravatarHash: "gravatar hash")
         
         try DataStorage.shared.readAccount()
         
-        XCTAssertNil(DataStorage.shared.accountId)
-        XCTAssertNil(DataStorage.shared.sessionId)
-        XCTAssertNil(DataStorage.shared.gravatarHash)
+        XCTAssertNil(DataStorage.shared.authentication)
         
-        try DataStorage.shared.saveAccount(accountId: accountId, sessionId: sessionId, gravatarHash: gravatarHash)
+        try DataStorage.shared.saveAccount(authentication: authentication)
         
-        XCTAssertEqual(DataStorage.shared.sessionId, sessionId)
-        XCTAssertEqual(DataStorage.shared.accountId, accountId)
-        XCTAssertEqual(DataStorage.shared.gravatarHash, gravatarHash)
+        XCTAssertEqual(DataStorage.shared.authentication, authentication)
     }
     
     func testManageOnlyOneAccount() throws {
-        let accountId = "account id"
-        let sessionId = "session id"
-        let gravatarHash = "gravatar hash"
+        let authentication = Authentication(sessionId: "session id",
+                                            accountId: "account id",
+                                            gravatarHash: "gravatar hash")
         
-        let accountId2 = "account id 2"
-        let sessionId2 = "session id 2"
-        let gravatarHash2 = "gravatar hash 2"
-        
-        try DataStorage.shared.readAccount()
-        
-        XCTAssertNil(DataStorage.shared.accountId)
-        XCTAssertNil(DataStorage.shared.sessionId)
-        XCTAssertNil(DataStorage.shared.gravatarHash)
-        
-        try DataStorage.shared.saveAccount(accountId: accountId, sessionId: sessionId, gravatarHash: gravatarHash)
-        
-        XCTAssertEqual(DataStorage.shared.sessionId, sessionId)
-        XCTAssertEqual(DataStorage.shared.accountId, accountId)
-        XCTAssertEqual(DataStorage.shared.gravatarHash, gravatarHash)
-        
-        try DataStorage.shared.saveAccount(accountId: accountId2, sessionId: sessionId2, gravatarHash: gravatarHash2)
-        
-        XCTAssertEqual(DataStorage.shared.sessionId, sessionId2)
-        XCTAssertEqual(DataStorage.shared.accountId, accountId2)
-        XCTAssertEqual(DataStorage.shared.gravatarHash, gravatarHash2)
+        let authentication2 = Authentication(sessionId: "session id 2",
+                                             accountId: "account id 2",
+                                             gravatarHash: "gravatar hash 2")
         
         try DataStorage.shared.readAccount()
         
-        XCTAssertEqual(DataStorage.shared.sessionId, sessionId2)
-        XCTAssertEqual(DataStorage.shared.accountId, accountId2)
-        XCTAssertEqual(DataStorage.shared.gravatarHash, gravatarHash2)
+        XCTAssertNil(DataStorage.shared.authentication)
+        
+        try DataStorage.shared.saveAccount(authentication: authentication)
+        
+        XCTAssertEqual(DataStorage.shared.authentication, authentication)
+        
+        try DataStorage.shared.saveAccount(authentication: authentication2)
+        
+        XCTAssertEqual(DataStorage.shared.authentication, authentication2)
+        
+        try DataStorage.shared.readAccount()
+        
+        XCTAssertEqual(DataStorage.shared.authentication, authentication2)
     }
     
     func testDeleteAllAccounts() throws {
-        let accountId = "account id"
-        let sessionId = "session id"
-        let gravatarHash = "gravatar hash"
+        let authentication = Authentication(sessionId: "session id",
+                                            accountId: "account id",
+                                            gravatarHash: "gravatar hash")
         
         try DataStorage.shared.readAccount()
         
-        XCTAssertNil(DataStorage.shared.accountId)
-        XCTAssertNil(DataStorage.shared.sessionId)
-        XCTAssertNil(DataStorage.shared.sessionId)
+        XCTAssertNil(DataStorage.shared.authentication)
+                
+        try DataStorage.shared.saveAccount(authentication: authentication)
         
-        try DataStorage.shared.saveAccount(accountId: accountId, sessionId: sessionId, gravatarHash: gravatarHash)
-        
-        XCTAssertEqual(DataStorage.shared.sessionId, sessionId)
-        XCTAssertEqual(DataStorage.shared.accountId, accountId)
-        XCTAssertEqual(DataStorage.shared.gravatarHash, gravatarHash)
-        
+        XCTAssertEqual(DataStorage.shared.authentication, authentication)
         
         try DataStorage.shared.readAccount()
         
-        XCTAssertEqual(DataStorage.shared.sessionId, sessionId)
-        XCTAssertEqual(DataStorage.shared.accountId, accountId)
-        XCTAssertEqual(DataStorage.shared.gravatarHash, gravatarHash)
+        XCTAssertEqual(DataStorage.shared.authentication, authentication)
         
         try DataStorage.shared.deleteAllAccounts()
         
-        XCTAssertNil(DataStorage.shared.accountId)
-        XCTAssertNil(DataStorage.shared.sessionId)
-        XCTAssertNil(DataStorage.shared.gravatarHash)
+        XCTAssertNil(DataStorage.shared.authentication)
         
         try DataStorage.shared.readAccount()
         
-        XCTAssertNil(DataStorage.shared.accountId)
-        XCTAssertNil(DataStorage.shared.sessionId)
-        XCTAssertNil(DataStorage.shared.gravatarHash)
+        XCTAssertNil(DataStorage.shared.authentication)
     }
 }
