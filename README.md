@@ -1,3 +1,4 @@
-MVDV is toy project to learn features of iOS 13 and not ready for real use yet.
+MVDV is simple Movie search app, powered by [The Movie Database (TMDB)](https://www.themoviedb.org/).
 
-MVDV is iOS app for The Movie Database (TMDB)
+MVDV is an example project to learn features of iOS 13 and apply [RDXVM](https://github.com/skyofdwarf/rdxvm), or something.
+
