@@ -53,10 +53,6 @@ class SearchViewController: UIViewController {
             navigationItem.backButtonTitle = ""
         }
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle.fill"),
-                                                            style: .plain,
-                                                            target: nil,
-                                                            action: nil)
         navigationItem.standardAppearance = UINavigationBarAppearance().then {
             $0.backgroundColor = R.color.tmdbColorPrimaryDarkBlue()
             $0.titleTextAttributes = [
