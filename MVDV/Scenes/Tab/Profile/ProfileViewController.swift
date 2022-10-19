@@ -73,6 +73,8 @@ class ProfileViewController: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
         
+        title = Strings.Common.Profile.title
+        
         self.tabBarItem = UITabBarItem(title: Strings.Common.Profile.title,
                                        image: UIImage(systemName: "person.crop.circle"),
                                        tag: 0)
