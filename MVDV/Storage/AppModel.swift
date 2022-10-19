@@ -50,7 +50,7 @@ struct AppState {
     @Driving var authenticated: Bool = false
 }
 
-final class AppModel: ViewModel<AppAction, AppMutation, AppState, AppEvent> {
+final class AppModel: ViewModel<AppAction, AppMutation, AppEvent, AppState> {
     static let shared = AppModel()
     
     private(set) var db = DisposeBag()

@@ -42,7 +42,7 @@ struct MainState {
     @Driving var imageConfiguration: ImageConfiguration?
 }
 
-final class MainViewModel: ViewModel<MainAction, MainMutation, MainState, MainEvent> {
+final class MainViewModel: ViewModel<MainAction, MainMutation, MainEvent, MainState> {
     private(set) var db = DisposeBag()
     
     let dataStorage: DataStorage

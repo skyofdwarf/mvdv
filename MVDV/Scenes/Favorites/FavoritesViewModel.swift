@@ -34,7 +34,7 @@ struct FavoritesState {
     @Driving var sections = Sections()
 }
 
-final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, FavoritesState, FavoritesEvent> {
+final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, FavoritesEvent, FavoritesState> {
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration

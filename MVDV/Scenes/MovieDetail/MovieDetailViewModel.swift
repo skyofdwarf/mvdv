@@ -45,7 +45,7 @@ struct MovieDetailState {
     @Driving var sections: Sections = .init()
 }
 
-final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutation, MovieDetailState, MovieDetailEvent> {
+final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutation, MovieDetailEvent, MovieDetailState> {
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration

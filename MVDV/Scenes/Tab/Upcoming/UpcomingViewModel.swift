@@ -32,7 +32,7 @@ struct UpcomingState {
     @Driving var sections: Sections = .init()
 }
 
-final class UpcomingViewModel: ViewModel<UpcomingAction, UpcomingMutation, UpcomingState, UpcomingEvent> {
+final class UpcomingViewModel: ViewModel<UpcomingAction, UpcomingMutation, UpcomingEvent, UpcomingState> {
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration

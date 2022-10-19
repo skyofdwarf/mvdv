@@ -36,7 +36,7 @@ struct HomeState {
     @Driving var sections: Sections = .init()
 }
 
-final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeState, HomeEvent> {
+final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeEvent, HomeState> {
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration

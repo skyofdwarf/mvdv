@@ -39,7 +39,7 @@ struct ProfileState {
     @Driving var sections = Sections()
 }
 
-final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileState, ProfileEvent> {
+final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileEvent, ProfileState> {
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration

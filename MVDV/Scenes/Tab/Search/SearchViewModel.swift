@@ -34,7 +34,7 @@ struct SearchState {
     @Driving var sections: Sections = .init()
 }
 
-final class SearchViewModel: ViewModel<SearchAction, SearchMutation, SearchState, SearchEvent> {
+final class SearchViewModel: ViewModel<SearchAction, SearchMutation, SearchEvent, SearchState> {
     private(set) var db = DisposeBag()
     
     let imageConfiguration: ImageConfiguration
