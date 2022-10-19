@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ImageCache.default.clearCache(completion: nil)
         #endif
         
-        // Override point for customization after application launch.
+        // Override point for customization after applicati on launch.
         
 //        coordinator = AppCoordinator(for: window)
         

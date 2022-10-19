@@ -23,10 +23,6 @@ class MovieDetailCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-    }
-    
     func setup() {
         titleLabel.font = UIFont.preferredFont(forTextStyle: .title1)
         releaseDateLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)

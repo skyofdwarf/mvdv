@@ -7,8 +7,10 @@
 */
 
 "section.profile" = "Profile";
-"section.favorites" = "Favorites";
 "section.menu" = "Menu";
+"section.powered" = "TMDB powered";
 
 "menu.favorites" = "Favorites";
 "menu.version" = "Version";
+"powered" = "ㅁㅂㄷㅂ is powered by TMDB";
+"mvdv" = "https://www.themoviedb.org";

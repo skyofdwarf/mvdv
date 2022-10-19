@@ -19,11 +19,13 @@ class ProfileViewController: UIViewController {
     enum Section: Int, CaseIterable {
         case profile
         case menu
+        case powered
         
         var title: String {
             switch self {
             case .profile: return Strings.Profile.Section.profile
             case .menu: return Strings.Profile.Section.menu
+            case .powered: return Strings.Profile.Section.powered
             }
         }
     }
@@ -33,6 +35,7 @@ class ProfileViewController: UIViewController {
         case authentication(Authentication)
         case movie(Movie)
         case menu(Menu)
+        case powered
     }
     
     enum Menu: Hashable {
@@ -155,6 +158,8 @@ class ProfileViewController: UIViewController {
         snapshot.appendItems([.menu(.version(sections.version))], toSection: .menu)
         snapshot.appendItems([.menu(.favorites)], toSection: .menu)
         
+        snapshot.appendItems([.powered], toSection: .powered)
+        
         dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
@@ -236,6 +241,8 @@ private extension ProfileViewController {
                 return Self.createProfileSection()
             case .menu:
                 return Self.createMenuSection(environment)
+            case .powered:
+                return Self.createPoweredSection()
             default:
                 return nil
             }
@@ -259,6 +266,18 @@ private extension ProfileViewController {
         config.backgroundColor = .black
         
         return NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
+    }
+    
+    static func createPoweredSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .estimated(100))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                               heightDimension: .estimated(100))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        return NSCollectionLayoutSection(group: group)
     }
     
     func createDataSource() {
@@ -288,6 +307,17 @@ private extension ProfileViewController {
             (cell, indexPath, authentication) in
             
             cell.configure(with: authentication)
+        }
+        
+        let poweredCellRegistration = UICollectionView.CellRegistration<PoweredCell, Void> {
+            (cell, indexPath, _) in
+            
+            cell.rx.link
+                .bind(onNext: {
+                    guard let url = URL(string: Strings.Profile.mvdv) else { return }
+                    UIApplication.shared.open(url)
+                })
+                .disposed(by: cell.db)
         }
         
         let menuCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Menu> {
@@ -326,7 +356,8 @@ private extension ProfileViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: movieCellRegistration, for: indexPath, item: movie)
             case .menu(let menu):
                 return collectionView.dequeueConfiguredReusableCell(using: menuCellRegistration, for: indexPath, item: menu)
-                
+            case .powered:
+                return collectionView.dequeueConfiguredReusableCell(using: poweredCellRegistration, for: indexPath, item: ())
             }
         }.then {
             let headerRegistration = UICollectionView.SupplementaryRegistration<MovieHeaderView>(elementKind: UICollectionView.elementKindSectionHeader) {

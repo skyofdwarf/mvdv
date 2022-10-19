@@ -22,6 +22,8 @@ class MoviePosterCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
+        
         imageView.kf.cancelDownloadTask()
     }
 

@@ -95,6 +95,10 @@ internal enum Strings {
     }
   }
   internal enum Profile {
+    /// https://www.themoviedb.org
+    internal static let mvdv = Strings.tr("Profile", "mvdv")
+    /// ㅁㅂㄷㅂ is powered by TMDB
+    internal static let powered = Strings.tr("Profile", "powered")
     internal enum Menu {
       /// Favorites
       internal static let favorites = Strings.tr("Profile", "menu.favorites")
@@ -102,10 +106,10 @@ internal enum Strings {
       internal static let version = Strings.tr("Profile", "menu.version")
     }
     internal enum Section {
-      /// Favorites
-      internal static let favorites = Strings.tr("Profile", "section.favorites")
       /// Menu
       internal static let menu = Strings.tr("Profile", "section.menu")
+      /// TMDB powered
+      internal static let powered = Strings.tr("Profile", "section.powered")
       /// Profile
       internal static let profile = Strings.tr("Profile", "section.profile")
     }

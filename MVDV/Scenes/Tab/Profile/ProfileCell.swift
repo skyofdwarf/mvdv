@@ -28,6 +28,8 @@ class ProfileCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
+        
         profileImageView.kf.cancelDownloadTask()
         db = DisposeBag()
     }

@@ -80,6 +80,7 @@
 		5628A65A28FE1CD000E32C14 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5628A65928FE1CD000E32C14 /* ProfileCoordinator.swift */; };
 		5628A65C28FE1CE400E32C14 /* MovieDetailCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5628A65B28FE1CE400E32C14 /* MovieDetailCoordinator.swift */; };
 		5628A65E28FE5E6B00E32C14 /* FavoritesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5628A65D28FE5E6B00E32C14 /* FavoritesCoordinator.swift */; };
+		5628A66028FF6CEF00E32C14 /* PoweredCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5628A65F28FF6CEF00E32C14 /* PoweredCell.swift */; };
 		5642821928D37042002A5F58 /* MVDVService+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5642821828D37042002A5F58 /* MVDVService+API.swift */; };
 		5642821D28D8653D002A5F58 /* MVDVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5642821C28D8653D002A5F58 /* MVDVService.swift */; };
 		5642821F28D86A56002A5F58 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5642821E28D86A56002A5F58 /* SearchViewModel.swift */; };
@@ -181,6 +182,7 @@
 		5628A65928FE1CD000E32C14 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		5628A65B28FE1CE400E32C14 /* MovieDetailCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailCoordinator.swift; sourceTree = "<group>"; };
 		5628A65D28FE5E6B00E32C14 /* FavoritesCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesCoordinator.swift; sourceTree = "<group>"; };
+		5628A65F28FF6CEF00E32C14 /* PoweredCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoweredCell.swift; sourceTree = "<group>"; };
 		5642821828D37042002A5F58 /* MVDVService+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MVDVService+API.swift"; sourceTree = "<group>"; };
 		5642821C28D8653D002A5F58 /* MVDVService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVDVService.swift; sourceTree = "<group>"; };
 		5642821E28D86A56002A5F58 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
@@ -440,6 +442,7 @@
 				5628A63828F9A93B00E32C14 /* ProfileViewModel.swift */,
 				5628A65928FE1CD000E32C14 /* ProfileCoordinator.swift */,
 				5628A63B28F9F3AC00E32C14 /* ProfileCell.swift */,
+				5628A65F28FF6CEF00E32C14 /* PoweredCell.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -794,6 +797,7 @@
 				5642821928D37042002A5F58 /* MVDVService+API.swift in Sources */,
 				4283FC1C279718B000F3D753 /* Date.swift in Sources */,
 				5628A65E28FE5E6B00E32C14 /* FavoritesCoordinator.swift in Sources */,
+				5628A66028FF6CEF00E32C14 /* PoweredCell.swift in Sources */,
 				4283FC5027998ED900F3D753 /* MainViewController.swift in Sources */,
 				5642821F28D86A56002A5F58 /* SearchViewModel.swift in Sources */,
 				5628A65028FD1BC300E32C14 /* HomeCoordinator.swift in Sources */,
