@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,13 +18,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tmdb-logo-primary-full" translatesAutoresizingMaskIntoConstraints="NO" id="Bg1-xD-7T8">
-                                <rect key="frame" x="103.5" y="381.5" width="207" height="133"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tmdb-logo-alt-long-blue" translatesAutoresizingMaskIntoConstraints="NO" id="Bg1-xD-7T8">
+                                <rect key="frame" x="103.5" y="430.5" width="207" height="35"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ㅁㅂㄷㅂ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sXN-rZ-qOl">
+                                <rect key="frame" x="124" y="353" width="166.5" height="57.5"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="48"/>
+                                <color key="textColor" name="tmdb-color-tertiary-light-green"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Bg1-xD-7T8" firstAttribute="top" secondItem="sXN-rZ-qOl" secondAttribute="bottom" constant="20" id="9af-NU-B5A"/>
+                            <constraint firstItem="sXN-rZ-qOl" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="C8q-xt-etD"/>
                             <constraint firstItem="Bg1-xD-7T8" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="D3Z-p5-jFQ"/>
                             <constraint firstItem="Bg1-xD-7T8" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.5" id="rAF-Ka-1cC"/>
                             <constraint firstItem="Bg1-xD-7T8" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="xQ0-go-eCR"/>
@@ -36,7 +45,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="tmdb-logo-primary-full" width="185.03999328613281" height="133.39999389648438"/>
+        <image name="tmdb-logo-alt-long-blue" width="423.04000854492188" height="35.400001525878906"/>
+        <namedColor name="tmdb-color-tertiary-light-green">
+            <color red="0.56470588235294117" green="0.80784313725490198" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
