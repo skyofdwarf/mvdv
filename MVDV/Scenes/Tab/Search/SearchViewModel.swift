@@ -29,9 +29,9 @@ struct SearchState {
         var movies: [Movie] = []
     }
     
-    @Driving var fetching: Bool = false
-    @Driving var query: String? = nil
-    @Driving var sections: Sections = .init()
+    @Drived var fetching: Bool = false
+    @Drived var query: String? = nil
+    @Drived var sections: Sections = .init()
 }
 
 final class SearchViewModel: ViewModel<SearchAction, SearchMutation, SearchEvent, SearchState> {
@@ -93,8 +93,7 @@ final class SearchViewModel: ViewModel<SearchAction, SearchMutation, SearchEvent
         }
     }
     
-    override func reduce(mutation: Mutation, state: State) -> State {
-        var state = state
+    override func reduce(mutation: Mutation, state: inout State) {
         switch mutation {
         case .fetching(let fetching):
             state.fetching = fetching
@@ -103,7 +102,6 @@ final class SearchViewModel: ViewModel<SearchAction, SearchMutation, SearchEvent
         case .sections(let sections):
             state.sections = sections
         }
-        return state
     }
 }
 

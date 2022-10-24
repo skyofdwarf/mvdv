@@ -38,8 +38,8 @@ enum MainMutation {
 }
 
 struct MainState {
-    @Driving var fetching: Bool = false
-    @Driving var imageConfiguration: ImageConfiguration?
+    @Drived var fetching: Bool = false
+    @Drived var imageConfiguration: ImageConfiguration?
 }
 
 final class MainViewModel: ViewModel<MainAction, MainMutation, MainEvent, MainState> {
@@ -69,15 +69,13 @@ final class MainViewModel: ViewModel<MainAction, MainMutation, MainEvent, MainSt
         return .empty()
     }
     
-    override func reduce(mutation: Mutation, state: State) -> State {
-        var state = state
+    override func reduce(mutation: Mutation, state: inout State) {
         switch mutation {
         case .fetching(let fetching):
             state.fetching = fetching
         case .imageConfiguration(let imageConfiguration):
             state.imageConfiguration = imageConfiguration
         }
-        return state
     }
     
     override func transform(mutation: Observable<Mutation>) -> Observable<Mutation> {

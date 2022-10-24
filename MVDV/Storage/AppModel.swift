@@ -44,10 +44,10 @@ enum AppMutation {
 }
 
 struct AppState {
-    @Driving var fetching: Bool = false
-    @Driving var imageConfiguration: ImageConfiguration?
-    @Driving var authentication: Authentication?
-    @Driving var authenticated: Bool = false
+    @Drived var fetching: Bool = false
+    @Drived var imageConfiguration: ImageConfiguration?
+    @Drived var authentication: Authentication?
+    @Drived var authenticated: Bool = false
 }
 
 final class AppModel: ViewModel<AppAction, AppMutation, AppEvent, AppState> {
@@ -102,8 +102,7 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppEvent, AppState> {
         }
     }
     
-    override func reduce(mutation: Mutation, state: State) -> State {
-        var state = state
+    override func reduce(mutation: Mutation, state: inout State) {
         switch mutation {
         case .fetching(let fetching):
             state.fetching = fetching
@@ -113,7 +112,6 @@ final class AppModel: ViewModel<AppAction, AppMutation, AppEvent, AppState> {
             state.authentication = authentication
             state.authenticated = authentication != nil
         }
-        return state
     }
     
     override func transform(mutation: Observable<Mutation>) -> Observable<Mutation> {
@@ -149,7 +147,7 @@ private extension AppModel {
     }
     
     func authenticate(dataStorage: DataStorage, providing: ASWebAuthenticationPresentationContextProviding) -> Observable<Reaction> {
-        guard state.authentication == nil else {
+        guard $state.authentication == nil else {
             return .just(.event(.alert(Strings.Common.authenticatedAlready)))
         }
         

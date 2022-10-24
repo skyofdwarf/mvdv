@@ -29,9 +29,9 @@ struct FavoritesState {
         var favorites: [Movie] = []
     }
     
-    @Driving var fetching = false
-    @Driving var authenticated = false
-    @Driving var sections = Sections()
+    @Drived var fetching = false
+    @Drived var authenticated = false
+    @Drived var sections = Sections()
 }
 
 final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, FavoritesEvent, FavoritesState> {
@@ -81,15 +81,13 @@ final class FavoritesViewModel: ViewModel<FavoritesAction, FavoritesMutation, Fa
         }
     }
     
-    override func reduce(mutation: Mutation, state: State) -> State {
-        var state = state
+    override func reduce(mutation: Mutation, state: inout State) {
         switch mutation {
         case .fetching(let fetching):
             state.fetching = fetching
         case .favorites(let movies):
             state.sections.favorites = movies
         }
-        return state
     }
 }
 

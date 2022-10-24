@@ -34,9 +34,9 @@ struct ProfileState {
         var favorites: [Movie] = []
     }
     
-    @Driving var fetching = false
-    @Driving var authenticated = false
-    @Driving var sections = Sections()
+    @Drived var fetching = false
+    @Drived var authenticated = false
+    @Drived var sections = Sections()
 }
 
 final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileEvent, ProfileState> {
@@ -101,8 +101,7 @@ final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileE
         }
     }
     
-    override func reduce(mutation: Mutation, state: State) -> State {
-        var state = state
+    override func reduce(mutation: Mutation, state: inout State) {
         switch mutation {
         case .fetching(let fetching):
             state.fetching = fetching
@@ -113,7 +112,6 @@ final class ProfileViewModel: ViewModel<ProfileAction, ProfileMutation, ProfileE
         case .favorites(let movies):
             state.sections.favorites = movies
         }
-        return state
     }
     
     override func transform(action: Observable<Action>) -> Observable<Action> {
@@ -184,7 +182,7 @@ extension ProfileViewModel {
     }
     
     func showFavorites() -> Observable<Reaction> {
-        guard state.authenticated else {
+        guard $state.authenticated else {
             return .just(.event(.alert(Strings.Common.notAuthenticatedYet)))
             
         }

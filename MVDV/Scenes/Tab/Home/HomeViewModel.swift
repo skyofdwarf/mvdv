@@ -32,8 +32,8 @@ struct HomeState {
         var topRated: [Movie] = []
     }
     
-    @Driving var fetching: Bool = false
-    @Driving var sections: Sections = .init()
+    @Drived var fetching: Bool = false
+    @Drived var sections: Sections = .init()
 }
 
 final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeEvent, HomeState> {
@@ -111,14 +111,12 @@ final class HomeViewModel: ViewModel<HomeAction, HomeMutation, HomeEvent, HomeSt
         }
     }
     
-    override func reduce(mutation: Mutation, state: State) -> State {
-        var state = state
+    override func reduce(mutation: Mutation, state: inout State) {
         switch mutation {
         case .fetching(let fetching):
             state.fetching = fetching
         case .sections(let sections):
             state.sections = sections
         }
-        return state
     }
 }

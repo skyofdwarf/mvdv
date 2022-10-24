@@ -39,10 +39,10 @@ struct MovieDetailState {
         var similar: [Movie]?
     }
     
-    @Driving var fetching: Bool = false
-    @Driving var favorited: Bool = false
-    @Driving var backdrop: URL?
-    @Driving var sections: Sections = .init()
+    @Drived var fetching: Bool = false
+    @Drived var favorited: Bool = false
+    @Drived var backdrop: URL?
+    @Drived var sections: Sections = .init()
 }
 
 final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutation, MovieDetailEvent, MovieDetailState> {
@@ -138,8 +138,7 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         }
     }
     
-    override func reduce(mutation: Mutation, state: State) -> State {
-        var state = state
+    override func reduce(mutation: Mutation, state: inout State) {
         switch mutation {
         case .fetching(let fetching):
             state.fetching = fetching
@@ -148,6 +147,5 @@ final class MovieDetailViewModel: ViewModel<MovieDetailAction, MovieDetailMutati
         case .sections(let sections):
             state.sections = sections
         }
-        return state
     }
 }
