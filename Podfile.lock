@@ -3,7 +3,7 @@ PODS:
   - R.swift (6.1.0):
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
-  - SwiftGen (6.5.1)
+  - SwiftGen (6.6.2)
 
 DEPENDENCIES:
   - Keys (from `Pods/CocoaPodsKeys`)
@@ -24,7 +24,7 @@ SPEC CHECKSUMS:
   Keys: a576f4c9c1c641ca913a959a9c62ed3f215a8de9
   R.swift: ec98ff71c4ab2f6fd01dd077e5afd15e63a4834c
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
-  SwiftGen: a6d22010845f08fe18fbdf3a07a8e380fd22e0ea
+  SwiftGen: 1366a7f71aeef49954ca5a63ba4bef6b0f24138c
 
 PODFILE CHECKSUM: d4c81336c5f4fe5058929da55343f8485661a016
 

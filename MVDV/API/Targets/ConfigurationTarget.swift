@@ -8,6 +8,6 @@
 import Foundation
 import Moya
 
-enum ConfigurationTarget: String, MVDBTarget {
+enum ConfigurationTarget: String, MVDVTarget {
     case configuration = "/configuration"
 }

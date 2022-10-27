@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-enum AuthenticationTarget: MVDBTarget {
+enum AuthenticationTarget: MVDVTarget {
     case requestToken
     case newSession(requestToken: String)
 }

@@ -1,5 +1,5 @@
 //
-//  MVDBTarget.swift
+//  MVDVTarget.swift
 //  MVDV
 //
 //  Created by YEONGJUNG KIM on 2022/01/18.
@@ -8,10 +8,10 @@
 import Foundation
 import Moya
 
-protocol MVDBTarget: TargetType, AccessTokenAuthorizable {
+protocol MVDVTarget: TargetType, AccessTokenAuthorizable {
 }
 
-extension MVDBTarget {
+extension MVDVTarget {
     // MARK:  AccessTokenAuthorizable
     var authorizationType: AuthorizationType? { .bearer }
     
@@ -28,7 +28,7 @@ extension MVDBTarget {
     var headers: [String: String]? { nil }
 }
 
-extension MVDBTarget where Self: RawRepresentable, RawValue == String {
+extension MVDVTarget where Self: RawRepresentable, RawValue == String {
     // MARK: TargeType
     var path: String { rawValue }
 }

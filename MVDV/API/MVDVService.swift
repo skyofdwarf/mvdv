@@ -11,7 +11,7 @@ import Keys
 import RxSwift
 import RxMoya
 
-fileprivate let accessToken = MVDBKeys().apiAccessToken
+fileprivate let accessToken = MVDVKeys().apiAccessToken
 
 final class MVDVService: APIService {
     static let shared = MVDVService()

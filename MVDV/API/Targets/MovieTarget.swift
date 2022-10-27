@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-enum MovieTarget: MVDBTarget {
+enum MovieTarget: MVDVTarget {
     case genres
     case detail(Int, stated: Bool)
     case similar(Int)

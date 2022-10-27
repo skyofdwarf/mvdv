@@ -8,7 +8,7 @@
 import Foundation
 import Moya
 
-enum AccountTarget: MVDBTarget {
+enum AccountTarget: MVDVTarget {
     case account(sessionId: String)
     case markFavorite(accountId: String, sessionId: String, mediaId: Int, favorited: Bool)
     case favoriteMovies(accountId: String, sessionId: String/*, page: Int*/)
