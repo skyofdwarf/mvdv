@@ -12,7 +12,7 @@ target 'MVDV' do
 end
 
 plugin 'cocoapods-keys', {
-  :project => "MVDB",
+  :project => "MVDV",
   :keys => [
     "apiKey",
     "apiAccessToken"
