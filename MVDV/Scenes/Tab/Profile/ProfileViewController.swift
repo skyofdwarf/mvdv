@@ -70,6 +70,8 @@ class ProfileViewController: UIViewController {
     
     var vm: ProfileViewModel!
     
+    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         

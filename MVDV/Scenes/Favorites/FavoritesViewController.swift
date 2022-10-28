@@ -40,6 +40,8 @@ class FavoritesViewController: UIViewController {
     private(set) var db = DisposeBag()
     var vm: FavoritesViewModel!
     
+    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         

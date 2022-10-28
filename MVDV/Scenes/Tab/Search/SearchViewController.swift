@@ -40,6 +40,8 @@ class SearchViewController: UIViewController {
     
     var vm: SearchViewModel!
     
+    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent  }
+    
     init() {        
         super.init(nibName: nil, bundle: nil)
         
